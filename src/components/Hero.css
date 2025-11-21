@@ -1,0 +1,243 @@
+/* Hero.css */
+.hero-section {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background: #000;
+  color: #fff;
+  overflow: hidden;
+  font-family: 'Bebas Neue', cursive;
+  transform: scale(1.5);
+  opacity: 0;
+  transition: all 2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.hero-section.zoom-in {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.hero-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-background-text {
+  position: absolute;
+  top: 54%;
+  left: 0;
+  width: 100vw;
+  text-align: center;
+  transform: translateY(-60%) scaleY(1.15);
+  transform-origin: center;
+  font-family: 'Bebas Neue', cursive;
+  font-size: 36vw;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: -0.01em;
+  z-index: 1;
+  user-select: none;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1s ease 1.5s;
+}
+
+.hero-background-text.fade-in-bg {
+  opacity: 1;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-image-container {
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 4;
+  opacity: 0;
+  transform: translate(-50%, -40%);
+  transition: all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1.8s;
+}
+
+.hero-image-container.fade-in-image {
+  opacity: 1;
+  transform: translate(-50%, -50%);
+}
+
+.hero-image {
+  width: 600px;
+  height: 640px;
+  object-fit: cover;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0));
+}
+
+.hero-titles {
+  position: absolute;
+  bottom: 80px;
+  right: 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 4;
+  opacity: 0;
+  transform: translateX(50px);
+  transition: all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 2.2s;
+}
+
+.hero-titles.slide-in-right {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.title-item {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 25px;
+  padding: 12px 24px;
+  font-family: 'Bebas Neue', cursive;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.title-item.active {
+  background: #fff;
+  color: #000;
+  text-shadow: none;
+}
+
+.title-item:hover {
+  background: rgba(255, 255, 255, 0);
+  transform: translateX(-5px);
+}
+
+.title-item.active:hover {
+  background: #fff;
+  transform: translateX(-5px);
+}
+
+.hero-tagline {
+  position: absolute;
+  bottom: 75px;
+  font-family: 'Bebas Neue', cursive;
+  left: 40px;
+  z-index: 4;
+  opacity: 0;
+  transform: translateX(-50px);
+  transition: all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 2s;
+}
+
+.hero-tagline.slide-in-left {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.hero-tagline p {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 1.2;
+  color: #fff;
+}
+
+/* Split Screen Animation */
+.split-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.split-top, .split-bottom {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 50vh;
+  background: #000;
+  transition: transform 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.split-top {
+  top: 0;
+}
+
+.split-bottom {
+  bottom: 0;
+}
+
+.split-overlay.animate .split-top {
+  transform: translateY(-100%);
+}
+
+.split-overlay.animate .split-bottom {
+  transform: translateY(100%);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .hero-background-text {
+    font-size: clamp(4rem, 15vw, 8rem);
+  }
+  
+  .hero-image {
+    width: 280px;
+    height: 350px;
+  }
+  
+  .hero-titles {
+    bottom: 40px;
+    right: 30px;
+  }
+  
+  .hero-tagline {
+    bottom: 40px;
+    left: 30px;
+  }
+  
+  .hero-tagline p {
+    font-size: 16px;
+  }
+  
+  .title-item {
+    font-size: 12px;
+    padding: 10px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-image {
+    width: 220px;
+    height: 280px;
+  }
+  
+  .hero-titles {
+    bottom: 20px;
+    right: 20px;
+  }
+  
+  .hero-tagline {
+    bottom: 20px;
+    left: 20px;
+  }
+}
