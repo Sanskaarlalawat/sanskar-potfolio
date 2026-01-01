@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import "./Loader.css";
 
 export default function Loader({ duration = 2600, exitDuration = 700, onFinish }) {
   useEffect(() => {
@@ -10,7 +9,7 @@ export default function Loader({ duration = 2600, exitDuration = 700, onFinish }
     return () => clearTimeout(timer);
   }, [duration, exitDuration, onFinish]);
 
-  const letters = ["T", "o", "k", "e", "n"," ", " T", "i", "n", "k", "e", " r", "e", "r" ];
+  const letters = ["T", "o", "k", "e", "n"," ", "T", "i", "n", "k", "e", "r", "e", "r" ];
 
   const containerVariants = {
     start: { transition: { staggerChildren: 0.15, delayChildren: 0.3 } },
@@ -21,7 +20,7 @@ export default function Loader({ duration = 2600, exitDuration = 700, onFinish }
     start: { opacity: 0, y: 0 },
     vertical: {
       opacity: 1,
-      letterSpacing: "1rem",
+      letterSpacing: "clamp(0.3rem, 1.5vw, 1rem)",
       scale: 1.05,
       transition: { duration: 0.8 }
     }
@@ -42,68 +41,103 @@ export default function Loader({ duration = 2600, exitDuration = 700, onFinish }
           animate="vertical"
           onAnimationComplete={() => {
             setTimeout(() => {
-              // Step 1: Fade out middle letters
-              document.querySelectorAll(".loader-letter.mid").forEach(el => {
+              document.querySelectorAll(".loader-letter").forEach(el => {
                 el.classList.add("fade-out");
               });
-
-              // Step 2: Wait for middle letters to disappear, then move M & I
-              setTimeout(() => {
-                const mEl = document.querySelector(".loader-letter.T");
-                const iEl = document.querySelector(".loader-letter.r");
-
-                // Move towards each other (small gap at collision)
-                mEl.style.setProperty("--hit-dir", "100px");
-                iEl.style.setProperty("--hit-dir", "-100px");
-
-                // Step 3: Trigger bounce
-                mEl.classList.add("hit");
-                iEl.classList.add("hit");
-
-                // Step 4: Fade out after bounce
-                setTimeout(() => {
-                  mEl.classList.add("fade-out-delay");
-                  iEl.classList.add("fade-out-delay");
-                }, 500);
-              }, 400); // Wait for fade-out of middle letters
-            }, 800); // Wait after vertical animation finishes
+            }, 800);
           }}
         >
-          {letters.map((letter, i) => {
-            if (letter === "T") {
-              return (
-                <motion.span
-                  key={i}
-                  className="loader-letter T"
-                  variants={letterVariants}
-                >
-                  {letter}
-                </motion.span>
-              );
-            }
-            if (letter === "r") {
-              return (
-                <motion.span
-                  key={i}
-                  className="loader-letter r"
-                  variants={letterVariants}
-                >
-                  {letter}
-                </motion.span>
-              );
-            }
-            return (
-              <motion.span
-                key={i}
-                className="loader-letter mid"
-                variants={letterVariants}
-              >
-                {letter}
-              </motion.span>
-            );
-          })}
+          {letters.map((letter, i) => (
+            <motion.span
+              key={i}
+              className="loader-letter"
+              variants={letterVariants}
+            >
+              {letter}
+            </motion.span>
+          ))}
         </motion.div>
       </motion.div>
+      <style>{`
+        .loader-overlay {
+          position: fixed;
+          inset: 0;
+          background: black;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 9999;
+          padding: 1rem;
+        }
+
+        .loader-text-container {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          font-weight: 700;
+          font-size: clamp(2rem, 8vw, 6rem);
+          color: white;
+          line-height: 1.2;
+          max-width: 100%;
+        }
+
+        .loader-letter {
+          display: inline-block;
+          will-change: transform, opacity, letter-spacing;
+        }
+
+        .fade-out {
+          animation: fadeOut 0.4s forwards ease-in;
+        }
+
+        @keyframes fadeOut {
+          to { opacity: 0; }
+        }
+
+        /* Small mobile devices */
+        @media (max-width: 374px) {
+          .loader-text-container {
+            font-size: clamp(1.5rem, 10vw, 2.5rem);
+          }
+        }
+
+        /* Mobile portrait */
+        @media (max-width: 600px) {
+          .loader-overlay {
+            padding: 0.5rem;
+          }
+        }
+
+        /* Tablet and larger */
+        @media (min-width: 601px) and (max-width: 1024px) {
+          .loader-text-container {
+            font-size: clamp(3rem, 7vw, 5rem);
+          }
+        }
+
+        /* Large screens */
+        @media (min-width: 1025px) {
+          .loader-text-container {
+            font-size: clamp(4rem, 6vw, 6rem);
+          }
+        }
+
+        /* Landscape mobile adjustments */
+        @media (max-height: 500px) and (orientation: landscape) {
+          .loader-text-container {
+            font-size: clamp(1.5rem, 6vh, 3rem);
+          }
+        }
+
+        /* High DPI screens */
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+          .loader-letter {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+          }
+        }
+      `}</style>
     </AnimatePresence>
   );
 }

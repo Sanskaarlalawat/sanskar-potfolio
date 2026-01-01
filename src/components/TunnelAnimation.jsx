@@ -23,7 +23,8 @@ class SequentialTypographyTunnel {
     this.totalSentences = this.sentences.length;
     
     // Smooth animation settings
-    this.smoothingFactor = 0.15;
+    this.smoothingFactor = 0.22; // Increased for ultra-smooth reverse scrolling
+    this.lastScrollY = 0; // Track previous position
     
     this.init();
   }
@@ -71,10 +72,11 @@ class SequentialTypographyTunnel {
     
     this.targetScrollY = activeScrollProgress;
     
-    // Always keep animation running to prevent frame sticking
-    if (!this.isScrolling) {
-      this.isScrolling = true;
+    // Force animation to run continuously to prevent reverse scroll sticking
+    if (this.rafId) {
+      cancelAnimationFrame(this.rafId);
     }
+    this.isScrolling = true;
     this.animate();
     
     // Store SENTENCE_DEPTH_DISTANCE for use in updateTextPositions
@@ -113,8 +115,8 @@ class SequentialTypographyTunnel {
     this.updateTextPositions();
     
     const scrollDiff = Math.abs(this.targetScrollY - this.scrollY);
-    // Always continue animating to prevent frame sticking
-    if (scrollDiff > 0.0001) {
+    // Always keep animating to prevent any sticking
+    if (scrollDiff > 0.000001 || this.isScrolling) {
       this.rafId = requestAnimationFrame(() => this.animate());
     } else {
       // Snap to final position
@@ -134,21 +136,24 @@ class SequentialTypographyTunnel {
     // Determine active sentence index
     const activeSentenceIndex = Math.max(0, Math.min(sentenceIndex, this.totalSentences - 1));
     
-    // Dynamic threshold based on scroll direction
-    const sentenceChangeThreshold = 0.2; // Wider threshold to prevent sticking
+    // Asymmetric thresholds - more aggressive for reverse to prevent sticking
+    const forwardThreshold = 0.3;
+    const backwardThreshold = 0.7;
     
-    // Detect scroll direction
-    const isMovingForward = activeSentenceIndex >= this.currentSentenceIndex;
+    // Detect scroll direction based on target vs current with hysteresis
+    const targetSentenceFloat = this.targetScrollY * this.totalSentences;
+    const scrollVelocity = targetSentenceFloat - (this.scrollY * this.totalSentences);
+    const isMovingForward = scrollVelocity >= -0.001; // Small tolerance for stability
     
     if (activeSentenceIndex !== this.currentSentenceIndex) {
       let shouldChange = false;
       
       if (isMovingForward) {
-        // Moving forward
-        shouldChange = withinSentenceProgress > sentenceChangeThreshold;
+        // Moving forward - need to pass threshold
+        shouldChange = withinSentenceProgress > forwardThreshold;
       } else {
-        // Moving backward
-        shouldChange = withinSentenceProgress < (1 - sentenceChangeThreshold);
+        // Moving backward - more aggressive threshold
+        shouldChange = withinSentenceProgress < (1 - backwardThreshold);
       }
       
       if (shouldChange) {
@@ -246,7 +251,6 @@ const TunnelAnimation = ({ sectionRef }) => {
   const animationFrameRef = useRef(null);
   const centralTextInstanceRef = useRef(null);
   
-  const [scrollPosition, setScrollPosition] = useState(0);
   const [currentSentence, setCurrentSentence] = useState(1);
   const [isInView, setIsInView] = useState(false);
   const [fadeIn, setFadeIn] = useState(false);
@@ -255,53 +259,42 @@ const TunnelAnimation = ({ sectionRef }) => {
   const currentTranslationRef = useRef(0);
   const targetTranslationRef = useRef(0);
   const isLoadedRef = useRef(false);
-  const sectionTopRef = useRef(0);
   
   // 🎯 MAIN CONTROLS - Optimized for ultra-smooth animation
   const TOTAL_SECTION_HEIGHT = 2800;     // Increased for more gradual scrolling
-  const ANIMATION_START_DELAY = 0.01;    // Start almost immediately
-  const ANIMATION_END_EARLY = 0.98;      // End near the bottom
   const TUNNEL_SPEED_MULTIPLIER = 0.22;  // Even slower for ultra-smooth movement
-  const SENTENCE_DEPTH_DISTANCE = 8;     // Consistent depth per sentence
   
   const sectionHeightRef = useRef(TOTAL_SECTION_HEIGHT);
-  const smoothingFactor = 0.12; // Increased smoothing for 3D tunnel
+  const smoothingFactor = 0.2; // Increased for smoother bidirectional scrolling
   
-  const tunnelTextContent = [
-    'EXPERIENCE', 'EXPERIENCE', 'EXPERIENCE', 'EXPERIENCE',
-    'EXPERIENCE', 'EXPERIENCE', 'EXPERIENCE', 'EXPERIENCE',
-    'EXPERIENCE', 'EXPERIENCE', 'EXPERIENCE', 'EXPERIENCE',
-    'EXPERIENCE', 'EXPERIENCE', 'EXPERIENCE', 'EXPERIENCE',
-    'EXPERIENCE', 'EXPERIENCE', 'EXPERIENCE', 'EXPERIENCE',
-    'EXPERIENCE', 'EXPERIENCE', 'EXPERIENCE', 'EXPERIENCE',
-    'EXPERIENCE', 'EXPERIENCE', 'EXPERIENCE', 'EXPERIENCE',
-    'EXPERIENCE', 'EXPERIENCE', 'EXPERIENCE', 'EXPERIENCE',
-    'EXPERIENCE', 'EXPERIENCE', 'EXPERIENCE', 'EXPERIENCE',
-    'EXPERIENCE', 'EXPERIENCE', 'EXPERIENCE', 'EXPERIENCE',
-    'EXPERIENCE', 'EXPERIENCE', 'EXPERIENCE', 'EXPERIENCE',
-    'EXPERIENCE', 'EXPERIENCE', 'EXPERIENCE', 'EXPERIENCE',
-    'EXPERIENCE', 'EXPERIENCE', 'EXPERIENCE', 'EXPERIENCE',
-  ];
+  const isMobileDevice = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  const textCount = isMobileDevice ? 60 : 100; // Increased for longer tunnel
+
+  const tunnelTextContent = useRef(Array(textCount).fill('EXPERIENCE')).current;
 
   // Create 3D text mesh with grey starting color
   const createText3DMesh = useCallback((text, position, rotation) => {
     const canvas = document.createElement('canvas');
     const context = canvas.getContext('2d');
     
-    const pixelRatio = window.devicePixelRatio || 1;
-    canvas.width = 2048 * pixelRatio;
-    canvas.height = 512 * pixelRatio;
-    
-    context.scale(pixelRatio, pixelRatio);
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    const maxPixelRatio = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 2);
+    const baseSize = isMobile ? 1024 : 2048;
+
+    canvas.width = baseSize * maxPixelRatio;
+    canvas.height = (baseSize / 4) * maxPixelRatio;
+
+    context.scale(maxPixelRatio, maxPixelRatio);
     context.clearRect(0, 0, canvas.width, canvas.height);
     
     context.fillStyle = 'white';
-    context.font = 'normal 400 480px "Bebas Neue", sans-serif';
+    const fontSize = isMobile ? 240 : 480;
+    context.font = `normal 400 ${fontSize}px "Bebas Neue", Arial, sans-serif`;
     context.textAlign = 'center';
     context.textBaseline = 'middle';
     
-    const centerX = (canvas.width / pixelRatio) / 2;
-    const centerY = (canvas.height / pixelRatio) / 2;
+    const centerX = (canvas.width / maxPixelRatio) / 2;
+    const centerY = (canvas.height / maxPixelRatio) / 2;
     context.fillText(text, centerX, centerY);
     
     const texture = new THREE.CanvasTexture(canvas);
@@ -357,13 +350,15 @@ const TunnelAnimation = ({ sectionRef }) => {
       textGroupFloorRef.current.add(floorMesh);
       textMeshesRef.current.push(floorMesh);
     });
-  }, [createText3DMesh]);
+  }, [createText3DMesh, tunnelTextContent]);
 
   // Update smooth scroll with color transition
   const updateSmoothScroll = useCallback(() => {
     if (!isLoadedRef.current || !isInView) return;
     
     const translationDiff = targetTranslationRef.current - currentTranslationRef.current;
+    
+    // Always animate smoothly, never snap abruptly during scroll
     currentTranslationRef.current += translationDiff * smoothingFactor;
     
     if (textGroupCeilingRef.current && textGroupFloorRef.current) {
@@ -409,7 +404,7 @@ const TunnelAnimation = ({ sectionRef }) => {
         }
       }
     });
-  }, [isInView]);
+  }, [isInView, smoothingFactor]);
 
   // Animation loop
   const animate = useCallback(() => {
@@ -432,11 +427,31 @@ const TunnelAnimation = ({ sectionRef }) => {
     camera.position.set(0, 0, 0);
     cameraRef.current = camera;
     
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setClearColor(0x000000);
-    containerRef.current.appendChild(renderer.domElement);
-    rendererRef.current = renderer;
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+    try {
+      const renderer = new THREE.WebGLRenderer({ 
+        antialias: !isMobile,
+        alpha: false,
+        powerPreference: isMobile ? 'low-power' : 'high-performance',
+        failIfMajorPerformanceCaveat: false
+      });
+      
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile ? 1.5 : 2));
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setClearColor(0x000000);
+      containerRef.current.appendChild(renderer.domElement);
+      rendererRef.current = renderer;
+    } catch (error) {
+      console.error('WebGL initialization failed:', error);
+      if (containerRef.current) {
+        const fallbackDiv = document.createElement('div');
+        fallbackDiv.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);color:#E8FFCC;font-size:1.5rem;text-align:center;padding:2rem;';
+        fallbackDiv.textContent = 'Your device does not support 3D graphics for this experience.';
+        containerRef.current.appendChild(fallbackDiv);
+      }
+      return;
+    }
     
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
     scene.add(ambientLight);
@@ -505,10 +520,6 @@ const TunnelAnimation = ({ sectionRef }) => {
         }
       }
       
-      // Update scroll position for progress bar (0 to 100%)
-      const scrollPercent = normalizedScrollProgress * 100;
-      setScrollPosition(scrollPercent);
-      
       // Update 3D tunnel animation
       const scrollMultiplier = TUNNEL_SPEED_MULTIPLIER;
       targetTranslationRef.current = clampedProgress * scrollMultiplier;
@@ -523,7 +534,7 @@ const TunnelAnimation = ({ sectionRef }) => {
         setFadeIn(false);
       }
     }
-  }, [sectionRef, fadeIn]);
+  }, [sectionRef, fadeIn, TUNNEL_SPEED_MULTIPLIER]);
 
   // Handle window resize
   const handleResize = useCallback(() => {
@@ -536,6 +547,8 @@ const TunnelAnimation = ({ sectionRef }) => {
 
   // Setup event listeners
   useEffect(() => {
+    const containerElement = containerRef.current; // Capture ref value for cleanup
+    
     initScene();
     
     const scrollHandler = { passive: true };
@@ -557,9 +570,22 @@ const TunnelAnimation = ({ sectionRef }) => {
         centralTextInstanceRef.current.destroy();
       }
       
-      if (rendererRef.current && containerRef.current) {
-        containerRef.current.removeChild(rendererRef.current.domElement);
+      if (rendererRef.current) {
+        textMeshesRef.current.forEach(mesh => {
+          if (mesh.geometry) mesh.geometry.dispose();
+          if (mesh.material) {
+            if (mesh.material.map) mesh.material.map.dispose();
+            mesh.material.dispose();
+          }
+        });
+        
+        if (containerElement && rendererRef.current.domElement.parentNode === containerElement) {
+          containerElement.removeChild(rendererRef.current.domElement);
+        }
+        
         rendererRef.current.dispose();
+        rendererRef.current.forceContextLoss();
+        rendererRef.current = null;
       }
     };
   }, [initScene, updateScrollTarget, handleResize]);

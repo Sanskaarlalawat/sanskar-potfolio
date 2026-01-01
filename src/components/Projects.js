@@ -1,5 +1,13 @@
 import React, { useRef, useEffect, useLayoutEffect, useState } from "react";
-import { ExternalLink, Zap, Globe, Database, Smartphone } from "lucide-react";
+import {
+  Database,
+  Zap,
+  Eye,
+  MessageCircle,
+  UserCheck,
+  Bot,
+  ExternalLink
+} from "lucide-react";
 
 const Projects = () => {
   const stackAreaRef = useRef(null);
@@ -10,56 +18,102 @@ const Projects = () => {
   const leftBottomTextRef = useRef(null);
   const rightBottomTextRef = useRef(null);
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [mode, setMode] = useState("top"); // 'top' | 'fixed' | 'bottom'
+  const [mode, setMode] = useState("top");
   const [isInitialized, setIsInitialized] = useState(false);
   const [textScrollProgress, setTextScrollProgress] = useState(0);
+  const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
 
   const projects = [
     {
       id: 1,
-      title: "AI Dashboard",
-      subtitle: "Machine Learning Platform",
-      description: "A comprehensive AI-powered dashboard that analyzes user behavior and provides intelligent insights for business growth.",
+      title: "IAS SATHI",
+      subtitle: "AI-Driven IAS Preparation Platform",
+      description: "An end-to-end AI-powered platform for IAS aspirants featuring chatbot assistance, answer evaluation, OCR, speech-to-text, flowchart-based guidance, and test series.",
       category: "Web Application",
-      tags: ["React", "Python", "TensorFlow"],
-      bgColor: "linear-gradient(135deg,#667eea 0%,#764ba2 100%)",
-      icon: <Database className="w-8 h-8" />
+      tags: ["Python", "Django", "LLMs", "AWS"],
+      bgColor: "linear-gradient(135deg, #85B9A5 0%, #7FA6A8 100%)",
+      icon: <Database className="w-6 h-6 md:w-8 md:h-8" />
     },
     {
       id: 2,
-      title: "E-Commerce Mobile",
-      subtitle: "Cross-Platform Shopping App",
-      description: "A modern mobile shopping experience with AR try-on features and personalized recommendations.",
-      category: "Mobile App",
-      tags: ["React Native", "Node.js", "Stripe"],
-      bgColor: "linear-gradient(135deg,#f093fb 0%,#f5576c 100%)",
-      icon: <Smartphone className="w-8 h-8" />
+      title: "NCERT AI Chatbot",
+      subtitle: "Vector-Based Knowledge System",
+      description: "GPT-powered chatbot using vector databases to answer NCERT-based UPSC queries with high contextual accuracy.",
+      category: "AI System",
+      tags: ["GPT-4o", "Vector DB", "Python"],
+      bgColor: "linear-gradient(135deg, #7FA6A8 0%, #7A8FA6 100%)",
+      icon: <Zap className="w-6 h-6 md:w-8 md:h-8" />
     },
     {
       id: 3,
-      title: "SaaS Analytics",
-      subtitle: "Business Intelligence Tool",
-      description: "Advanced analytics platform helping businesses track KPIs and generate reports.",
-      category: "SaaS Platform",
-      tags: ["Vue.js", "Django", "PostgreSQL"],
-      bgColor: "linear-gradient(135deg,#a8edea 0%,#fed6e3 100%)",
-      icon: <Zap className="w-8 h-8" />
+      title: "Object Detection System",
+      subtitle: "Computer Vision Surveillance",
+      description: "Large-scale object detection system deployed across 100+ locations using custom-trained models on 1000+ images.",
+      category: "Computer Vision",
+      tags: ["OpenCV", "OpenVINO", "Ultralytics"],
+      bgColor: "linear-gradient(135deg, #7A8FA6 0%, #8B7FB8 100%)",
+      icon: <Eye className="w-6 h-6 md:w-8 md:h-8" />
     },
     {
       id: 4,
-      title: "Social Platform",
-      subtitle: "Community Hub",
-      description: "Next-generation social platform with real-time messaging and community features.",
-      category: "Social Network",
-      tags: ["Next.js", "GraphQL", "Redis"],
-      bgColor: "linear-gradient(135deg,#ffecd2 0%,#fcb69f 100%)",
-      icon: <Globe className="w-8 h-8" />
+      title: "WhatsApp Chat Analysis",
+      subtitle: "NLP & Behavioral Insights",
+      description: "NLP-based analytics tool extracting engagement patterns and user behavior from WhatsApp conversations.",
+      category: "Data Science",
+      tags: ["Python", "NLP", "ML"],
+      bgColor: "linear-gradient(135deg, #8B7FB8 0%, #7C5AA3 100%)",
+      icon: <MessageCircle className="w-6 h-6 md:w-8 md:h-8" />
+    },
+    {
+      id: 5,
+      title: "Face Recognition System",
+      subtitle: "Real-Time CV Application",
+      description: "Real-time face recognition system with 95% accuracy using deep learning and live camera integration.",
+      category: "Computer Vision",
+      tags: ["TensorFlow", "OpenCV"],
+      bgColor: "linear-gradient(135deg, #7C5AA3 0%, #6D3B91 100%)",
+      icon: <UserCheck className="w-6 h-6 md:w-8 md:h-8" />
+    },
+    {
+      id: 6,
+      title: "Web Feature Extraction Bot",
+      subtitle: "AI Automation Tool",
+      description: "ChatGPT-powered bot that scrapes websites and extracts structured features in real time.",
+      category: "AI Automation",
+      tags: ["ChatGPT API", "Web Scraping"],
+      bgColor: "linear-gradient(135deg, #6D3B91 0%, #5A2F78 100%)",
+      icon: <Bot className="w-6 h-6 md:w-8 md:h-8" />
     }
   ];
 
-  // Enhanced text animation function - letter by letter
+  // Get device type
+  const getDeviceType = () => {
+    const width = windowSize.width;
+    if (width < 640) return 'mobile';
+    if (width < 1024) return 'tablet';
+    return 'desktop';
+  };
+
+  const deviceType = getDeviceType();
+  const isMobile = deviceType === 'mobile';
+  const isTablet = deviceType === 'tablet';
+  const isDesktop = deviceType === 'desktop';
+
+  // Get card dimensions based on device
+  const getCardDimensions = () => {
+    if (isMobile) {
+      return { width: 260, height: 300 };
+    }
+    if (isTablet) {
+      return { width: 320, height: 440 };
+    }
+    return { width: 400, height: 480 };
+  };
+
+  const cardDimensions = getCardDimensions();
+
+  // Enhanced text animation function
   const animateTextLetters = (progress) => {
-    // Animate main hero text
     const heroText = heroTextRef.current;
     if (heroText) {
       const letters = heroText.querySelectorAll('.letter');
@@ -71,10 +125,10 @@ const Projects = () => {
           const letterStart = index;
           const letterEnd = index + 1;
           
-          let color = '#202327ff'; // dark grey
+          let color = '#202327ff';
           
           if (letterProgress >= letterEnd) {
-            color = '#ffffff'; // white
+            color = '#ffffff';
           } else if (letterProgress > letterStart) {
             const localProgress = letterProgress - letterStart;
             const darkGrey = [75, 85, 99];
@@ -93,22 +147,21 @@ const Projects = () => {
       }
     }
 
-    // Animate left bottom text
     const leftBottomText = leftBottomTextRef.current;
     if (leftBottomText) {
       const letters = leftBottomText.querySelectorAll('.letter');
       if (letters.length) {
         const totalLetters = letters.length;
-        const letterProgress = Math.max(0, (progress - 0.3) * 1.4) * totalLetters; // Start later, faster
+        const letterProgress = Math.max(0, (progress - 0.3) * 1.4) * totalLetters;
 
         letters.forEach((letter, index) => {
           const letterStart = index;
           const letterEnd = index + 1;
           
-          let color = '#202327ff'; // grey-500 (starting color)
+          let color = '#202327ff';
           
           if (letterProgress >= letterEnd) {
-            color = '#ffffff'; // white
+            color = '#ffffff';
           } else if (letterProgress > letterStart) {
             const localProgress = letterProgress - letterStart;
             const grey = [107, 114, 128];
@@ -127,22 +180,21 @@ const Projects = () => {
       }
     }
 
-    // Animate right bottom text
     const rightBottomText = rightBottomTextRef.current;
     if (rightBottomText) {
       const letters = rightBottomText.querySelectorAll('.letter');
       if (letters.length) {
         const totalLetters = letters.length;
-        const letterProgress = Math.max(0, (progress - 0.5) * 2) * totalLetters; // Start even later, fastest
+        const letterProgress = Math.max(0, (progress - 0.5) * 2) * totalLetters;
 
         letters.forEach((letter, index) => {
           const letterStart = index;
           const letterEnd = index + 1;
           
-          let color = '#6b7280'; // grey-500 (starting color)
+          let color = '#6b7280';
           
           if (letterProgress >= letterEnd) {
-            color = '#ffffff'; // white
+            color = '#ffffff';
           } else if (letterProgress > letterStart) {
             const localProgress = letterProgress - letterStart;
             const grey = [107, 114, 128];
@@ -162,7 +214,6 @@ const Projects = () => {
     }
   };
 
-  // Wrap text in spans for letter-by-letter animation
   const wrapLettersInSpans = (text, startingColor = '#4b5563') => {
     return text.split('').map((char, index) => (
       <span 
@@ -175,14 +226,13 @@ const Projects = () => {
     ));
   };
 
-  // rotate/fly-away logic (safe checks) - optimized for smoothness
   const rotateCards = (cards) => {
     if (!cards || !cards.length) return;
     let angle = 0;
-    const baseRotation = -8;
+    const baseRotation = isMobile ? -5 : isTablet ? -6 : -8;
+    const verticalOffset = isMobile ? 15 : isTablet ? 20 : 25;
     const total = cards.length;
     
-    // Use transform3d for hardware acceleration
     for (let i = 0; i < total; i++) {
       const card = cards[i];
       if (!card || !(card instanceof HTMLElement)) continue;
@@ -192,38 +242,45 @@ const Projects = () => {
           card.style.opacity = "0";
           card.style.pointerEvents = "none";
         } else {
-          const scale = Math.max(0.84, 1 - i * 0.02);
+          const scale = Math.max(0.85, 1 - i * 0.03);
+          const translateY = i * verticalOffset;
           card.style.transform = `translate3d(0, 0, 0) rotateZ(${angle}deg) scale3d(${scale}, ${scale}, 1)`;
           card.style.opacity = "1";
           card.style.pointerEvents = "auto";
           card.style.zIndex = `${1000 + (total - i)}`;
           angle += baseRotation;
         }
-        // Use longer transition for smoother animation
         card.style.transition = "all 0.8s cubic-bezier(0.23, 1, 0.32, 1)";
       } catch (e) {
-        // ignore single-card failures
         continue;
       }
     }
   };
 
-  // Force scroll to top on component mount
+  // Track window size
   useLayoutEffect(() => {
-    // Reset scroll position on page load/refresh
+    const updateSize = () => {
+      setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+    };
+    
+    updateSize();
+    window.addEventListener('resize', updateSize);
+    
+    return () => window.removeEventListener('resize', updateSize);
+  }, []);
+
+  useLayoutEffect(() => {
     window.scrollTo(0, 0);
     
-    // Small delay to ensure DOM is ready
     setTimeout(() => {
       rotateCards(cardRefs.current.filter(Boolean));
       setIsInitialized(true);
-      // Initialize text animation
       animateTextLetters(0);
     }, 50);
   }, []);
 
   useEffect(() => {
-    if (!stackAreaRef.current || !isInitialized) return;
+    if (!stackAreaRef.current || !isInitialized || windowSize.width === 0) return;
     let ticking = false;
     let lastScrollY = 0;
 
@@ -233,7 +290,6 @@ const Projects = () => {
 
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
       
-      // Throttle scroll updates for smoother performance
       if (Math.abs(scrollTop - lastScrollY) < 1) return;
       lastScrollY = scrollTop;
 
@@ -242,25 +298,20 @@ const Projects = () => {
       const stackHeight = stackArea.offsetHeight;
       const windowHeight = window.innerHeight;
 
-      // Text gradient animation progress - enhanced for letter-by-letter effect with smoother progress
       const heroHeight = windowHeight;
-      const textProgress = Math.min(1, Math.max(0, scrollTop / (heroHeight * 1.5))); // Increased multiplier for smoother progression
+      const textProgress = Math.min(1, Math.max(0, scrollTop / (heroHeight * 1.5)));
       setTextScrollProgress(textProgress);
       
-      // Apply letter-by-letter animation
       animateTextLetters(textProgress);
 
-      // compute start and end for "fixed" zone
       const start = stackTopDoc;
       const end = stackTopDoc + Math.max(0, stackHeight - windowHeight);
 
-      // progress 0..1 with smoother interpolation
       const maxScroll = Math.max(1, end - start);
       const scrollWithinStack = scrollTop - start;
       const progress = Math.max(0, Math.min(1, scrollWithinStack / maxScroll));
       setScrollProgress(progress);
 
-      // determine overall mode and set once
       if (scrollTop < start) {
         setMode("top");
       } else if (scrollTop >= start && scrollTop <= end) {
@@ -269,13 +320,10 @@ const Projects = () => {
         setMode("bottom");
       }
 
-      // decide which cards fly away based on thresholds with smoother transitions
       const cards = cardRefs.current.filter((c) => c && c instanceof HTMLElement);
       if (cards.length) {
         const totalCards = cards.length;
         const cardThreshold = maxScroll / Math.max(1, totalCards);
-        
-        // Add hysteresis to prevent flickering
         const hysteresis = cardThreshold * 0.1;
         
         for (let i = 0; i < totalCards; i++) {
@@ -303,7 +351,6 @@ const Projects = () => {
       }
     };
 
-    // run once to set initial state
     handleScroll();
 
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -312,15 +359,92 @@ const Projects = () => {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
     };
-  }, [isInitialized]);
+  }, [isInitialized, windowSize, isMobile, isTablet]);
 
-  // compute wrapper style (used for both left & right wrappers)
   const computeWrapperStyle = (isLeft = false) => {
     const stackEl = stackAreaRef.current;
     if (!stackEl) return {};
     const stackHeight = stackEl.offsetHeight || 0;
     const windowHeight = window.innerHeight || 0;
 
+    // Mobile & Tablet: Stack vertically
+    if (isMobile || isTablet) {
+      const baseStyle = {
+        width: "100%",
+        display: "flex",
+        alignItems: "flex-end",
+        justifyContent: "center",
+        padding: isMobile ? "2rem 1.5rem 1rem" : "2.5rem 2rem 1.5rem",
+        willChange: "transform, position",
+        transform: "translate3d(0, 0, 0)"
+      };
+
+      if (isLeft) {
+        // Left wrapper for mobile/tablet
+        if (mode === "top") {
+          return {
+            ...baseStyle,
+            position: "absolute",
+            top: 0,
+            left: 0,
+            height: "45vh",
+            zIndex: 20
+          };
+        } else if (mode === "fixed") {
+          return {
+            ...baseStyle,
+            position: "fixed",
+            top: 0,
+            left: 0,
+            height: "45vh",
+            zIndex: 999
+          };
+        } else {
+          const top = Math.max(0, stackHeight - windowHeight);
+          return {
+            ...baseStyle,
+            position: "absolute",
+            top: `${top}px`,
+            left: 0,
+            height: "45vh",
+            zIndex: 20
+          };
+        }
+      } else {
+        // Right wrapper for mobile/tablet
+        if (mode === "top") {
+          return {
+            ...baseStyle,
+            position: "absolute",
+            top: "50vh",
+            left: 0,
+            height: "45vh",
+            zIndex: 20
+          };
+        } else if (mode === "fixed") {
+          return {
+            ...baseStyle,
+            position: "fixed",
+            top: "50vh",
+            left: 0,
+            height: "45vh",
+            zIndex: 999
+          };
+        } else {
+          const top = Math.max(0, stackHeight - windowHeight) + windowHeight * 0.5;
+          return {
+            ...baseStyle,
+            position: "absolute",
+            top: `${top}px`,
+            left: 0,
+            height: "45vh",
+            zIndex: 20
+          };
+        }
+      }
+    }
+
+    // Desktop: Side by side (original behavior)
     const baseStyle = {
       width: "50%",
       height: "100vh",
@@ -329,9 +453,7 @@ const Projects = () => {
       justifyContent: isLeft ? "flex-start" : "center",
       paddingLeft: isLeft ? "3rem" : undefined,
       paddingRight: !isLeft ? "3rem" : undefined,
-      // Add will-change for better performance
       willChange: "transform, position",
-      // Use transform3d for hardware acceleration
       transform: "translate3d(0, 0, 0)"
     };
 
@@ -353,7 +475,7 @@ const Projects = () => {
         top: 0,
         zIndex: 999
       };
-    } else { // bottom
+    } else {
       const top = Math.max(0, stackHeight - windowHeight);
       return {
         ...baseStyle,
@@ -397,13 +519,12 @@ const Projects = () => {
         }
         .bebas-font { font-family: 'Bebas Neue', sans-serif; }
         
-        /* Optimize smooth scrolling performance */
         * {
+          font-family: 'Bebas Neue', sans-serif;
           -webkit-font-smoothing: antialiased;
           -moz-osx-font-smoothing: grayscale;
         }
         
-        /* Hardware acceleration for better performance */
         .smooth-transform {
           transform: translate3d(0, 0, 0);
           will-change: transform;
@@ -412,18 +533,16 @@ const Projects = () => {
         }
       `}</style>
       
-      {/* HERO - Dark Design with Enhanced Letter Animation */}
+      {/* HERO */}
       <div className="h-screen flex items-center justify-center bg-black relative overflow-hidden smooth-transform">
-        {/* Background blur effect */}
         <div className="absolute inset-0">
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gray-800 rounded-full blur-3xl opacity-30"></div>
         </div>
 
-        {/* Main content with animated text - full width left aligned */}
-        <div className="w-full relative z-10 pl-8 pr-16 smooth-transform">
+        <div className="w-full relative z-10 px-4 sm:px-6 md:px-8 lg:pl-8 lg:pr-16 smooth-transform">
           <h1 
             ref={heroTextRef}
-            className="bebas-font text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-normal mb-12 leading-none text-left max-w-none uppercase tracking-wide smooth-transform"
+            className="bebas-font text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-normal mb-8 sm:mb-10 md:mb-12 leading-none text-left max-w-none uppercase tracking-wide smooth-transform"
           >
             {wrapLettersInSpans(heroText)}{" "}
             <span 
@@ -435,93 +554,99 @@ const Projects = () => {
           </h1>
         </div>
 
-        {/* Bottom content with animated text */}
-        <div className="absolute bottom-8 left-8 right-8 flex justify-between items-end smooth-transform">
+        <div className="absolute bottom-10 sm:bottom-6 md:bottom-8 left-4 sm:left-6 md:left-8 right-4 sm:right-6 md:right-8 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 sm:gap-0 smooth-transform pb-16 sm:pb-0">
           <div 
             ref={leftBottomTextRef}
-            className="bebas-font text-lg md:text-xl leading-relaxed max-w-sm uppercase tracking-wide"
+            className="bebas-font text-base sm:text-lg md:text-xl leading-relaxed max-w-sm uppercase tracking-wide"
           >
             {wrapLettersInSpans(leftBottomText, '#6b7280')}
           </div>
           <div 
             ref={rightBottomTextRef}
-            className="bebas-font text-lg md:text-xl leading-relaxed max-w-sm text-right uppercase tracking-wide"
+            className="bebas-font text-base sm:text-lg md:text-xl leading-relaxed max-w-sm sm:text-right uppercase tracking-wide"
           >
             {wrapLettersInSpans(rightBottomText, '#6b7280')}
           </div>
         </div>
       </div>
 
-      {/* STACK AREA - Dark theme */}
+      {/* STACK AREA */}
       <div className="relative bg-black">
         <div
           ref={stackAreaRef}
           className="w-full relative bg-black"
-          style={{ height: `${50 + projects.length * 60}vh` }}
+          style={{ height: `${50 + projects.length * (isMobile ? 80 : isTablet ? 70 : 60)}vh` }}
         >
-          {/* LEFT wrapper controlled by JS */}
+          {/* LEFT wrapper */}
           <div ref={leftWrapperRef} style={leftStyle} className="smooth-transform">
-            <div style={{ maxWidth: 560 }}>
-              <h3 className="text-4xl md:text-6xl font-bold text-white leading-tight mb-6">Our Projects</h3>
-              <p className="text-gray-400 text-lg leading-relaxed mb-8">
+            <div className={`${isMobile || isTablet ? 'w-full text-center' : ''}`} style={{ maxWidth: isMobile || isTablet ? '100%' : 560 }}>
+              <h3 className="text-3xl sm:text-4xl md:text-5xl lg:text-8xl font-bold text-white leading-tight mb-4 sm:mb-5 md:mb-6">Our Projects</h3>
+              <p className="text-gray-400 text-base sm:text-lg md:text-2xl lg:text-3xlleading-relaxed mb-6 sm:mb-7 md:mb-8">
                 Each project represents a unique challenge solved with innovative thinking, cutting-edge technology, and meticulous attention to detail. Scroll to explore our featured work.
               </p>
-              <button className="bg-white text-black px-8 py-4 rounded-full font-semibold text-lg hover:bg-gray-200 transition-all duration-300 ease-out flex items-center gap-2 transform hover:scale-105">
-                View All Projects <ExternalLink className="w-5 h-5" />
-              </button>
+              {/* <button className="bg-white text-black px-6 sm:px-7 md:px-8 py-3 sm:py-3.5 md:py-4 rounded-full font-semibold text-base sm:text-lg hover:bg-gray-200 transition-all duration-300 ease-out flex items-center gap-2 transform hover:scale-105 mx-auto lg:mx-0">
+                View All Projects <ExternalLink className="w-4 h-4 sm:w-5 sm:h-5" />
+              </button> */}
             </div>
           </div>
 
-          {/* RIGHT wrapper controlled by JS */}
+          {/* RIGHT wrapper */}
           <div ref={rightWrapperRef} style={rightStyle} className="smooth-transform">
-            <div style={{ width: 400, height: 480, position: "relative" }}>
+            <div style={{ 
+                width: cardDimensions.width, 
+                height: cardDimensions.height, 
+                position: "relative",
+                paddingTop: isMobile ? '20px' : isTablet ? '30px' : '40px'
+              }}>
               {projects.map((project, index) => (
                 <div
                   key={project.id}
                   ref={(el) => (cardRefs.current[index] = el)}
-                  className="project-card absolute inset-0 w-96 h-[30rem] rounded-3xl shadow-2xl cursor-pointer hover:scale-105"
+                  className="project-card absolute inset-0 rounded-2xl sm:rounded-3xl shadow-2xl cursor-pointer hover:scale-105"
                   style={{ 
                     background: project.bgColor, 
                     transformOrigin: "center bottom",
-                    transform: "translate3d(0, 0, 0)"
+                    transform: "translate3d(0, 0, 0)",
+                    width: cardDimensions.width,
+                    height: cardDimensions.height
                   }}
                 >
-                  <div className="relative h-full p-8 flex flex-col justify-between text-white overflow-hidden">
+                  <div className="relative h-full p-5 sm:p-6 md:p-8 flex flex-col justify-between text-gray-900 overflow-hidden">
                     <div className="absolute inset-0 opacity-10">
-                      <div className="absolute top-0 right-0 w-32 h-32 bg-white rounded-full transform translate-x-16 -translate-y-16" />
-                      <div className="absolute bottom-0 left-0 w-24 h-24 bg-white rounded-full transform -translate-x-12 translate-y-12" />
+                      <div className="absolute top-0 right-0 w-24 sm:w-28 md:w-32 h-24 sm:h-28 md:h-32 bg-black rounded-full transform translate-x-12 sm:translate-x-14 md:translate-x-16 -translate-y-12 sm:-translate-y-14 md:-translate-y-16" />
+                      <div className="absolute bottom-0 left-0 w-20 sm:w-22 md:w-24 h-20 sm:h-22 md:h-24 bg-black rounded-full transform -translate-x-10 sm:-translate-x-11 md:-translate-x-12 translate-y-10 sm:translate-y-11 md:translate-y-12" />
                     </div>
 
                     <div className="relative z-10">
-                      <div className="flex justify-between items-start mb-4">
-                        <span className="text-white/80 text-sm font-bold uppercase tracking-wider">{String(index + 1).padStart(2, "0")}</span>
-                        <div className="text-white/90">{project.icon}</div>
+                      <div className="flex justify-between items-start mb-3 sm:mb-4">
+                        <span className="text-gray-800 text-xs sm:text-sm font-bold uppercase tracking-wider">{String(index + 1).padStart(2, "0")}</span>
+                        <div className="text-gray-900">{project.icon}</div>
                       </div>
-                      <div className="mb-4">
-                        <span className="inline-block px-3 py-1 bg-white/20 rounded-full text-xs font-medium text-white/90 mb-3">{project.category}</span>
+                      <div className="mb-3 sm:mb-4">
+                        <span className="inline-block px-2.5 sm:px-3 py-0.5 sm:py-1 bg-black/20 rounded-full text-xs font-medium text-gray-900 mb-2 sm:mb-3">{project.category}</span>
                       </div>
                     </div>
 
                     <div className="relative z-10 flex-1 flex flex-col justify-center">
-                      <h3 className="text-2xl font-bold mb-3 leading-tight">{project.title}</h3>
-                      <p className="text-white/90 font-medium mb-4">{project.subtitle}</p>
-                      <p className="text-white/80 text-sm leading-relaxed mb-6 line-clamp-3">{project.description}</p>
+                      <h3 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-3 leading-tight text-gray-900">{project.title}</h3>
+                      <p className="text-gray-800 font-medium mb-3 sm:mb-4 text-sm sm:text-base">{project.subtitle}</p>
+                      <p className="text-gray-700 text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6 line-clamp-3">{project.description}</p>
                     </div>
 
                     <div className="relative z-10">
-                      <div className="flex flex-wrap gap-2 mb-4">
+                      <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-3 sm:mb-4">
                         {project.tags.slice(0, 2).map((tag, ti) => (
-                          <span key={ti} className="px-3 py-1 bg-white/10 rounded-full text-xs font-medium text-white/90">{tag}</span>
+                          <span key={ti} className="px-2.5 sm:px-3 py-0.5 sm:py-1 bg-black/20 rounded-full text-xs font-medium text-gray-900">{tag}</span>
                         ))}
                       </div>
 
-                      <div className="flex items-center text-white font-semibold hover:text-white/80 transition-colors duration-300">
+                      <div className="flex items-center text-gray-900 font-semibold hover:text-gray-700 transition-colors duration-300 text-sm sm:text-base">
                         <span className="mr-2">View Case Study</span>
-                        <ExternalLink className="w-4 h-4" />
+                        <ExternalLink className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                       </div>
                     </div>
 
-                    <div className="absolute bottom-4 right-4 w-8 h-8 bg-white/20 rounded-full" />
+                    <div className="absolute bottom-3 sm:bottom-4 right-3 sm:right-4 w-6 sm:w-7 md:w-8 h-6 sm:h-7 md:h-8 bg-black/20 rounded-full" />
                   </div>
                 </div>
               ))}
@@ -529,8 +654,6 @@ const Projects = () => {
           </div>
         </div>
       </div>
-
-      {/* Progress bar removed */}
     </section>
   );
 };

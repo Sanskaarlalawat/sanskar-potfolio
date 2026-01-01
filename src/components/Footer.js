@@ -16,7 +16,7 @@ const Footer = ({ contactRef }) => {
   return (
     <footer
       ref={contactRef}
-      className="bg-white text-black pt-20 pb-8 px-6 border-t border-gray-300"
+      className="bg-white text-black pt-20 pb-8 px-6"
       style={{
         animation: 'fadeIn 1s ease-out',
         fontFamily: "'Bebas Neue', cursive"

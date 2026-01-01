@@ -67,7 +67,6 @@
   transform: translate(-50%, -50%);
   z-index: 4;
   opacity: 0;
-  transform: translate(-50%, -40%);
   transition: all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1.8s;
 }
 
@@ -77,11 +76,11 @@
 }
 
 .hero-image {
-  width: 600px;
+  width: 90vw;
+  max-width: 620px;
   height: 640px;
   object-fit: cover;
   border-radius: 20px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
   filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0));
 }
 
@@ -195,40 +194,184 @@
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
+
+/* Tablets (Portrait and Landscape) - 768px to 1024px */
+@media (max-width: 1024px) and (min-width: 769px) {
   .hero-background-text {
-    font-size: clamp(4rem, 15vw, 8rem);
+    font-size: 36vw;
+    top: 50%;
+  }
+  
+  .hero-image-container {
+    top: 60%;
   }
   
   .hero-image {
-    width: 280px;
-    height: 350px;
+    width: 450px;
+    height: 500px;
   }
   
   .hero-titles {
-    bottom: 40px;
-    right: 30px;
+    bottom: 60px;
+    right: 40px;
+    gap: 8px;
   }
   
   .hero-tagline {
-    bottom: 40px;
+    bottom: 60px;
+    left: 40px;
+  }
+  
+  .hero-tagline p {
+    font-size: 24px;
+  }
+  
+  .title-item {
+    font-size: 14px;
+    padding: 10px 22px;
+  }
+}
+
+/* Tablets (Portrait) and Large Phones - 481px to 768px */
+@media (max-width: 768px) and (min-width: 481px) {
+  .hero-background-text {
+    font-size: 36vw;
+    top: 45%;
+    transform: translateY(-50%) scaleY(1.15);
+  }
+  
+  .hero-image-container {
+    top: 66%;
+  }
+  
+  .hero-image {
+    height: 500px;
+    border-radius: 16px;
+  }
+  
+  .hero-titles {
+    bottom: 50px;
+    right: 30px;
+    gap: 8px;
+  }
+  
+  .hero-tagline {
+    bottom: 50px;
     left: 30px;
   }
   
   .hero-tagline p {
-    font-size: 16px;
+    font-size: 20px;
+    line-height: 1.3;
+  }
+  
+  .title-item {
+    font-size: 13px;
+    padding: 10px 20px;
+    border-radius: 20px;
+  }
+}
+
+/* Mobile Phones (Large) - 376px to 480px */
+@media (max-width: 480px) and (min-width: 376px) {
+  .hero-background-text {
+    font-size: 38vw;
+    top: 38%;
+    transform: translateY(-50%) scaleY(1.2);
+    letter-spacing: -0.02em;
+  }
+  
+  .hero-image-container {
+    top: 63%;
+    weight:70px;
+  }
+  
+  .hero-image {
+    height: 520px;
+    border-radius: 14px;
+  }
+  
+  .hero-titles {
+    bottom: 40px;
+    right: 20px;
+    gap: 6px;
+  }
+  
+  .hero-tagline {
+    bottom: 40px;
+    left: 20px;
+  }
+  
+  .hero-tagline p {
+    font-size: 17px;
+    line-height: 1.3;
   }
   
   .title-item {
     font-size: 12px;
-    padding: 10px 20px;
+    padding: 8px 18px;
+    border-radius: 18px;
   }
 }
 
-@media (max-width: 480px) {
+/* Mobile Phones (Small) - up to 375px */
+@media (max-width: 375px) {
+  .hero-background-text {
+    font-size: 38vw;
+    top: 38%;
+    transform: translateY(-50%) scaleY(1.25);
+    letter-spacing: -0.03em;
+  }
+  
+  .hero-image-container {
+    top: 71%;
+  }
+  
   .hero-image {
-    width: 220px;
-    height: 280px;
+    
+    height: 380px;
+    border-radius: 12px;
+    align-self: center;
+  }
+  
+  .hero-titles {
+    bottom: 30px;
+    right: 16px;
+    gap: 6px;
+  }
+  
+  .hero-tagline {
+    bottom: 30px;
+    left: 16px;
+  }
+  
+  .hero-tagline p {
+    font-size: 15px;
+    line-height: 1.35;
+  }
+  
+  .title-item {
+    font-size: 11px;
+    padding: 8px 16px;
+    border-radius: 16px;
+  }
+}
+
+/* Landscape orientation adjustments for phones */
+@media (max-height: 500px) and (orientation: landscape) {
+  .hero-background-text {
+    font-size: 20vh;
+    top: 50%;
+  }
+  
+  .hero-image-container {
+    top: 50%;
+  }
+  
+  .hero-image {
+    
+    height: 60vh;
+    max-width: 280px;
   }
   
   .hero-titles {
@@ -239,5 +382,38 @@
   .hero-tagline {
     bottom: 20px;
     left: 20px;
+  }
+  
+  .hero-tagline p {
+    font-size: 14px;
+    line-height: 1.2;
+  }
+  
+  .title-item {
+    font-size: 11px;
+    padding: 6px 14px;
+  }
+}
+
+/* Extra small devices - 320px and below */
+@media (max-width: 320px) {
+  .hero-background-text {
+    font-size: 39vw;
+  }
+
+  .hero-image-container {
+    top: 70%;
+  }
+  .hero-image {
+    height: 440px;
+  }
+  
+  .hero-tagline p {
+    font-size: 13px;
+  }
+  
+  .title-item {
+    font-size: 10px;
+    padding: 7px 14px;
   }
 }
