@@ -65,6 +65,7 @@ const AIServicesCarousel = ({ sectionRef }) => {
           left: 50%;
           transform: translate(-50%, -50%);
           letter-spacing: 0.03em;
+          
         }
 
         /* 3D Scene Container */
