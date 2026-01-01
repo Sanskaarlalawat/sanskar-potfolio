@@ -32,10 +32,10 @@ const Header = ({
           {/* Logo */}
           <motion.div
             whileHover={{ scale: 1.05 }}
-            className="w-12 h-12 bg-black rounded-full flex items-center justify-center cursor-pointer"
+            className="w-12 h-12 rounded-full flex items-center justify-center cursor-pointer overflow-hidden bg-black"
             onClick={() => scrollToSection(heroRef)}
           >
-            <span className="text-white font-bold text-lg">S</span>
+            <img src="/logo.svg" alt="Logo" className="w-full h-full object-cover" />
           </motion.div>
 
           {/* Navigation */}
