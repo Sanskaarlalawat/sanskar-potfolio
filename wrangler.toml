@@ -1,5 +1,3 @@
 name = "sanskar-portfolio"
+pages_build_output_dir = "./build"
 compatibility_date = "2026-01-01"
-
-[site]
-bucket = "./build"
