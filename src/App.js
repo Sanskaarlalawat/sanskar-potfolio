@@ -42,7 +42,7 @@ const App = () => {
       )}
 
       {!loading && (
-        <div ref={containerRef} className="bg-white text-black min-h-screen overflow-x-hidden font-sans">
+        <div ref={containerRef} className="bg-white text-black min-h-screen font-sans">
           <Header 
             mobileMenuOpen={mobileMenuOpen}
             setMobileMenuOpen={setMobileMenuOpen}

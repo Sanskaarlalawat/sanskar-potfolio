@@ -17,6 +17,7 @@ const Projects = () => {
   const heroTextRef = useRef(null);
   const leftBottomTextRef = useRef(null);
   const rightBottomTextRef = useRef(null);
+  const introRef = useRef(null);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [mode, setMode] = useState("top");
   const [isInitialized, setIsInitialized] = useState(false);
@@ -298,8 +299,14 @@ const Projects = () => {
       const stackHeight = stackArea.offsetHeight;
       const windowHeight = window.innerHeight;
 
-      const heroHeight = windowHeight;
-      const textProgress = Math.min(1, Math.max(0, scrollTop / (heroHeight * 1.5)));
+      let textProgress = 0;
+      if (introRef.current) {
+        const introRect = introRef.current.getBoundingClientRect();
+        const startOffset = windowHeight * 0.8; // start when top reaches 90% of screen height
+        const distanceToAnimate = windowHeight * 0.9; // finish over exactly 60% of screen height scroll
+        textProgress = (startOffset - introRect.top) / distanceToAnimate;
+        textProgress = Math.min(1, Math.max(0, textProgress));
+      }
       setTextScrollProgress(textProgress);
       
       animateTextLetters(textProgress);
@@ -534,7 +541,7 @@ const Projects = () => {
       `}</style>
       
       {/* HERO */}
-      <div className="h-screen flex items-center justify-center bg-black relative overflow-hidden smooth-transform">
+      <div ref={introRef} className="h-screen flex items-center justify-center bg-black relative overflow-hidden smooth-transform">
         <div className="absolute inset-0">
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gray-800 rounded-full blur-3xl opacity-30"></div>
         </div>
