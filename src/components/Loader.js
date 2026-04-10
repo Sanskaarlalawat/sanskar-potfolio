@@ -1,15 +1,16 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Loader({ duration = 2600, exitDuration = 700, onFinish }) {
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (onFinish) onFinish();
-    }, duration + exitDuration);
-    return () => clearTimeout(timer);
-  }, [duration, exitDuration, onFinish]);
+  const [visible, setVisible] = useState(true);
 
-  const letters = ["T", "o", "k", "e", "n"," ", "T", "i", "n", "k", "e", "r", "e", "r" ];
+  useEffect(() => {
+    // After `duration` ms, hide the loader — this triggers the AnimatePresence exit animation
+    const hideTimer = setTimeout(() => setVisible(false), duration);
+    return () => clearTimeout(hideTimer);
+  }, [duration]);
+
+  const letters = ["T", "o", "k", "e", "n", " ", "T", "i", "n", "k", "e", "r", "e", "r"];
 
   const containerVariants = {
     start: { transition: { staggerChildren: 0.15, delayChildren: 0.3 } },
@@ -27,37 +28,42 @@ export default function Loader({ duration = 2600, exitDuration = 700, onFinish }
   };
 
   return (
-    <AnimatePresence>
-      <motion.div
-        className="loader-overlay"
-        initial={{ opacity: 1 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0, transition: { duration: exitDuration / 1000 } }}
-      >
-        <motion.div
-          className="loader-text-container"
-          variants={containerVariants}
-          initial="start"
-          animate="vertical"
-          onAnimationComplete={() => {
-            setTimeout(() => {
-              document.querySelectorAll(".loader-letter").forEach(el => {
-                el.classList.add("fade-out");
-              });
-            }, 800);
-          }}
-        >
-          {letters.map((letter, i) => (
-            <motion.span
-              key={i}
-              className="loader-letter"
-              variants={letterVariants}
+    <>
+      {/* onExitComplete fires after the exit fade finishes — correct time to unmount the loader */}
+      <AnimatePresence onExitComplete={() => { if (onFinish) onFinish(); }}>
+        {visible && (
+          <motion.div
+            className="loader-overlay"
+            initial={{ opacity: 1 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, transition: { duration: exitDuration / 1000 } }}
+          >
+            <motion.div
+              className="loader-text-container"
+              variants={containerVariants}
+              initial="start"
+              animate="vertical"
+              onAnimationComplete={() => {
+                setTimeout(() => {
+                  document.querySelectorAll(".loader-letter").forEach(el => {
+                    el.classList.add("fade-out");
+                  });
+                }, 800);
+              }}
             >
-              {letter}
-            </motion.span>
-          ))}
-        </motion.div>
-      </motion.div>
+              {letters.map((letter, i) => (
+                <motion.span
+                  key={i}
+                  className="loader-letter"
+                  variants={letterVariants}
+                >
+                  {letter}
+                </motion.span>
+              ))}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       <style>{`
         .loader-overlay {
           position: fixed;
@@ -138,6 +144,6 @@ export default function Loader({ duration = 2600, exitDuration = 700, onFinish }
           }
         }
       `}</style>
-    </AnimatePresence>
+    </>
   );
 }

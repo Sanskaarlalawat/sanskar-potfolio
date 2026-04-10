@@ -17,7 +17,6 @@ const Hero = ({ heroRef }) => {
   const loadedCountRef = useRef(0);
   const currentFrameRef = useRef(0);
   const rafRef = useRef(null);
-  const intervalRef = useRef(null);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -117,21 +116,6 @@ const Hero = ({ heroRef }) => {
       window.removeEventListener("resize", handleResize);
       resizeObserver.disconnect();
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
-  }, [drawFrame]);
-
-  // Periodic check to ensure canvas stays properly sized
-  useEffect(() => {
-    intervalRef.current = setInterval(() => {
-      // Only redraw if we have images loaded
-      if (loadedCountRef.current > 0) {
-        drawFrame(currentFrameRef.current);
-      }
-    }, 30000); // Check every 30 seconds
-
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
     };
   }, [drawFrame]);
 

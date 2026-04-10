@@ -498,10 +498,10 @@ const Projects = () => {
   const leftStyle = computeWrapperStyle(true);
   const rightStyle = computeWrapperStyle(false);
 
-  const heroText = "What we put on camera has weight. Yet faces with lived experience are still overlooked. We exists to change that. We represent bold faces with white hair, albinism, and striking contrast.";
-  const heroSubtext = "Not trends—truth.";
+  const heroText = "I build AI systems that don't just process data — they understand context, generate insight, and automate the complex. From LLM pipelines to computer vision, every project is engineered to make intelligent systems work in the real world.";
+  const heroSubtext = "Built to perform.";
   const leftBottomText = "";
-  const rightBottomText = "Our white hair campaign casts models with presence. Real people. No retouching. No sameness.";
+  const rightBottomText = "Prompt engineering, vector databases, real-time inference — the full stack of modern AI, shipped end to end.";
 
   return (
     <section className="relative bg-black overflow-hidden">
@@ -588,7 +588,7 @@ const Projects = () => {
           <div ref={leftWrapperRef} style={leftStyle} className="smooth-transform">
             <div className={`${isMobile || isTablet ? 'w-full text-center' : ''}`} style={{ maxWidth: isMobile || isTablet ? '100%' : 560 }}>
               <h3 className="text-3xl sm:text-4xl md:text-5xl lg:text-8xl font-bold text-white leading-tight mb-4 sm:mb-5 md:mb-6">Our Projects</h3>
-              <p className="text-gray-400 text-base sm:text-lg md:text-2xl lg:text-3xlleading-relaxed mb-6 sm:mb-7 md:mb-8">
+              <p className="text-gray-400 text-base sm:text-lg md:text-2xl lg:text-3xl leading-relaxed mb-6 sm:mb-7 md:mb-8">
                 Each project represents a unique challenge solved with innovative thinking, cutting-edge technology, and meticulous attention to detail. Scroll to explore our featured work.
               </p>
               {/* <button className="bg-white text-black px-6 sm:px-7 md:px-8 py-3 sm:py-3.5 md:py-4 rounded-full font-semibold text-base sm:text-lg hover:bg-gray-200 transition-all duration-300 ease-out flex items-center gap-2 transform hover:scale-105 mx-auto lg:mx-0">

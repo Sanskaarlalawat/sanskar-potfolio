@@ -43,21 +43,19 @@ const App = () => {
 
       {!loading && (
         <div ref={containerRef} className="bg-white text-black min-h-screen font-sans">
-          <Header 
+          <Header
             mobileMenuOpen={mobileMenuOpen}
             setMobileMenuOpen={setMobileMenuOpen}
             scrollToSection={scrollToSection}
             projectsRef={projectsRef}
+            tunnelRef={tunnelRef}
             aboutRef={aboutRef}
             heroRef={heroRef}
             contactRef={contactRef}
           />
 
-          <Hero 
+          <Hero
             heroRef={heroRef}
-            scrollToSection={scrollToSection}
-            projectsRef={projectsRef}
-            scrollY={scrollY}
           />
 
           <Projects 
