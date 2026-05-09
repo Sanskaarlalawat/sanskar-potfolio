@@ -8,13 +8,6 @@ import {
   Bot,
 } from "lucide-react";
 
-const hexToRgba = (hex, alpha) => {
-  const r = parseInt(hex.slice(1, 3), 16);
-  const g = parseInt(hex.slice(3, 5), 16);
-  const b = parseInt(hex.slice(5, 7), 16);
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-};
-
 const Projects = () => {
   const stackAreaRef = useRef(null);
   const rightWrapperRef = useRef(null);
@@ -26,7 +19,7 @@ const Projects = () => {
   const introRef = useRef(null);
   const activeIndexRef = useRef(0);
 
-  const [scrollProgress, setScrollProgress] = useState(0);
+
   const [mode, setMode] = useState("top");
   const [isInitialized, setIsInitialized] = useState(false);
   const [textScrollProgress, setTextScrollProgress] = useState(0);
@@ -118,7 +111,7 @@ const Projects = () => {
   const deviceType = getDeviceType();
   const isMobile = deviceType === "mobile";
   const isTablet = deviceType === "tablet";
-  const isDesktop = deviceType === "desktop";
+
 
   const getCardDimensions = () => {
     if (isMobile) return { width: 260, height: 300 };
