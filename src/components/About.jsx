@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useMemo } from 'react';
-import { Mail, Linkedin, Phone, MessageCircle } from "lucide-react";
 
 const About = ({ aboutRef: aboutRefProp }) => {
   const aboutRef = useRef(null);
@@ -138,7 +137,6 @@ const About = ({ aboutRef: aboutRefProp }) => {
   useEffect(() => {
     // Only track mouse on non-touch devices to avoid mobile perf issues
     let handleMouseMove = null;
-    let mouseListenerAdded = false;
     if (!('ontouchstart' in window)) {
       handleMouseMove = (e) => {
         const hero = heroRef.current;
@@ -151,7 +149,6 @@ const About = ({ aboutRef: aboutRefProp }) => {
         hero.style.setProperty('--mouse-y', `${yPos}px`);
       };
       window.addEventListener('mousemove', handleMouseMove);
-      mouseListenerAdded = true;
     }
 
     class RiverFlow {
@@ -341,14 +338,6 @@ const About = ({ aboutRef: aboutRefProp }) => {
       observer?.disconnect();
     };
   }, []);
-
-  const handleContactClick = () => {
-    window.open('mailto:sanskarlal23@gmail.com', '_blank');
-  };
-
-  const handlePhoneClick = () => {
-    window.open('tel:+919887033255', '_self');
-  };
 
   return (
     <>

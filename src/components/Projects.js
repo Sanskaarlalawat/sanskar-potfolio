@@ -256,6 +256,7 @@ const Projects = () => {
       setIsInitialized(true);
       animateTextLetters(0);
     }, 50);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -290,7 +291,6 @@ const Projects = () => {
       const end = stackTopDoc + Math.max(0, stackHeight - windowHeight);
       const maxScroll = Math.max(1, end - start);
       const scrollWithinStack = scrollTop - start;
-      const progress = Math.max(0, Math.min(1, scrollWithinStack / maxScroll));
       if (scrollTop < start) {
         setMode("top");
       } else if (scrollTop >= start && scrollTop <= end) {
@@ -344,6 +344,7 @@ const Projects = () => {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isInitialized, windowSize, isMobile, isTablet]);
 
   const computeWrapperStyle = (isLeft = false) => {

@@ -16,7 +16,7 @@ const App = () => {
   const [activeProject, setActiveProject] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loading, setLoading] = useState(true);
-  const { scrollY } = useScroll();
+  useScroll();
   
   const containerRef = useRef(null);
   const heroRef = useRef(null);

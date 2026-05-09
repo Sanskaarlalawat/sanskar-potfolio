@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { X, ExternalLink, Github } from 'lucide-react';
 
 const ProjectModal = ({ activeProject, setActiveProject }) => {
@@ -192,46 +192,6 @@ const ProjectModal = ({ activeProject, setActiveProject }) => {
         </motion.div>
       )}
     </AnimatePresence>
-  );
-};
-
-// Demo Component
-const Demo = () => {
-  const [activeProject, setActiveProject] = React.useState(null);
-
-  const sampleProject = {
-    title: "AI-Powered Analytics",
-    subtitle: "Machine Learning Dashboard",
-    category: "Data Science",
-    color: "#6366f1",
-    bgColor: "#e0e7ff",
-    description: "A comprehensive analytics platform that leverages advanced machine learning algorithms to provide real-time insights and predictive analytics. Built with scalability and performance in mind, this system processes millions of data points efficiently. The dashboard features real-time monitoring, predictive modeling, and automated reporting capabilities.",
-    tags: ["React", "TensorFlow", "Python", "PostgreSQL", "Redis", "Docker", "AWS", "Kubernetes", "GraphQL"]
-  };
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 flex items-center justify-center p-8">
-      <style>{`
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-      `}</style>
-      <div className="text-center">
-        <h1 className="text-4xl font-black mb-4 text-gray-800">Modal Layout Animation Demo</h1>
-        <p className="text-gray-600 mb-8">Click to see smooth layout transitions</p>
-        <button
-          onClick={() => setActiveProject(sampleProject)}
-          className="px-8 py-4 bg-indigo-600 text-white rounded-full font-semibold shadow-lg hover:bg-indigo-700 transition-colors"
-        >
-          Open Project Modal
-        </button>
-      </div>
-      
-      <ProjectModal 
-        activeProject={activeProject} 
-        setActiveProject={setActiveProject} 
-      />
-    </div>
   );
 };
 
