@@ -291,8 +291,6 @@ const Projects = () => {
       const maxScroll = Math.max(1, end - start);
       const scrollWithinStack = scrollTop - start;
       const progress = Math.max(0, Math.min(1, scrollWithinStack / maxScroll));
-      setScrollProgress(progress);
-
       if (scrollTop < start) {
         setMode("top");
       } else if (scrollTop >= start && scrollTop <= end) {
