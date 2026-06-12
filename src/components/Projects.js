@@ -8,7 +8,7 @@ import {
   Bot,
 } from "lucide-react";
 
-const Projects = () => {
+const Projects = ({ onViewAll }) => {
   const stackAreaRef = useRef(null);
   const rightWrapperRef = useRef(null);
   const leftWrapperRef = useRef(null);
@@ -660,6 +660,22 @@ const Projects = () => {
             </div>
           </div>
         </div>
+
+        {/* ── VIEW ALL PROJECTS CTA ── */}
+        <button
+          onClick={onViewAll}
+          className="view-all-cta group relative w-full overflow-hidden border-t border-b border-neutral-800 bg-black py-10 sm:py-14 text-center cursor-pointer"
+        >
+          <span className="absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-[cubic-bezier(0.65,0,0.35,1)]" />
+          <span className="relative z-10 flex flex-col items-center gap-2 transition-colors duration-300 group-hover:text-black text-white">
+            <span className="text-xs font-mono uppercase tracking-[0.3em] text-gray-500 group-hover:text-gray-600 transition-colors duration-300">
+              ({String(projects.length).padStart(2, "0")}) Projects
+            </span>
+            <span className="bebas-font uppercase leading-none text-5xl sm:text-6xl md:text-7xl">
+              View All Projects
+            </span>
+          </span>
+        </button>
       </div>
     </section>
   );

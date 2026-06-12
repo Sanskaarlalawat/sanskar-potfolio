@@ -1,0 +1,132 @@
+.pt-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  pointer-events: all;
+  overflow: hidden;
+}
+
+.pt-panel {
+  position: absolute;
+  inset: 0;
+  transform: translateY(103%);
+  will-change: transform;
+}
+
+/* curved leading / trailing edges for the sweep */
+.pt-panel::before,
+.pt-panel::after {
+  content: '';
+  position: absolute;
+  left: -5%;
+  width: 110%;
+  height: 90px;
+  background: inherit;
+}
+.pt-panel::before {
+  top: -88px;
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+}
+.pt-panel::after {
+  bottom: -88px;
+  border-radius: 0 0 50% 50% / 0 0 100% 100%;
+}
+
+.pt-panel-lead {
+  background: #f1f1ee;
+}
+
+.pt-panel-main {
+  background: #0a0a0a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Cover: sweep up from bottom ── */
+.pt-overlay.cover .pt-panel {
+  animation: pt-cover 0.6s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+}
+.pt-overlay.cover .pt-panel-main {
+  animation-delay: 0.1s;
+}
+
+/* ── Reveal: continue up and out through the top ── */
+.pt-overlay.reveal .pt-panel {
+  transform: translateY(0);
+  animation: pt-reveal 0.6s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+}
+.pt-overlay.reveal .pt-panel-lead {
+  animation-delay: 0.1s;
+}
+
+@keyframes pt-cover {
+  from { transform: translateY(103%); }
+  to   { transform: translateY(0); }
+}
+
+@keyframes pt-reveal {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-103%); }
+}
+
+/* ── Label ── */
+.pt-label-wrap {
+  overflow: hidden;
+  padding: 0.1em 0.3em;
+}
+
+.pt-label {
+  display: block;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(3rem, 9vw, 8rem);
+  line-height: 1;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #f1f1ee;
+  text-align: center;
+  transform: translateY(115%);
+  will-change: transform;
+}
+
+.pt-overlay.cover .pt-label {
+  animation: pt-label-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.3s forwards;
+}
+
+.pt-overlay.reveal .pt-label {
+  transform: translateY(0);
+  animation: pt-label-out 0.35s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+}
+
+@keyframes pt-label-in {
+  from { transform: translateY(115%); }
+  to   { transform: translateY(0); }
+}
+
+@keyframes pt-label-out {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-115%); }
+}
+
+/* small index line above the label */
+.pt-tag {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, calc(-50% - clamp(2.4rem, 7vw, 6rem)));
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: #6b6b6b;
+  opacity: 0;
+}
+
+.pt-overlay.cover .pt-tag {
+  animation: pt-tag-in 0.4s ease 0.45s forwards;
+}
+
+@keyframes pt-tag-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}

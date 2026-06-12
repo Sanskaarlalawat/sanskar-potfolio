@@ -145,7 +145,7 @@ const Hero = ({ heroRef }) => {
   const s3Y = useTransform(scrollYProgress, [0.66, 0.73, 0.93, 1], [60, 0, 0, -60]);
 
   return (
-    <section ref={heroRef} className="relative bg-[#121212]" style={{ fontFamily: "'League Spartan', sans-serif" }}>
+    <section ref={heroRef} className="relative bg-[#121212]" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
       {/* Container for both canvas and overlay */}
       <div ref={containerRef} className="relative h-[500vh]" id="scroll-sequence">
         
@@ -176,7 +176,7 @@ const Hero = ({ heroRef }) => {
               </motion.div>
 
               <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-bold tracking-tighter leading-[0.9] mb-8"
-                style={{ fontFamily: "'Bebas Neue', cursive", letterSpacing: "0.02em" }}
+                style={{ fontFamily: "'Bebas Neue', sans-serif", letterSpacing: "0.02em" }}
               >
                 <span className="block text-white">Sanskar</span>
                 <span className="block text-transparent bg-clip-text bg-gradient-to-r from-gray-100 to-gray-500">Lalawat</span>

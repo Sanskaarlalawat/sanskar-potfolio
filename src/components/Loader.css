@@ -10,7 +10,7 @@
 
 .loader-text-container {
   display: flex;
-  font-family: sans-serif;
+  font-family: 'Space Grotesk', sans-serif;
   font-weight: 700;
   font-size: clamp(3rem, 6vw, 6rem);
   color: white;

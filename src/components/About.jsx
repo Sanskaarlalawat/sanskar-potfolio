@@ -342,7 +342,7 @@ const About = ({ aboutRef: aboutRefProp }) => {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
         
         .river-flow-section { --primary: #208C8D; --primary-light: #2AA5A6; --bg: #FcFcF9; --text: #134252; --muted: #626C71;position: relative; overflow: hidden; background-image: url('/bg-career2.svg');background-size: cover; background-position: center; }
         .river-svg-container { position: fixed; top: 0; left: 0; width: 100%; pointer-events: none; z-index: 5; transform-origin: 0 0; will-change: transform; }
@@ -487,7 +487,7 @@ const About = ({ aboutRef: aboutRefProp }) => {
           color: #e0e0e0;
           margin-bottom: 0;
           letter-spacing: -0.02em;
-          font-family: 'Inter', sans-serif;
+          font-family: 'Space Grotesk', sans-serif;
         }
 
         .hero-title-line {

@@ -19,7 +19,7 @@ const Footer = ({ contactRef }) => {
       className="bg-white text-black pt-20 pb-8 px-6"
       style={{
         animation: 'fadeIn 1s ease-out',
-        fontFamily: "'Bebas Neue', cursive"
+        fontFamily: "'Bebas Neue', sans-serif"
       }}
     >
       <style>{`

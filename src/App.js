@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, useScroll } from 'framer-motion';
 import { ArrowUp } from 'lucide-react';
 import Header from './components/Header';
@@ -11,12 +11,67 @@ import ProjectModal from './components/ProjectModal';
 import Loader from './components/Loader';
 import TunnelAnimation from './components/TunnelAnimation';
 import Recommendations from './components/Recommendations';
+import AllProjects from './pages/AllProjects';
+import ProjectDetail from './pages/ProjectDetail';
+import PageTransition from './components/PageTransition';
+import { getProjectBySlug } from './data/projects';
+
+// Tiny hash router: '' → home, '#/projects' → list, '#/project/<slug>' → detail.
+const getRoute = () => {
+  const hash = window.location.hash.replace(/^#\/?/, '');
+  if (hash === 'projects') return { page: 'projects' };
+  if (hash.startsWith('project/')) return { page: 'project', slug: hash.slice('project/'.length) };
+  return { page: 'home' };
+};
 
 const App = () => {
   const [activeProject, setActiveProject] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [route, setRoute] = useState(getRoute);
+  // Only play the intro loader when landing on the home page.
+  const [loading, setLoading] = useState(() => getRoute().page === 'home');
+  // Home mounts under the loader as its exit sweep begins, so the curtain
+  // reveals real content instead of a blank page.
+  const [homeRevealed, setHomeRevealed] = useState(() => getRoute().page !== 'home');
+  const [transition, setTransition] = useState(null);
+  const transitionLockRef = useRef(false);
   useScroll();
+
+  // Route changes go through the curtain transition: cover → swap hash → reveal.
+  const navigate = useCallback((hash, label, tag) => {
+    const current = window.location.hash || '#/';
+    if (current === hash || transitionLockRef.current) return;
+    transitionLockRef.current = true;
+    setTransition({ hash, label, tag });
+  }, []);
+
+  const handleTransitionDone = useCallback(() => {
+    transitionLockRef.current = false;
+    setTransition(null);
+  }, []);
+
+  const openAllProjects = useCallback(() => {
+    navigate('#/projects', 'All Projects', 'Selected Work');
+  }, [navigate]);
+
+  const openProject = useCallback((slug) => {
+    const project = getProjectBySlug(slug);
+    navigate(
+      `#/project/${slug}`,
+      project ? project.title : 'Project',
+      project ? `Project — ${String(project.id).padStart(2, '0')}` : 'Project'
+    );
+  }, [navigate]);
+
+  const goHome = useCallback(() => {
+    navigate('#/', 'Home', 'Sanskar Lalawat');
+  }, [navigate]);
+
+  useEffect(() => {
+    const onHashChange = () => setRoute(getRoute());
+    window.addEventListener('hashchange', onHashChange);
+    return () => window.removeEventListener('hashchange', onHashChange);
+  }, []);
   
   const containerRef = useRef(null);
   const heroRef = useRef(null);
@@ -31,17 +86,29 @@ const App = () => {
     elementRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  return (
+  // Single return tree so PageTransition survives route swaps mid-animation.
+  let pageContent;
+  if (route.page === 'projects') {
+    pageContent = <AllProjects onOpenProject={openProject} onBack={goHome} />;
+  } else if (route.page === 'project') {
+    pageContent = (
+      <ProjectDetail
+        slug={route.slug}
+        onBack={openAllProjects}
+        onOpenProject={openProject}
+      />
+    );
+  } else pageContent = (
     <>
       {loading && (
         <Loader
-          duration={4000}
-          exitDuration={900}
+          duration={3200}
+          onExitStart={() => setHomeRevealed(true)}
           onFinish={() => setLoading(false)}
         />
       )}
 
-      {!loading && (
+      {(homeRevealed || !loading) && (
         <div ref={containerRef} className="bg-white text-black min-h-screen font-sans">
           <Header
             mobileMenuOpen={mobileMenuOpen}
@@ -52,15 +119,17 @@ const App = () => {
             aboutRef={aboutRef}
             heroRef={heroRef}
             contactRef={contactRef}
+            onAllProjects={openAllProjects}
           />
 
           <Hero
             heroRef={heroRef}
           />
 
-          <Projects 
+          <Projects
             projectsRef={projectsRef}
             setActiveProject={setActiveProject}
+            onViewAll={openAllProjects}
           />
 
           {/* 3D Tunnel Animation Section */}
@@ -90,6 +159,13 @@ const App = () => {
           </motion.button>
         </div>
       )}
+    </>
+  );
+
+  return (
+    <>
+      {pageContent}
+      <PageTransition transition={transition} onDone={handleTransitionDone} />
     </>
   );
 };

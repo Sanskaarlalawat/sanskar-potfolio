@@ -663,8 +663,9 @@ const TunnelAnimation = ({ sectionRef }) => {
           left: 0,
           width: '100vw',
           height: '100vh',
-          zIndex: 10
-        }} 
+          zIndex: 10,
+          pointerEvents: 'none'
+        }}
       />
       
       {/* Central Text Container - Only when in view */}

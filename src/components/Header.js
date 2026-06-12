@@ -2,22 +2,32 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 
-const Header = ({ 
-  mobileMenuOpen, 
-  setMobileMenuOpen, 
-  scrollToSection, 
-  projectsRef, 
+const Header = ({
+  mobileMenuOpen,
+  setMobileMenuOpen,
+  scrollToSection,
+  projectsRef,
   tunnelRef, // Added tunnel ref
-  aboutRef, 
-  heroRef, 
-  contactRef 
+  aboutRef,
+  heroRef,
+  contactRef,
+  onAllProjects
 }) => {
   const navigationItems = [
     { name: 'Projects', ref: projectsRef }, // Added tunnel/experience navigation
+    { name: 'All Projects', action: onAllProjects },
     { name: 'About', ref: aboutRef },
     { name: 'Skills', ref: heroRef },
     { name: 'Contact', ref: contactRef }
   ];
+
+  const handleNavClick = (item) => {
+    if (item.action) {
+      item.action();
+    } else {
+      scrollToSection(item.ref);
+    }
+  };
 
   return (
     <>
@@ -48,7 +58,7 @@ const Header = ({
             {navigationItems.map((item, index) => (
               <motion.button
                 key={item.name}
-                onClick={() => scrollToSection(item.ref)}
+                onClick={() => handleNavClick(item)}
                 whileHover={{ scale: 1.05 }}
                 className="text-gray-700 hover:text-black transition-colors font-medium"
               >
@@ -85,7 +95,7 @@ const Header = ({
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.1 }}
                   onClick={() => {
-                    scrollToSection(item.ref);
+                    handleNavClick(item);
                     setMobileMenuOpen(false);
                   }}
                   className="block text-2xl font-medium text-gray-800 hover:text-black transition-colors"
