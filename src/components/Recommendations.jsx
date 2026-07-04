@@ -42,22 +42,18 @@ const Recommendations = ({ sectionRef }) => {
       const sectionHeight = rect.height;
       const windowHeight = window.innerHeight;
       const container = sectionRef.current.querySelector('[data-recommendations-container]');
-      
+
       if (!container) return;
 
-      // Calculate scroll progress
       const scrollProgress = -sectionTop / (sectionHeight - windowHeight);
       const clampedProgress = Math.min(1, Math.max(0, scrollProgress));
 
-      // Calculate card dimensions
       const totalCards = reviews.length;
-      const cardWidth = window.innerWidth <= 480 ? 95 : 
-                        window.innerWidth <= 768 ? 90 : 
+      const cardWidth = window.innerWidth <= 480 ? 95 :
+                        window.innerWidth <= 768 ? 90 :
                         window.innerWidth <= 1024 ? 78 : 65;
 
-      // Determine positioning - use will-change for smoother transitions
       if (sectionTop > 0) {
-        // Before section enters viewport
         container.style.position = 'absolute';
         container.style.top = '0';
         container.style.bottom = 'auto';
@@ -65,35 +61,28 @@ const Recommendations = ({ sectionRef }) => {
         wrapperRef.current.style.transform = 'translate3d(0, 0, 0)';
         setActiveCardIndex(0);
       } else if (sectionTop + sectionHeight < windowHeight) {
-        // After section leaves viewport
         container.style.position = 'absolute';
         container.style.top = 'auto';
         container.style.bottom = '0';
         container.style.willChange = 'auto';
-        
-        // Keep cards at final position
         const finalTranslateX = -cardWidth * (totalCards - 1);
         wrapperRef.current.style.transform = `translate3d(${finalTranslateX}vw, 0, 0)`;
         setActiveCardIndex(totalCards - 1);
       } else {
-        // Section is in viewport - sticky
         container.style.position = 'fixed';
         container.style.top = '0';
         container.style.bottom = 'auto';
         container.style.willChange = 'transform';
 
-        // Calculate active card based on progress
         const cardProgress = clampedProgress * (totalCards - 1);
         const currentCardIndex = Math.min(totalCards - 1, Math.round(cardProgress));
         setActiveCardIndex(currentCardIndex);
 
-        // Calculate horizontal translation - use transform3d for GPU acceleration
         const translateX = -clampedProgress * cardWidth * (totalCards - 1);
         wrapperRef.current.style.transform = `translate3d(${translateX}vw, 0, 0)`;
       }
     };
 
-    // Throttle scroll handler for better performance
     let ticking = false;
     const onScroll = () => {
       if (!ticking) {
@@ -122,7 +111,7 @@ const Recommendations = ({ sectionRef }) => {
           <h2 className="recommendations-title">
             Client Reviews
           </h2>
-          
+
           <div ref={wrapperRef} className="recommendations-wrapper">
             {reviews.map((review, index) => (
               <div
@@ -137,12 +126,12 @@ const Recommendations = ({ sectionRef }) => {
                     {review.number}
                   </div>
                 </div>
-                
+
                 <div className="review-content">
                   <div className="review-text">
                     {review.text}
                   </div>
-                  
+
                   <div className="review-footer">
                     <div className="client-initials">
                       {review.clientInitials}
@@ -157,9 +146,7 @@ const Recommendations = ({ sectionRef }) => {
                     </div>
                     <div className="rating">
                       {[...Array(5)].map((_, i) => (
-                        <span key={i} className="star">
-                          ★
-                        </span>
+                        <span key={i} className="star">★</span>
                       ))}
                     </div>
                   </div>
@@ -167,7 +154,7 @@ const Recommendations = ({ sectionRef }) => {
               </div>
             ))}
           </div>
-          
+
           <div className="recommendations-dots">
             {reviews.map((_, index) => (
               <div

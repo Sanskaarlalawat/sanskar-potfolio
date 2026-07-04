@@ -169,8 +169,8 @@ export default function Loader({ duration = 3200, onExitStart, onFinish }) {
           justify-content: center;
           margin: 0;
           padding: 0 1rem;
-          font-family: 'Bebas Neue', sans-serif;
-          font-weight: 400;
+          font-family: 'Space Grotesk', sans-serif;
+          font-weight: 800;
           font-size: clamp(3.2rem, 12vw, 11rem);
           line-height: 0.9;
           letter-spacing: 0.02em;
@@ -228,7 +228,8 @@ export default function Loader({ duration = 3200, onExitStart, onFinish }) {
         }
 
         .ldr-counter {
-          font-family: 'Bebas Neue', sans-serif;
+          font-family: 'Space Grotesk', sans-serif;
+          font-weight: 800;
           font-size: clamp(2.2rem, 5vw, 4rem);
           line-height: 1;
           color: #f1f1ee;

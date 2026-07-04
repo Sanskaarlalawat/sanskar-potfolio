@@ -13,13 +13,15 @@ import TunnelAnimation from './components/TunnelAnimation';
 import Recommendations from './components/Recommendations';
 import AllProjects from './pages/AllProjects';
 import ProjectDetail from './pages/ProjectDetail';
+import AboutPage from './pages/AboutPage';
 import PageTransition from './components/PageTransition';
 import { getProjectBySlug } from './data/projects';
 
-// Tiny hash router: '' → home, '#/projects' → list, '#/project/<slug>' → detail.
+// Tiny hash router: '' → home, '#/projects' → list, '#/project/<slug>' → detail, '#/about' → about.
 const getRoute = () => {
   const hash = window.location.hash.replace(/^#\/?/, '');
   if (hash === 'projects') return { page: 'projects' };
+  if (hash === 'about') return { page: 'about' };
   if (hash.startsWith('project/')) return { page: 'project', slug: hash.slice('project/'.length) };
   return { page: 'home' };
 };
@@ -52,6 +54,10 @@ const App = () => {
 
   const openAllProjects = useCallback(() => {
     navigate('#/projects', 'All Projects', 'Selected Work');
+  }, [navigate]);
+
+  const openAbout = useCallback(() => {
+    navigate('#/about', 'About', 'Sanskar Lalawat');
   }, [navigate]);
 
   const openProject = useCallback((slug) => {
@@ -90,6 +96,8 @@ const App = () => {
   let pageContent;
   if (route.page === 'projects') {
     pageContent = <AllProjects onOpenProject={openProject} onBack={goHome} />;
+  } else if (route.page === 'about') {
+    pageContent = <AboutPage />;
   } else if (route.page === 'project') {
     pageContent = (
       <ProjectDetail
@@ -110,18 +118,6 @@ const App = () => {
 
       {(homeRevealed || !loading) && (
         <div ref={containerRef} className="bg-white text-black min-h-screen font-sans">
-          <Header
-            mobileMenuOpen={mobileMenuOpen}
-            setMobileMenuOpen={setMobileMenuOpen}
-            scrollToSection={scrollToSection}
-            projectsRef={projectsRef}
-            tunnelRef={tunnelRef}
-            aboutRef={aboutRef}
-            heroRef={heroRef}
-            contactRef={contactRef}
-            onAllProjects={openAllProjects}
-          />
-
           <Hero
             heroRef={heroRef}
           />
@@ -130,6 +126,7 @@ const App = () => {
             projectsRef={projectsRef}
             setActiveProject={setActiveProject}
             onViewAll={openAllProjects}
+            onOpenProject={openProject}
           />
 
           {/* 3D Tunnel Animation Section */}
@@ -164,6 +161,13 @@ const App = () => {
 
   return (
     <>
+      <Header
+        onHome={goHome}
+        onProjects={openAllProjects}
+        onAbout={openAbout}
+        mobileMenuOpen={mobileMenuOpen}
+        setMobileMenuOpen={setMobileMenuOpen}
+      />
       {pageContent}
       <PageTransition transition={transition} onDone={handleTransitionDone} />
     </>

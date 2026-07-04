@@ -78,7 +78,8 @@
 
 .pt-label {
   display: block;
-  font-family: 'Bebas Neue', sans-serif;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 800;
   font-size: clamp(3rem, 9vw, 8rem);
   line-height: 1;
   letter-spacing: 0.02em;

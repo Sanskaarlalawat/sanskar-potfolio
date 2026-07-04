@@ -38,11 +38,6 @@ const ProjectDetail = ({ slug, onBack, onOpenProject }) => {
   if (!project) {
     return (
       <div className="pd-page">
-        <div className="pd-topbar">
-          <button className="pd-back" onClick={onBack}>
-            <span className="pd-back-arrow">←</span> All Projects
-          </button>
-        </div>
         <div className="pd-hero">
           <h1 className="pd-hero-title">Not Found</h1>
           <p className="pd-hero-subtitle">This project doesn't exist.</p>
@@ -55,16 +50,6 @@ const ProjectDetail = ({ slug, onBack, onOpenProject }) => {
 
   return (
     <div className="pd-page" key={slug}>
-      {/* Top bar */}
-      <div className="pd-topbar">
-        <button className="pd-back" onClick={onBack}>
-          <span className="pd-back-arrow">←</span> All Projects
-        </button>
-        <span className="pd-topbar-meta">
-          {String(project.id).padStart(2, "0")} — Project
-        </span>
-      </div>
-
       {/* Hero */}
       <header className="pd-hero">
         <motion.div

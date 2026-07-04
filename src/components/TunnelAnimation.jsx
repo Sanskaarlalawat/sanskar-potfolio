@@ -289,7 +289,7 @@ const TunnelAnimation = ({ sectionRef }) => {
     
     context.fillStyle = 'white';
     const fontSize = isMobile ? 240 : 480;
-    context.font = `normal 400 ${fontSize}px "Bebas Neue", Arial, sans-serif`;
+    context.font = `800 ${fontSize}px "Space Grotesk", Arial, sans-serif`;
     context.textAlign = 'center';
     context.textBaseline = 'middle';
     
@@ -593,7 +593,7 @@ const TunnelAnimation = ({ sectionRef }) => {
   return (
     <div ref={sectionRef} className="relative bg-black" style={{ height: `${TOTAL_SECTION_HEIGHT}px` }}>
       <style jsx>{`
-        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&display=swap');
         
         .text-layer {
           position: fixed;
@@ -654,9 +654,9 @@ const TunnelAnimation = ({ sectionRef }) => {
       `}</style>
       
       {/* Three.js Container - Fixed position when in view */}
-      <div 
-        ref={containerRef} 
-        className={`${isInView ? 'fixed' : 'absolute'} top-0 left-0 w-screen h-screen z-10 transition-opacity duration-1200 ease-out ${fadeIn ? 'opacity-100' : 'opacity-0'}`}
+      <div
+        ref={containerRef}
+        className={`tunnel-canvas-container ${isInView ? 'fixed' : 'absolute'} top-0 left-0 w-screen h-screen z-10 transition-opacity duration-1200 ease-out ${fadeIn ? 'opacity-100' : 'opacity-0'}`}
         style={{
           position: isInView ? 'fixed' : 'absolute',
           top: 0,

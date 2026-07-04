@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500&display=swap');
 
 .pd-page {
   min-height: 100vh;
@@ -52,7 +52,7 @@
 
 /* ── Hero ── */
 .pd-hero {
-  padding: 9rem 2rem 0;
+  padding: 7rem 2rem 0;
 }
 
 .pd-hero-label {
@@ -73,7 +73,8 @@
 }
 
 .pd-hero-title {
-  font-family: 'Bebas Neue', sans-serif;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 800;
   font-size: clamp(3.2rem, 12vw, 11rem);
   line-height: 0.88;
   text-transform: uppercase;
@@ -138,7 +139,8 @@
 }
 
 .pd-cover-title {
-  font-family: 'Bebas Neue', sans-serif;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 800;
   font-size: clamp(3rem, 10vw, 9rem);
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.9);
@@ -246,7 +248,8 @@
   object-fit: cover;
 }
 .pd-gallery-num {
-  font-family: 'Bebas Neue', sans-serif;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 800;
   font-size: 5rem;
   color: rgba(0, 0, 0, 0.25);
 }
@@ -291,7 +294,8 @@
 .pd-next:hover .pd-next-label { color: #3a3a3a; }
 
 .pd-next-title {
-  font-family: 'Bebas Neue', sans-serif;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 800;
   font-size: clamp(3rem, 10vw, 9rem);
   line-height: 0.9;
   text-transform: uppercase;
@@ -310,8 +314,7 @@
 
 /* ── Mobile ── */
 @media (max-width: 768px) {
-  .pd-hero { padding: 7rem 1.25rem 0; }
-  .pd-topbar { padding: 1.25rem; }
+  .pd-hero { padding: 6rem 1.25rem 0; }
   .pd-meta { grid-template-columns: 1fr 1fr; gap: 1.5rem; padding: 2rem 1.25rem; }
   .pd-cover-wrap { padding: 1.25rem; }
   .pd-section { grid-template-columns: 1fr; gap: 1.5rem; padding: 3rem 1.25rem; }

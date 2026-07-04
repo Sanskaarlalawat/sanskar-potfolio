@@ -73,14 +73,6 @@ const AllProjects = ({ onOpenProject, onBack }) => {
 
   return (
     <div className="ap-page">
-      {/* Top bar */}
-      <div className="ap-topbar">
-        <button className="ap-back" onClick={onBack}>
-          <span className="ap-back-arrow">←</span> Back
-        </button>
-        <span className="ap-topbar-meta">Sanskar Lalawat — Portfolio</span>
-      </div>
-
       {/* Hero */}
       <header className="ap-hero">
         <motion.div

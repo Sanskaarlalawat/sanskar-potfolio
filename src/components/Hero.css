@@ -6,7 +6,7 @@
   background: #000;
   color: #fff;
   overflow: hidden;
-  font-family: 'Bebas Neue', sans-serif;
+  font-family: 'Space Grotesk', sans-serif;
   transform: scale(1.5);
   opacity: 0;
   transition: all 2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -34,7 +34,7 @@
   text-align: center;
   transform: translateY(-60%) scaleY(1.15);
   transform-origin: center;
-  font-family: 'Bebas Neue', sans-serif;
+  font-family: 'Space Grotesk', sans-serif;
   font-size: 36vw;
   font-weight: 600;
   color: #fff;
@@ -108,7 +108,7 @@
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 25px;
   padding: 12px 24px;
-  font-family: 'Bebas Neue', sans-serif;
+  font-family: 'Space Grotesk', sans-serif;
   font-size: 16px;
   font-weight: 600;
   letter-spacing: 0.5px;
@@ -136,7 +136,7 @@
 .hero-tagline {
   position: absolute;
   bottom: 75px;
-  font-family: 'Bebas Neue', sans-serif;
+  font-family: 'Space Grotesk', sans-serif;
   left: 40px;
   z-index: 4;
   opacity: 0;

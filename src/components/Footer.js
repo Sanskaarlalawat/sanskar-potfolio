@@ -19,12 +19,10 @@ const Footer = ({ contactRef }) => {
       className="bg-white text-black pt-20 pb-8 px-6"
       style={{
         animation: 'fadeIn 1s ease-out',
-        fontFamily: "'Bebas Neue', sans-serif"
+        fontFamily: "'Space Grotesk', sans-serif"
       }}
     >
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
-        
         @keyframes fadeIn {
           from { opacity: 0; }
           to { opacity: 1; }

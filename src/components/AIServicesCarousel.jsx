@@ -4,7 +4,7 @@ const AIServicesCarousel = ({ sectionRef }) => {
   return (
     <section ref={sectionRef} className="relative w-full min-h-screen flex items-center justify-center overflow-hidden bg-white">
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 
         .ai-services-section {
           font-family: 'Space Grotesk', sans-serif;

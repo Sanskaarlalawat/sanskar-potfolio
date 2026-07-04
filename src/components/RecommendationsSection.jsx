@@ -5,17 +5,6 @@ const ReviewsAnimation = () => {
   const containerRef = useRef(null);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
 
-  useEffect(() => {
-    // Load Bebas Neue font
-    const link = document.createElement('link');
-    link.href = 'https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap';
-    link.rel = 'stylesheet';
-    document.head.appendChild(link);
-
-    return () => {
-      document.head.removeChild(link);
-    };
-  }, []);
 
   const reviews = [
     {

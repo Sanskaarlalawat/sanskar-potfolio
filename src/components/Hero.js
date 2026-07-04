@@ -176,7 +176,7 @@ const Hero = ({ heroRef }) => {
               </motion.div>
 
               <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-bold tracking-tighter leading-[0.9] mb-8"
-                style={{ fontFamily: "'Bebas Neue', sans-serif", letterSpacing: "0.02em" }}
+                style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 800, letterSpacing: "0.02em" }}
               >
                 <span className="block text-white">Sanskar</span>
                 <span className="block text-transparent bg-clip-text bg-gradient-to-r from-gray-100 to-gray-500">Lalawat</span>
