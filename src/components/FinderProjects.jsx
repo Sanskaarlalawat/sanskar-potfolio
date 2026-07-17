@@ -354,7 +354,8 @@ const FinderProjects = ({ onOpenProject }) => {
               <div className="fp-prev-cover">
                 <video
                   className="fp-prev-cover-video"
-                  src="/projects-loop-v2.mp4"
+                  key={selected.coverVideo || "/projects-loop-v2.mp4"}
+                  src={selected.coverVideo || "/projects-loop-v2.mp4"}
                   autoPlay
                   muted
                   loop

@@ -28,6 +28,7 @@ const projectsData = [
     tags: ["Python", "Django", "LLMs", "AWS", "OCR", "Speech-to-Text"],
     accent: "#85B9A5",
     gradient: "linear-gradient(135deg, #85B9A5 0%, #7FA6A8 100%)",
+    coverVideo: "/cover-ias-sathi.mp4",
     image: null,
     gallery: [],
   },
