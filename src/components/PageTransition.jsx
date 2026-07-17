@@ -18,7 +18,8 @@ const PageTransition = ({ transition, onDone }) => {
     }
     setPhase('cover');
     const swapTimer = setTimeout(() => {
-      window.location.hash = transition.hash;
+      window.history.pushState(null, '', transition.path);
+      window.dispatchEvent(new Event('app:navigate'));
     }, COVER_MS);
     const revealTimer = setTimeout(() => {
       setPhase('reveal');

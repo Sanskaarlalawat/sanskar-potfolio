@@ -1,6 +1,7 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Sanskar Lalawat",
+  "name": "Sanskar Lalawat — AI/ML Engineer",
+  "description": "Portfolio of Sanskar Lalawat: AI voice agents, LLM platforms, RAG systems and computer vision.",
   "icons": [
     {
       "src": "favicon.ico",
@@ -18,8 +19,8 @@
       "sizes": "512x512"
     }
   ],
-  "start_url": ".",
+  "start_url": "/",
   "display": "standalone",
-  "theme_color": "#000000",
+  "theme_color": "#ffffff",
   "background_color": "#ffffff"
 }

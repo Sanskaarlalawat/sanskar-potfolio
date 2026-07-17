@@ -1,5 +1,8 @@
 import React, { useMemo, useState, useRef, useEffect } from "react";
-import { Database, Zap, Eye, MessageCircle, UserCheck, Bot, X } from "lucide-react";
+import {
+  GraduationCap, PhoneCall, MessageCircle, Boxes, BarChart3, ScanFace, Bot,
+  Database, X,
+} from "lucide-react";
 import projectsData from "../data/projects";
 import "./FinderProjects.css";
 
@@ -13,33 +16,60 @@ const PALETTE = [
   { base: "#85CBCF", deep: "#356E72" }, // teal
 ];
 
-const GLYPHS = [Database, Zap, Eye, MessageCircle, UserCheck, Bot];
+// Each project gets an icon that reflects what it actually is.
+const GLYPH_BY_SLUG = {
+  "ias-sathi": GraduationCap,
+  "ai-voice-calling-agent": PhoneCall,
+  "ncert-ai-chatbot": MessageCircle,
+  "object-detection-system": Boxes,
+  "whatsapp-chat-analysis": BarChart3,
+  "face-recognition-system": ScanFace,
+  "web-feature-extraction-bot": Bot,
+};
 
 const projectStyle = (project) => {
   const i = projectsData.findIndex((p) => p.id === project.id);
-  return { palette: PALETTE[i % PALETTE.length], Glyph: GLYPHS[i % GLYPHS.length] };
+  return {
+    palette: PALETTE[i % PALETTE.length],
+    Glyph: GLYPH_BY_SLUG[project.slug] || Database,
+  };
 };
 
-// Chunky rounded macOS-style folder with an embossed glyph.
+// Layered 3D folder: dark back panel with the tab, paper sheets inside, and a
+// front flap that swings open on hover (see .fp-folder rules in the CSS).
 const Folder = ({ color = "#89B4E8", deep, glyph: Glyph, size = 84 }) => (
-  <span className="fp-folder" style={{ width: size, height: size * 0.8 }}>
-    <svg viewBox="0 0 100 80" width="100%" height="100%">
-      <path
-        d="M8 18 a9 9 0 0 1 9-9 h19 a9 9 0 0 1 6.8 3.1 l4.4 5.1 H83 a9 9 0 0 1 9 9 v36 a9 9 0 0 1-9 9 H17 a9 9 0 0 1-9-9 Z"
-        fill={color}
-      />
-      <path d="M8 24 h84 v2.5 H8z" fill="rgba(255,255,255,0.22)" />
+  <span
+    className="fp-folder"
+    style={{ width: size, height: size * 0.8, "--fc": color, "--fd": deep || color }}
+  >
+    <svg className="fp-f-back" viewBox="0 0 100 80" width="100%" height="100%">
+      <path d="M8 18 a9 9 0 0 1 9-9 h19 a9 9 0 0 1 6.8 3.1 l4.4 5.1 H83 a9 9 0 0 1 9 9 v36 a9 9 0 0 1-9 9 H17 a9 9 0 0 1-9-9 Z" />
     </svg>
-    {Glyph && deep && (
-      <Glyph
-        className="fp-folder-glyph"
-        size={Math.round(size * 0.3)}
-        strokeWidth={2.1}
-        style={{ color: deep }}
-      />
-    )}
+    <span className="fp-f-paper-back" />
+    <span className="fp-f-paper" />
+    <span className="fp-f-front">
+      {Glyph && deep && (
+        <Glyph className="fp-folder-glyph" size={Math.round(size * 0.3)} strokeWidth={2.1} />
+      )}
+    </span>
+    <span className="fp-f-shadow" />
   </span>
 );
+
+// Cursor-following tilt: writes rotation vars consumed by .fp-folder.
+const tiltHandlers = {
+  onMouseMove: (e) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width - 0.5;
+    const y = (e.clientY - r.top) / r.height - 0.5;
+    e.currentTarget.style.setProperty("--ty", `${(x * 26).toFixed(1)}deg`);
+    e.currentTarget.style.setProperty("--tx", `${(-y * 18).toFixed(1)}deg`);
+  },
+  onMouseLeave: (e) => {
+    e.currentTarget.style.removeProperty("--ty");
+    e.currentTarget.style.removeProperty("--tx");
+  },
+};
 
 const DiskIcon = () => (
   <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -265,6 +295,7 @@ const FinderProjects = ({ onOpenProject }) => {
                       className={`fp-item ${selectedId === project.id ? "selected" : ""}`}
                       onClick={() => setSelectedId(project.id)}
                       onDoubleClick={() => onOpenProject(project.slug)}
+                      {...tiltHandlers}
                     >
                       <span className="fp-icon-wrap">
                         <Folder color={palette.base} deep={palette.deep} glyph={Glyph} />
@@ -320,16 +351,16 @@ const FinderProjects = ({ onOpenProject }) => {
                 </button>
               </div>
 
-              <div className="fp-prev-cover" style={{ background: selected.gradient }}>
-                <svg viewBox="0 0 280 150" preserveAspectRatio="xMidYMid slice">
-                  <g className="fp-prev-rings">
-                    <circle cx="220" cy="30" r="60" fill="none" stroke="rgba(0,0,0,0.25)" />
-                    <circle cx="220" cy="30" r="38" fill="none" stroke="rgba(0,0,0,0.25)" />
-                    <circle cx="50" cy="130" r="46" fill="none" stroke="rgba(0,0,0,0.25)" />
-                    <line x1="0" y1="75" x2="280" y2="75" stroke="rgba(0,0,0,0.18)" />
-                  </g>
-                </svg>
-                <span className="fp-prev-cover-title">{selected.title}</span>
+              <div className="fp-prev-cover">
+                <video
+                  className="fp-prev-cover-video"
+                  src="/projects-loop-v2.mp4"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  aria-hidden="true"
+                />
               </div>
 
               <h3 className="fp-prev-title">{selected.title}</h3>

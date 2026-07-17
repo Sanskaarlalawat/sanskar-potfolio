@@ -3,28 +3,99 @@ import { motion } from "framer-motion";
 import { getProjectBySlug, getNextProject } from "../data/projects";
 import "./ProjectDetail.css";
 
-const riseUp = {
-  initial: { opacity: 0, y: 60 },
+const rise = {
+  initial: { opacity: 0, y: 20 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true, margin: "-60px" },
-  transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] },
+  transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] },
 };
 
-const CoverArt = ({ project }) => (
-  <>
-    <svg
-      className="pd-cover-rings"
-      viewBox="0 0 1200 700"
-      preserveAspectRatio="xMidYMid slice"
-    >
-      <circle cx="1050" cy="80" r="260" fill="none" stroke="#000" strokeWidth="1.5" />
-      <circle cx="1050" cy="80" r="180" fill="none" stroke="#000" strokeWidth="1.5" />
-      <circle cx="120" cy="620" r="220" fill="none" stroke="#000" strokeWidth="1.5" />
-      <line x1="0" y1="350" x2="1200" y2="350" stroke="#000" strokeWidth="1" />
-      <line x1="600" y1="0" x2="600" y2="700" stroke="#000" strokeWidth="1" />
-    </svg>
-    <span className="pd-cover-title">{project.title}</span>
-  </>
+/* Features written as "Title — description" split into card title + body. */
+const splitFeature = (text) => {
+  const i = text.indexOf("—");
+  if (i > 6 && i < text.length - 6) {
+    return [text.slice(0, i).trim(), text.slice(i + 1).trim()];
+  }
+  return [null, text];
+};
+
+/* ── How it works — voice agent case study only ── */
+const voiceSteps = [
+  {
+    title: "Call comes in",
+    body: "A student dials the institute's number. Plivo picks up the PSTN call and opens a WebSocket to the FastAPI server, streaming raw mulaw audio in real time.",
+  },
+  {
+    title: "Three coroutines boot",
+    body: "Every call runs three asyncio coroutines concurrently — a Plivo pump streaming audio in, a Deepgram pump handling transcription, and a turn runner orchestrating the response.",
+  },
+  {
+    title: "Speech becomes text",
+    body: "Deepgram transcribes the caller as they speak. The moment a speech_final event fires, the turn is handed to the LLM — typically in under 300 ms.",
+  },
+  {
+    title: "The LLM decides",
+    body: "GPT-4o-mini generates the reply with full conversation context. When it detects intent, it calls tools instead of just talking:",
+    tools: [
+      { name: "book_lead()", desc: "logs the lead to SQLite and pushes it to Google Sheets" },
+      { name: "transfer_call()", desc: "bridges the caller to a human counselor via Plivo REST" },
+    ],
+  },
+  {
+    title: "Voice goes back out",
+    body: "The reply is split into sentences. Each one is synthesized by Sarvam AI in under 200 ms and streamed back while the LLM is still writing the next — the full loop stays under a second.",
+  },
+];
+
+const HowItWorks = () => (
+  <div className="cs-steps">
+    {voiceSteps.map((step, i) => (
+      <div className="cs-step" key={i}>
+        <span className="cs-step-num">{String(i + 1).padStart(2, "0")}</span>
+        <div className="cs-step-body">
+          <h3 className="cs-step-title">{step.title}</h3>
+          <p className="cs-step-desc">{step.body}</p>
+          {step.tools && (
+            <div className="cs-step-tools">
+              {step.tools.map((t) => (
+                <div className="cs-step-tool" key={t.name}>
+                  <code>{t.name}</code>
+                  <span>{t.desc}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    ))}
+  </div>
+);
+
+/* ── Comparison — voice agent case study only ── */
+const compareRows = [
+  { label: "Cost per minute", human: "₹30–50", siya: "₹2–3" },
+  { label: "Availability", human: "9 AM – 6 PM", siya: "24 / 7" },
+  { label: "Missed calls", human: "Yes, off-hours", siya: "Zero" },
+  { label: "Languages", human: "One per agent", siya: "Auto-detects both" },
+  { label: "Lead capture", human: "Manual entry", siya: "Automatic, to Sheets" },
+  { label: "Response time", human: "Hold music", siya: "Under a second" },
+];
+
+const ComparisonTable = () => (
+  <div className="cs-table">
+    <div className="cs-table-row cs-table-head">
+      <span />
+      <span>Human call center</span>
+      <span>Siya</span>
+    </div>
+    {compareRows.map((row) => (
+      <div className="cs-table-row" key={row.label}>
+        <span className="cs-table-label">{row.label}</span>
+        <span className="cs-table-human">{row.human}</span>
+        <span className="cs-table-siya">{row.siya}</span>
+      </div>
+    ))}
+  </div>
 );
 
 const ProjectDetail = ({ slug, onBack, onOpenProject }) => {
@@ -37,169 +108,158 @@ const ProjectDetail = ({ slug, onBack, onOpenProject }) => {
 
   if (!project) {
     return (
-      <div className="pd-page">
-        <div className="pd-hero">
-          <h1 className="pd-hero-title">Not Found</h1>
-          <p className="pd-hero-subtitle">This project doesn't exist.</p>
+      <div className="cs-page">
+        <div className="cs-container">
+          <h1 className="cs-title">Not found</h1>
+          <p className="cs-subtitle">This project doesn't exist.</p>
         </div>
       </div>
     );
   }
 
-  const titleWords = project.title.split(" ");
+  const isVoiceAgent = project.slug === "ai-voice-calling-agent";
+  const [intro, ...restParas] = project.longDescription;
 
   return (
-    <div className="pd-page" key={slug}>
-      {/* Hero */}
-      <header className="pd-hero">
-        <motion.div
-          className="pd-hero-label"
-          initial={{ opacity: 0, y: 20 }}
+    <div className="cs-page" key={slug} style={{ "--accent": project.accent }}>
+      <div className="cs-container">
+        {/* Back */}
+        <button className="cs-back" onClick={onBack}>
+          <span className="cs-back-arrow">←</span> All projects
+        </button>
+
+        {/* Hero */}
+        <motion.header
+          className="cs-hero"
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         >
-          {project.category}
-        </motion.div>
-        <h1 className="pd-hero-title">
-          {titleWords.map((word, i) => (
-            <motion.span
-              key={i}
-              className="pd-title-line"
-              initial={{ opacity: 0, y: "60%" }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                duration: 0.9,
-                ease: [0.22, 1, 0.36, 1],
-                delay: 0.1 + i * 0.08,
-              }}
-            >
-              {word}
-            </motion.span>
-          ))}
-        </h1>
-        <motion.p
-          className="pd-hero-subtitle"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
-        >
-          {project.subtitle}
-        </motion.p>
-      </header>
+          <div className="cs-meta">
+            <span>{project.role}</span>
+            <span className="cs-meta-dot">·</span>
+            <span>{project.year}</span>
+          </div>
+          <h1 className="cs-title">{project.title}</h1>
+          <p className="cs-subtitle">{project.subtitle}</p>
+          <p className="cs-intro">{intro}</p>
+          <div className="cs-tags">
+            {project.tags.map((tag) => (
+              <span className="cs-tag" key={tag}>{tag}</span>
+            ))}
+          </div>
+        </motion.header>
 
-      {/* Meta grid */}
-      <motion.div className="pd-meta" {...riseUp}>
-        <div className="pd-meta-item">
-          <div className="pd-meta-label">Year</div>
-          <div className="pd-meta-value">{project.year}</div>
-        </div>
-        <div className="pd-meta-item">
-          <div className="pd-meta-label">Role</div>
-          <div className="pd-meta-value">{project.role}</div>
-        </div>
-        <div className="pd-meta-item">
-          <div className="pd-meta-label">Client</div>
-          <div className="pd-meta-value">{project.client}</div>
-        </div>
-        <div className="pd-meta-item">
-          <div className="pd-meta-label">Stack</div>
-          <div className="pd-meta-value">{project.tags.slice(0, 3).join(", ")}</div>
-        </div>
-      </motion.div>
+        {/* Stat band */}
+        {project.metrics && (
+          <motion.div className="cs-stats" {...rise}>
+            {project.metrics.map((m) => (
+              <div className="cs-stat" key={m.label}>
+                <span className="cs-stat-value">{m.value}</span>
+                <span className="cs-stat-label">{m.label}</span>
+              </div>
+            ))}
+          </motion.div>
+        )}
 
-      {/* Cover */}
-      <div className="pd-cover-wrap">
+        {/* Cover */}
         <motion.div
-          className="pd-cover"
+          className="cs-cover"
           style={{ background: project.gradient }}
-          initial={{ opacity: 0, scale: 0.96 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+          {...rise}
         >
           {project.image ? (
             <img src={project.image} alt={project.title} />
           ) : (
-            <CoverArt project={project} />
+            <span className="cs-cover-title">{project.title}</span>
           )}
         </motion.div>
-      </div>
 
-      {/* Overview */}
-      <motion.section className="pd-section" {...riseUp}>
-        <div className="pd-section-label">Overview</div>
-        <div className="pd-section-body">
-          {project.longDescription.map((para, i) => (
-            <p key={i}>{para}</p>
+        {/* Overview */}
+        <motion.section className="cs-section" {...rise}>
+          <h2 className="cs-heading">Overview</h2>
+          {restParas.map((para, i) => (
+            <p className="cs-body" key={i}>{para}</p>
           ))}
-        </div>
-      </motion.section>
+        </motion.section>
 
-      {/* Features */}
-      <motion.section className="pd-section" {...riseUp}>
-        <div className="pd-section-label">Key Features</div>
-        <div className="pd-section-body">
-          {project.features.map((feature, i) => (
-            <div className="pd-feature" key={i}>
-              <span className="pd-feature-index">
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <span className="pd-feature-text">{feature}</span>
+        {/* Highlights */}
+        <motion.section className="cs-section" {...rise}>
+          <h2 className="cs-heading">Highlights</h2>
+          <div className="cs-cards">
+            {project.features.map((feature, i) => {
+              const [title, body] = splitFeature(feature);
+              return (
+                <div className="cs-card" key={i}>
+                  {title && <h3 className="cs-card-title">{title}</h3>}
+                  <p className="cs-card-body">{body}</p>
+                </div>
+              );
+            })}
+          </div>
+        </motion.section>
+
+        {/* How it works — voice agent only */}
+        {isVoiceAgent && (
+          <motion.section className="cs-section" {...rise}>
+            <h2 className="cs-heading">How a call works</h2>
+            <p className="cs-body">
+              From the caller's first word to Siya's reply, the whole loop runs in
+              under a second. Here is what happens on every call:
+            </p>
+            <HowItWorks />
+          </motion.section>
+        )}
+
+        {/* Comparison — voice agent only */}
+        {isVoiceAgent && (
+          <motion.section className="cs-section" {...rise}>
+            <h2 className="cs-heading">Why not just hire more agents?</h2>
+            <p className="cs-body">
+              The institute was missing every call outside office hours. Siya
+              answers all of them, in both languages, at a tenth of the cost.
+            </p>
+            <ComparisonTable />
+          </motion.section>
+        )}
+
+        {/* Stack */}
+        <motion.section className="cs-section" {...rise}>
+          <h2 className="cs-heading">Stack</h2>
+          <div className="cs-tags">
+            {project.tags.map((tag) => (
+              <span className="cs-tag" key={tag}>{tag}</span>
+            ))}
+          </div>
+        </motion.section>
+
+        {/* Gallery — only when real images exist */}
+        {project.gallery.length > 0 && (
+          <motion.section className="cs-section" {...rise}>
+            <div className="cs-gallery">
+              {project.gallery.map((src, i) => (
+                <div className="cs-gallery-item" key={i}>
+                  <img src={src} alt={`${project.title} — ${i + 1}`} />
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-      </motion.section>
+          </motion.section>
+        )}
 
-      {/* Stack */}
-      <motion.section className="pd-section" {...riseUp}>
-        <div className="pd-section-label">Technologies</div>
-        <div className="pd-tags">
-          {project.tags.map((tag, i) => (
-            <span className="pd-tag" key={i}>
-              {tag}
-            </span>
-          ))}
-        </div>
-      </motion.section>
+        {/* Next project */}
+        <motion.section className="cs-next-wrap" {...rise}>
+          <span className="cs-next-label">Next project</span>
+          <button className="cs-next" onClick={() => onOpenProject(nextProject.slug)}>
+            {nextProject.title}
+            <span className="cs-next-arrow">→</span>
+          </button>
+        </motion.section>
 
-      {/* Gallery */}
-      <div className="pd-gallery">
-        {(project.gallery.length
-          ? project.gallery
-          : [null, null]
-        ).map((src, i) => (
-          <motion.div
-            className="pd-gallery-item"
-            key={i}
-            style={!src ? { background: project.gradient } : undefined}
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-40px" }}
-            transition={{ duration: 0.7, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
-          >
-            {src ? (
-              <img src={src} alt={`${project.title} — ${i + 1}`} />
-            ) : (
-              <span className="pd-gallery-num">
-                {String(i + 1).padStart(2, "0")}
-              </span>
-            )}
-          </motion.div>
-        ))}
+        <footer className="cs-footer">
+          <span>© {new Date().getFullYear()} Sanskar Lalawat</span>
+          <span>AI Engineer — India</span>
+        </footer>
       </div>
-
-      {/* Next project */}
-      <button className="pd-next" onClick={() => onOpenProject(nextProject.slug)}>
-        <span className="pd-next-inner">
-          <span className="pd-next-label">Next Project</span>
-          <span className="pd-next-title">{nextProject.title}</span>
-        </span>
-      </button>
-
-      <footer className="pd-footer">
-        <span>© {new Date().getFullYear()} Sanskar Lalawat</span>
-        <span>AI Engineer — India</span>
-      </footer>
     </div>
   );
 };

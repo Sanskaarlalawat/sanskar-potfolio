@@ -1,163 +1,296 @@
-import React, { useRef, useEffect, useState, useCallback } from "react";
-import { motion } from "framer-motion";
+import React, { useEffect, useState, useRef, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import projectsData from "../data/projects";
 import "./AllProjects.css";
 
+const EASE = [0.22, 1, 0.36, 1];
+
 // Gradient cover used when a project has no real image yet.
-const ProjectCover = ({ project, showTitle = true }) => (
-  <div className="ap-preview-cover" style={{ background: project.gradient }}>
+const ProjectCover = ({ project }) => (
+  <div className="ap-cover" style={{ background: project.gradient }}>
     {project.image ? (
       <img src={project.image} alt={project.title} />
     ) : (
-      <>
-        <svg
-          className="ap-preview-cover-rings"
-          viewBox="0 0 340 240"
-          preserveAspectRatio="xMidYMid slice"
-        >
-          <circle cx="290" cy="30" r="90" fill="none" stroke="#000" strokeWidth="1" />
-          <circle cx="290" cy="30" r="60" fill="none" stroke="#000" strokeWidth="1" />
-          <circle cx="40" cy="210" r="70" fill="none" stroke="#000" strokeWidth="1" />
-          <line x1="0" y1="120" x2="340" y2="120" stroke="#000" strokeWidth="0.5" />
-        </svg>
-        {showTitle && (
-          <span className="ap-preview-cover-text">{project.title}</span>
-        )}
-      </>
+      <svg
+        className="ap-cover-rings"
+        viewBox="0 0 340 240"
+        preserveAspectRatio="xMidYMid slice"
+      >
+        <circle cx="290" cy="30" r="90" fill="none" stroke="#000" strokeWidth="1" />
+        <circle cx="290" cy="30" r="60" fill="none" stroke="#000" strokeWidth="1" />
+        <circle cx="40" cy="210" r="70" fill="none" stroke="#000" strokeWidth="1" />
+        <line x1="0" y1="120" x2="340" y2="120" stroke="#000" strokeWidth="0.5" />
+      </svg>
     )}
   </div>
 );
 
-const AllProjects = ({ onOpenProject, onBack }) => {
-  const previewRef = useRef(null);
-  const innerRef = useRef(null);
-  const mouse = useRef({ x: 0, y: 0 });
-  const pos = useRef({ x: 0, y: 0 });
-  const rafRef = useRef(null);
-  const [hovered, setHovered] = useState(null);
+/* Title split into words, each masked and revealed line by line. */
+const RevealTitle = React.forwardRef(({ text, id }, ref) => (
+  <h2 className="ap-title" aria-label={text} ref={ref}>
+    {text.split(" ").map((word, i) => (
+      <span className="ap-title-mask" key={`${id}-${i}`}>
+        <motion.span
+          className="ap-title-word"
+          initial={{ y: "112%" }}
+          animate={{ y: 0 }}
+          exit={{ y: "-112%" }}
+          transition={{ duration: 0.65, ease: EASE, delay: 0.04 * i }}
+        >
+          {word}
+        </motion.span>
+      </span>
+    ))}
+  </h2>
+));
+
+/* Rolling two-digit counter, digits slide vertically on change. */
+const RollingNumber = ({ value }) => (
+  <span className="ap-num-roll">
+    <AnimatePresence mode="popLayout" initial={false}>
+      <motion.span
+        key={value}
+        className="ap-num-current"
+        initial={{ y: "100%" }}
+        animate={{ y: 0 }}
+        exit={{ y: "-100%" }}
+        transition={{ duration: 0.5, ease: EASE }}
+      >
+        {String(value).padStart(2, "0")}
+      </motion.span>
+    </AnimatePresence>
+  </span>
+);
+
+const AllProjects = ({ onOpenProject }) => {
+  const [index, setIndex] = useState(0);
   const [isTouch, setIsTouch] = useState(false);
+  const lockRef = useRef(false);
+  const trackRef = useRef(null);
+  const total = projectsData.length;
+  const project = projectsData[index];
 
   useEffect(() => {
-    setIsTouch(window.matchMedia("(hover: none), (max-width: 768px)").matches);
+    setIsTouch(window.matchMedia("(hover: none), (max-width: 820px)").matches);
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
     window.scrollTo(0, 0);
   }, []);
 
-  // Lerp the floating preview toward the cursor.
-  const animate = useCallback(() => {
-    pos.current.x += (mouse.current.x - pos.current.x) * 0.12;
-    pos.current.y += (mouse.current.y - pos.current.y) * 0.12;
-    if (previewRef.current) {
-      previewRef.current.style.transform = `translate3d(${pos.current.x + 30}px, ${
-        pos.current.y - 120
-      }px, 0)`;
-    }
-    rafRef.current = requestAnimationFrame(animate);
+  // Mobile: track which carousel slide is centered.
+  const onTrackScroll = useCallback(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    const slide = track.firstElementChild;
+    if (!slide) return;
+    const step = slide.offsetWidth + 14;
+    const i = Math.round(track.scrollLeft / step);
+    setIndex((prev) => {
+      const next = Math.max(0, Math.min(total - 1, i));
+      return next === prev ? prev : next;
+    });
+  }, [total]);
+
+  const go = useCallback(
+    (dir) => {
+      if (lockRef.current) return;
+      lockRef.current = true;
+      setIndex((i) => (i + dir + total) % total);
+      setTimeout(() => { lockRef.current = false; }, 750);
+    },
+    [total]
+  );
+
+  const jumpTo = useCallback((i) => {
+    if (lockRef.current || i === undefined) return;
+    lockRef.current = true;
+    setIndex(i);
+    setTimeout(() => { lockRef.current = false; }, 750);
   }, []);
 
+  // Keyboard navigation
   useEffect(() => {
     if (isTouch) return;
-    const onMove = (e) => {
-      mouse.current.x = e.clientX;
-      mouse.current.y = e.clientY;
+    const onKey = (e) => {
+      if (e.key === "ArrowRight" || e.key === "ArrowDown") go(1);
+      if (e.key === "ArrowLeft" || e.key === "ArrowUp") go(-1);
+      if (e.key === "Enter") onOpenProject(projectsData[index]?.slug);
     };
-    window.addEventListener("mousemove", onMove, { passive: true });
-    rafRef.current = requestAnimationFrame(animate);
-    return () => {
-      window.removeEventListener("mousemove", onMove);
-      cancelAnimationFrame(rafRef.current);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [go, isTouch, index, onOpenProject]);
+
+  // Wheel navigation with a lockout so one gesture = one slide
+  useEffect(() => {
+    if (isTouch) return;
+    const onWheel = (e) => {
+      if (Math.abs(e.deltaY) < 24) return;
+      go(e.deltaY > 0 ? 1 : -1);
     };
-  }, [animate, isTouch]);
+    window.addEventListener("wheel", onWheel, { passive: true });
+    return () => window.removeEventListener("wheel", onWheel);
+  }, [go, isTouch]);
 
-  const hoveredProject =
-    hovered !== null ? projectsData.find((p) => p.id === hovered) : null;
+  /* ── Mobile: swipeable snap carousel, same design language ── */
+  if (isTouch) {
+    return (
+      <div className="ap-page ap-page--m" style={{ "--accent": project.accent }}>
+        <header className="ap-m-hero">
+          <div className="ap-m-label">Selected work</div>
+          <h1 className="ap-m-heading">Projects</h1>
+          <p className="ap-m-sub">Swipe through — tap a card to open the case study.</p>
+        </header>
 
+        <div className="ap-m-track" ref={trackRef} onScroll={onTrackScroll}>
+          {projectsData.map((p, i) => (
+            <motion.button
+              key={p.id}
+              className="ap-m-slide"
+              onClick={() => onOpenProject(p.slug)}
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55, ease: EASE, delay: 0.08 + i * 0.06 }}
+            >
+              <div className="ap-m-cover">
+                <ProjectCover project={p} />
+                <span className="ap-m-cover-num">{String(i + 1).padStart(2, "0")}</span>
+              </div>
+              <div className="ap-m-meta">
+                <span className="ap-m-category">{p.category}</span>
+                <span className="ap-m-year">{p.year}</span>
+              </div>
+              <h2 className="ap-m-title">{p.title}</h2>
+              <p className="ap-m-desc">{p.description}</p>
+              <span className="ap-m-cta">View case study →</span>
+            </motion.button>
+          ))}
+        </div>
+
+        {/* Counter — same language as desktop */}
+        <div className="ap-m-counter">
+          <RollingNumber value={index + 1} />
+          <span className="ap-counter-total">/ {String(total).padStart(2, "0")}</span>
+          <span className="ap-progress">
+            <span
+              className="ap-progress-fill"
+              style={{ width: `${((index + 1) / total) * 100}%` }}
+            />
+          </span>
+        </div>
+
+        <footer className="ap-footer ap-footer--m">
+          <span>© {new Date().getFullYear()} Sanskar Lalawat</span>
+          <span>AI Engineer — India</span>
+        </footer>
+      </div>
+    );
+  }
+
+  /* ── Desktop: full-viewport slider ── */
   return (
-    <div className="ap-page">
-      {/* Hero */}
-      <header className="ap-hero">
-        <motion.div
-          className="ap-hero-label"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          Selected Work
-        </motion.div>
-        <motion.h1
-          className="ap-hero-title"
-          initial={{ opacity: 0, y: 60 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
-        >
-          Projects
-          <sup className="ap-hero-count">
-            ({String(projectsData.length).padStart(2, "0")})
-          </sup>
-        </motion.h1>
-        <motion.p
-          className="ap-hero-sub"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-        >
-          AI systems, computer vision and intelligent automation — every
-          project engineered end to end, from model to production.
-        </motion.p>
-      </header>
-
-      {/* List */}
-      <div className="ap-list" onMouseLeave={() => setHovered(null)}>
-        {projectsData.map((project, index) => (
-          <motion.button
-            key={project.id}
-            className="ap-row"
-            onClick={() => onOpenProject(project.slug)}
-            onMouseEnter={() => setHovered(project.id)}
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-40px" }}
-            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <div className="ap-row-inner">
-              {isTouch ? (
-                <div className="ap-row-mobile-cover">
-                  <ProjectCover project={project} showTitle={false} />
-                </div>
-              ) : (
-                <span className="ap-row-index">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-              )}
-              <div className="ap-row-main">
-                <span className="ap-row-title">{project.title}</span>
-                <p className="ap-row-desc">{project.description}</p>
-              </div>
-              <div className="ap-row-meta">
-                <span className="ap-row-category">{project.category}</span>
-                <span className="ap-row-year">{project.year}</span>
-                {!isTouch && <span className="ap-row-arrow">→</span>}
-              </div>
-            </div>
-          </motion.button>
-        ))}
+    <div className="ap-page ap-page--slider" style={{ "--accent": project.accent }}>
+      {/* Top strip */}
+      <div className="ap-top">
+        <span className="ap-top-label">Selected work</span>
+        <span className="ap-top-hint">Scroll, arrow keys, or click a title</span>
       </div>
 
-      {/* Floating preview */}
-      {!isTouch && (
-        <div
-          ref={previewRef}
-          className={`ap-preview ${hoveredProject ? "visible" : ""}`}
-        >
-          <div ref={innerRef} className="ap-preview-inner">
-            {hoveredProject && <ProjectCover project={hoveredProject} />}
-          </div>
-        </div>
-      )}
+      <div className="ap-stage">
+        {/* Left — index of all projects */}
+        <nav className="ap-index">
+          {projectsData.map((p, i) => (
+            <button
+              key={p.id}
+              className={`ap-index-item ${i === index ? "active" : ""}`}
+              onClick={() => jumpTo(i)}
+              onDoubleClick={() => onOpenProject(p.slug)}
+            >
+              <span className="ap-index-num">{String(i + 1).padStart(2, "0")}</span>
+              <span className="ap-index-title">{p.title}</span>
+            </button>
+          ))}
+        </nav>
 
-      <footer className="ap-footer">
-        <span>© {new Date().getFullYear()} Sanskar Lalawat</span>
-        <span>AI Engineer — India</span>
-      </footer>
+        {/* Center — media card */}
+        <div className="ap-media" onClick={() => onOpenProject(project.slug)}>
+          <AnimatePresence mode="popLayout" initial={false}>
+            <motion.div
+              key={project.id}
+              className="ap-media-inner"
+              initial={{ clipPath: "inset(0 0 100% 0)", scale: 1.08 }}
+              animate={{ clipPath: "inset(0 0 0% 0)", scale: 1 }}
+              exit={{ opacity: 0, scale: 0.98 }}
+              transition={{ duration: 0.7, ease: EASE }}
+            >
+              <ProjectCover project={project} />
+            </motion.div>
+          </AnimatePresence>
+          <span className="ap-media-open">Open case study →</span>
+        </div>
+
+        {/* Right — active project details */}
+        <div className="ap-detail">
+          <div className="ap-detail-meta">
+            <AnimatePresence mode="popLayout" initial={false}>
+              <motion.span
+                key={project.id}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.45, ease: EASE }}
+              >
+                {project.category}
+                <span className="ap-detail-dot">·</span>
+                {project.year}
+              </motion.span>
+            </AnimatePresence>
+          </div>
+
+          <AnimatePresence mode="popLayout" initial={false}>
+            <RevealTitle key={project.id} id={project.id} text={project.title} />
+          </AnimatePresence>
+
+          <AnimatePresence mode="popLayout" initial={false}>
+            <motion.p
+              key={project.id}
+              className="ap-detail-desc"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.55, ease: EASE, delay: 0.12 }}
+            >
+              {project.description}
+            </motion.p>
+          </AnimatePresence>
+
+          <motion.button
+            className="ap-detail-cta"
+            onClick={() => onOpenProject(project.slug)}
+            whileHover={{ x: 4 }}
+          >
+            View case study →
+          </motion.button>
+        </div>
+      </div>
+
+      {/* Bottom strip — counter + prev/next */}
+      <div className="ap-bottom">
+        <div className="ap-counter">
+          <RollingNumber value={index + 1} />
+          <span className="ap-counter-total">/ {String(total).padStart(2, "0")}</span>
+          <span className="ap-progress">
+            <span
+              className="ap-progress-fill"
+              style={{ width: `${((index + 1) / total) * 100}%` }}
+            />
+          </span>
+        </div>
+        <div className="ap-nav">
+          <button className="ap-nav-btn" onClick={() => go(-1)}>← Prev</button>
+          <button className="ap-nav-btn" onClick={() => go(1)}>Next →</button>
+        </div>
+      </div>
     </div>
   );
 };

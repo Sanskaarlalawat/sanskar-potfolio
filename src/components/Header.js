@@ -39,21 +39,23 @@ const Header = ({ onHome, onProjects, onAbout, mobileMenuOpen, setMobileMenuOpen
             transition={{ duration: 0.7, delay: 0.2 }}
             className="hidden md:flex items-center gap-6 bg-black/70 backdrop-blur-md border border-white/10 rounded-full px-7 py-2.5 shadow-lg"
           >
-            <motion.button
-              onClick={onProjects}
+            <motion.a
+              href="/projects"
+              onClick={(e) => { e.preventDefault(); onProjects(); }}
               whileHover={{ scale: 1.06 }}
               className="text-white/80 hover:text-white transition-colors text-sm font-medium tracking-wide"
             >
               My Work
-            </motion.button>
+            </motion.a>
             <span className="w-px h-3.5 bg-white/10" />
-            <motion.button
-              onClick={onAbout}
+            <motion.a
+              href="/about"
+              onClick={(e) => { e.preventDefault(); onAbout(); }}
               whileHover={{ scale: 1.06 }}
               className="text-white/80 hover:text-white transition-colors text-sm font-medium tracking-wide"
             >
               About
-            </motion.button>
+            </motion.a>
           </motion.nav>
 
           <motion.button

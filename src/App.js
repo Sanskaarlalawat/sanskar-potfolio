@@ -16,13 +16,19 @@ import ProjectDetail from './pages/ProjectDetail';
 import AboutPage from './pages/AboutPage';
 import PageTransition from './components/PageTransition';
 import { getProjectBySlug } from './data/projects';
+import { applySeo, seoForRoute } from './seo';
 
-// Tiny hash router: '' → home, '#/projects' → list, '#/project/<slug>' → detail, '#/about' → about.
+// Tiny path router: '/' → home, '/projects' → list, '/project/<slug>' → detail, '/about' → about.
+// Old '#/...' links are upgraded to real paths so Google indexes every page separately.
+if (window.location.hash.startsWith('#/')) {
+  window.history.replaceState(null, '', window.location.hash.slice(1));
+}
+
 const getRoute = () => {
-  const hash = window.location.hash.replace(/^#\/?/, '');
-  if (hash === 'projects') return { page: 'projects' };
-  if (hash === 'about') return { page: 'about' };
-  if (hash.startsWith('project/')) return { page: 'project', slug: hash.slice('project/'.length) };
+  const path = window.location.pathname.replace(/^\/+|\/+$/g, '');
+  if (path === 'projects') return { page: 'projects' };
+  if (path === 'about') return { page: 'about' };
+  if (path.startsWith('project/')) return { page: 'project', slug: path.slice('project/'.length) };
   return { page: 'home' };
 };
 
@@ -39,12 +45,12 @@ const App = () => {
   const transitionLockRef = useRef(false);
   useScroll();
 
-  // Route changes go through the curtain transition: cover → swap hash → reveal.
-  const navigate = useCallback((hash, label, tag) => {
-    const current = window.location.hash || '#/';
-    if (current === hash || transitionLockRef.current) return;
+  // Route changes go through the curtain transition: cover → swap path → reveal.
+  const navigate = useCallback((path, label, tag) => {
+    const current = window.location.pathname || '/';
+    if (current === path || transitionLockRef.current) return;
     transitionLockRef.current = true;
-    setTransition({ hash, label, tag });
+    setTransition({ path, label, tag });
   }, []);
 
   const handleTransitionDone = useCallback(() => {
@@ -53,31 +59,41 @@ const App = () => {
   }, []);
 
   const openAllProjects = useCallback(() => {
-    navigate('#/projects', 'All Projects', 'Selected Work');
+    navigate('/projects', 'All Projects', 'Selected Work');
   }, [navigate]);
 
   const openAbout = useCallback(() => {
-    navigate('#/about', 'About', 'Sanskar Lalawat');
+    navigate('/about', 'About', 'Sanskar Lalawat');
   }, [navigate]);
 
   const openProject = useCallback((slug) => {
     const project = getProjectBySlug(slug);
     navigate(
-      `#/project/${slug}`,
+      `/project/${slug}`,
       project ? project.title : 'Project',
       project ? `Project — ${String(project.id).padStart(2, '0')}` : 'Project'
     );
   }, [navigate]);
 
   const goHome = useCallback(() => {
-    navigate('#/', 'Home', 'Sanskar Lalawat');
+    navigate('/', 'Home', 'Sanskar Lalawat');
   }, [navigate]);
 
   useEffect(() => {
-    const onHashChange = () => setRoute(getRoute());
-    window.addEventListener('hashchange', onHashChange);
-    return () => window.removeEventListener('hashchange', onHashChange);
+    const onNavigate = () => setRoute(getRoute());
+    window.addEventListener('popstate', onNavigate);
+    window.addEventListener('app:navigate', onNavigate);
+    return () => {
+      window.removeEventListener('popstate', onNavigate);
+      window.removeEventListener('app:navigate', onNavigate);
+    };
   }, []);
+
+  // Keep title / description / canonical in sync with the active route.
+  useEffect(() => {
+    const project = route.page === 'project' ? getProjectBySlug(route.slug) : null;
+    applySeo(seoForRoute(route, project));
+  }, [route]);
   
   const containerRef = useRef(null);
   const heroRef = useRef(null);

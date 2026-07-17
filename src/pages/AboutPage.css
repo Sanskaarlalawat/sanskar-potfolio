@@ -1,370 +1,257 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&display=swap');
+/* ══════════════════════════════════════════
+   ABOUT — light editorial layout
+   Same design language as the case study pages.
+══════════════════════════════════════════ */
 
 .about-page {
   min-height: 100vh;
-  background: #0a0a0a;
-  color: #f1f1ee;
-  font-family: 'Space Grotesk', sans-serif;
-  overflow-x: hidden;
+  background: #ffffff;
+  color: #211b1c;
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+}
+
+.about-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 24px 48px;
 }
 
 /* ── Hero ── */
-.about-hero {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 7rem 2rem 4rem;
-  border-bottom: 1px solid #1c1c1c;
-  position: relative;
-}
+.about-hero { padding-top: 158px; }
 
-.about-hero-label {
-  font-size: 0.75rem;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: #4a4a4a;
-  margin-bottom: 2rem;
+.about-meta {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 16px;
+  color: #837d7d;
+  letter-spacing: -0.01em;
+  margin-bottom: 14px;
 }
-.about-hero-label::before {
-  content: '';
-  width: 40px;
-  height: 1px;
-  background: #4a4a4a;
-}
+.about-meta-dot { color: #c9c2c2; }
 
-.about-hero-name {
-  font-family: 'Space Grotesk', sans-serif;
-  font-weight: 800;
-  font-size: clamp(4rem, 16vw, 14rem);
-  line-height: 0.85;
-  text-transform: uppercase;
-  letter-spacing: 0.01em;
-  margin: 0 0 3rem;
-  color: #f1f1ee;
-}
-
-.about-hero-bottom {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rem;
-  align-items: end;
-}
-
-.about-hero-title {
-  font-size: clamp(1.1rem, 2.5vw, 1.7rem);
-  font-weight: 300;
-  line-height: 1.5;
-  color: #8a8a8a;
-  max-width: 480px;
-}
-
-.about-hero-title strong {
-  color: #f1f1ee;
-  font-weight: 500;
-}
-
-.about-hero-status {
-  display: flex;
+.about-available {
+  display: inline-flex;
   align-items: center;
-  gap: 0.6rem;
-  font-size: 0.8rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: #6b6b6b;
-  justify-content: flex-end;
+  gap: 7px;
+  color: #2e7d4f;
 }
-
-.about-hero-status-dot {
+.about-available-dot {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: #b8f5a0;
-  box-shadow: 0 0 8px #b8f5a0;
-  animation: pulse 2.2s ease-in-out infinite;
+  background: #34a862;
 }
 
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
+.about-title {
+  font-size: clamp(40px, 7vw, 64px);
+  font-weight: 700;
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+  color: #181212;
+  margin: 0 0 16px;
 }
 
-/* ── Stats bar ── */
+.about-subtitle {
+  font-size: clamp(19px, 2.6vw, 23px);
+  font-weight: 400;
+  line-height: 1.45;
+  letter-spacing: -0.015em;
+  color: #837d7d;
+  margin: 0;
+}
+
+/* ── Stat band ── */
 .about-stats {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  border-bottom: 1px solid #1c1c1c;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 56px;
+  padding: 28px 0;
+  border-top: 1px solid #ece8e7;
+  border-bottom: 1px solid #ece8e7;
 }
-
 .about-stat {
-  padding: 2.5rem 2rem;
-  border-right: 1px solid #1c1c1c;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
-.about-stat:last-child { border-right: none; }
-
-.about-stat-number {
-  font-family: 'Space Grotesk', sans-serif;
-  font-weight: 800;
-  font-size: clamp(2.5rem, 5vw, 4.5rem);
-  line-height: 1;
-  color: #f1f1ee;
-  margin-bottom: 0.4rem;
+.about-stat-value {
+  font-size: clamp(24px, 3.4vw, 32px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #181212;
 }
-
 .about-stat-label {
-  font-size: 0.7rem;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: #4a4a4a;
+  font-size: 14px;
+  color: #837d7d;
+  letter-spacing: -0.01em;
 }
 
-/* ── Bio section ── */
-.about-bio {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: 4rem;
-  padding: 6rem 2rem;
-  border-bottom: 1px solid #1c1c1c;
+/* ── Sections ── */
+.about-section { padding-top: 96px; }
+
+.about-heading {
+  font-size: clamp(28px, 4.4vw, 36px);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: #181212;
+  margin: 0 0 20px;
 }
 
-.about-bio-label {
-  font-size: 0.75rem;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: #6b6b6b;
-  padding-top: 0.5rem;
+.about-body {
+  font-size: 19px;
+  font-weight: 400;
+  line-height: 1.55;
+  letter-spacing: -0.012em;
+  color: #211b1c;
+  margin: 0 0 18px;
+}
+.about-body:last-child { margin-bottom: 0; }
+
+/* ── Experience ── */
+.about-exp-list { margin-top: 8px; }
+
+.about-exp {
+  padding: 30px 0;
+  border-bottom: 1px solid #eee9e8;
+}
+.about-exp:last-child { border-bottom: none; }
+
+.about-exp-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.about-exp-role {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #181212;
+  margin: 0 0 2px;
+}
+.about-exp-company {
+  font-size: 16px;
+  color: #837d7d;
+  letter-spacing: -0.01em;
+}
+.about-exp-period {
+  font-size: 15px;
+  color: #a39c9c;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+.about-exp-desc {
+  font-size: 17px;
+  line-height: 1.55;
+  letter-spacing: -0.01em;
+  color: #554f4f;
+  margin: 0 0 14px;
 }
 
-.about-bio-text p {
-  font-size: clamp(1rem, 1.8vw, 1.3rem);
-  font-weight: 300;
-  line-height: 1.8;
-  color: #c9c9c4;
-  margin: 0 0 1.5rem;
+/* ── Tag pills ── */
+.about-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
-.about-bio-text p:last-child { margin-bottom: 0; }
+.about-tag {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  letter-spacing: -0.01em;
+  color: #554f4f;
+  background: #f5f2f1;
+  border-radius: 100px;
+  padding: 6px 14px;
+  box-shadow: inset 0 1px 0 0 rgba(24, 18, 18, 0.05);
+}
 
 /* ── Skills ── */
 .about-skills {
   display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: 4rem;
-  padding: 6rem 2rem;
-  border-bottom: 1px solid #1c1c1c;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px 24px;
+  margin-top: 8px;
 }
-
-.about-skills-label {
-  font-size: 0.75rem;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: #6b6b6b;
-  padding-top: 0.5rem;
-}
-
-.about-skills-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 3rem;
-}
-
-.about-skill-group-title {
-  font-size: 0.7rem;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: #4a4a4a;
-  margin-bottom: 1rem;
-}
-
-.about-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
-}
-
-.about-tag {
-  font-size: 0.78rem;
-  letter-spacing: 0.05em;
-  padding: 0.45rem 1rem;
-  border: 1px solid #2a2a2a;
-  border-radius: 999px;
-  color: #9a9a94;
-  transition: border-color 0.25s ease, color 0.25s ease;
-}
-.about-tag:hover {
-  border-color: #f1f1ee;
-  color: #f1f1ee;
-}
-
-/* ── Experience / Timeline ── */
-.about-exp {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: 4rem;
-  padding: 6rem 2rem;
-  border-bottom: 1px solid #1c1c1c;
-}
-
-.about-exp-label {
-  font-size: 0.75rem;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: #6b6b6b;
-  padding-top: 0.5rem;
-  position: sticky;
-  top: 6rem;
-  align-self: start;
-}
-
-.about-timeline { display: flex; flex-direction: column; gap: 0; }
-
-.about-timeline-item {
-  display: grid;
-  grid-template-columns: 80px 1fr;
-  gap: 2rem;
-  padding: 2.5rem 0;
-  border-bottom: 1px solid #1c1c1c;
-  position: relative;
-}
-.about-timeline-item:first-child { padding-top: 0; }
-.about-timeline-item:last-child { border-bottom: none; }
-
-.about-tl-logo {
-  width: 48px;
-  height: 48px;
-  border-radius: 10px;
-  background: #181818;
-  border: 1px solid #282828;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.75rem;
+.about-skill-title {
+  font-size: 15px;
   font-weight: 600;
-  letter-spacing: 0.05em;
-  color: #9a9a94;
-  flex-shrink: 0;
-  margin-top: 0.2rem;
+  letter-spacing: -0.01em;
+  color: #837d7d;
+  margin: 0 0 12px;
 }
 
-.about-tl-company {
-  font-family: 'Space Grotesk', sans-serif;
-  font-weight: 700;
-  font-size: clamp(1.6rem, 3vw, 2.4rem);
-  color: #f1f1ee;
-  letter-spacing: 0.02em;
-  margin-bottom: 0.35rem;
-  line-height: 1;
-}
-
-.about-tl-role {
-  display: inline-block;
-  font-size: 0.75rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: #9a9a94;
-  margin-bottom: 0.6rem;
-}
-
-.about-tl-period {
-  font-size: 0.7rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: #4a4a4a;
-  margin-bottom: 1.2rem;
-}
-
-.about-tl-desc {
-  font-size: 0.95rem;
-  font-weight: 300;
-  line-height: 1.7;
-  color: #7a7a7a;
-  margin-bottom: 1.2rem;
-}
-
-.about-tl-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.about-tl-tag {
-  font-size: 0.7rem;
-  letter-spacing: 0.08em;
-  padding: 0.3rem 0.8rem;
-  border: 1px solid #222;
-  border-radius: 999px;
-  color: #6b6b6b;
-}
-
-/* ── Contact strip ── */
+/* ── Contact ── */
 .about-contact {
-  padding: 6rem 2rem;
+  margin-top: 110px;
+  padding: 40px 0 0;
+  border-top: 1px solid #ece8e7;
+}
+.about-contact-title {
+  font-size: clamp(30px, 5vw, 44px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: #181212;
+  margin: 0 0 10px;
+}
+.about-contact-sub {
+  font-size: 18px;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  color: #837d7d;
+  margin: 0 0 24px;
+}
+.about-contact-links {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 2rem;
+  flex-wrap: wrap;
+  gap: 12px;
 }
-
-.about-contact-text {
-  font-family: 'Space Grotesk', sans-serif;
-  font-weight: 800;
-  font-size: clamp(2.5rem, 7vw, 7rem);
-  line-height: 0.9;
-  text-transform: uppercase;
-  color: #f1f1ee;
-}
-
 .about-contact-link {
   display: inline-flex;
   align-items: center;
-  gap: 0.75rem;
-  background: #f1f1ee;
-  color: #0a0a0a;
-  font-size: 0.8rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
+  font-size: 16px;
   font-weight: 600;
-  padding: 1rem 2rem;
-  border-radius: 999px;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+  background: #181212;
+  border-radius: 100px;
+  padding: 12px 22px;
   text-decoration: none;
-  white-space: nowrap;
-  transition: background 0.25s ease, color 0.25s ease;
-  flex-shrink: 0;
+  transition: background 0.2s ease;
 }
-.about-contact-link:hover {
-  background: #d4d4d0;
+.about-contact-link:hover { background: #3f393a; }
+
+.about-contact-link--ghost {
+  color: #181212;
+  background: #f5f2f1;
 }
+.about-contact-link--ghost:hover { background: #ece8e7; color: #181212; }
 
 /* ── Footer ── */
 .about-footer {
   display: flex;
   justify-content: space-between;
-  padding: 2.5rem 2rem 3rem;
-  color: #4a4a4a;
-  font-size: 0.7rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  border-top: 1px solid #1c1c1c;
+  margin-top: 90px;
+  padding-top: 24px;
+  border-top: 1px solid #f1edec;
+  font-size: 14px;
+  color: #a39c9c;
+  letter-spacing: -0.01em;
 }
 
 /* ── Mobile ── */
-@media (max-width: 768px) {
-  .about-hero { padding: 6rem 1.25rem 3rem; }
-  .about-hero-bottom { grid-template-columns: 1fr; gap: 1.5rem; }
-  .about-hero-status { justify-content: flex-start; }
-  .about-stats { grid-template-columns: 1fr 1fr; }
-  .about-stat { border-right: none; border-bottom: 1px solid #1c1c1c; }
-  .about-stat:nth-child(odd) { border-right: 1px solid #1c1c1c; }
-  .about-stat:nth-child(3), .about-stat:nth-child(4) { border-bottom: none; }
-  .about-bio { grid-template-columns: 1fr; gap: 1.5rem; padding: 3rem 1.25rem; }
-  .about-skills { grid-template-columns: 1fr; gap: 1.5rem; padding: 3rem 1.25rem; }
-  .about-skills-grid { grid-template-columns: 1fr; gap: 2rem; }
-  .about-exp { grid-template-columns: 1fr; gap: 1.5rem; padding: 3rem 1.25rem; }
-  .about-exp-label { position: static; }
-  .about-timeline-item { grid-template-columns: 1fr; gap: 0.75rem; }
-  .about-tl-logo { width: 40px; height: 40px; font-size: 0.65rem; }
-  .about-contact { flex-direction: column; align-items: flex-start; padding: 4rem 1.25rem; }
-  .about-footer { padding: 2rem 1.25rem; flex-direction: column; gap: 0.5rem; }
+@media (max-width: 700px) {
+  .about-hero { padding-top: 128px; }
+  .about-section { padding-top: 72px; }
+  .about-stats { grid-template-columns: repeat(3, 1fr); }
+  .about-skills { grid-template-columns: 1fr; }
+  .about-exp-head { flex-direction: column; gap: 4px; }
+  .about-footer { flex-direction: column; gap: 6px; }
 }
