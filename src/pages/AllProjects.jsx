@@ -4,25 +4,12 @@ import projectsData from "../data/projects";
 import "./AllProjects.css";
 
 const EASE = [0.22, 1, 0.36, 1];
-const DEFAULT_COVER_VIDEO = "/projects-loop-v2.mp4";
 
-// Project cover. `withVideo` plays the looping clip (one card at a time on the
-// desktop slider); otherwise it falls back to the gradient + rings artwork.
-const ProjectCover = ({ project, withVideo = false }) => (
+// Gradient cover used when a project has no real image yet.
+const ProjectCover = ({ project }) => (
   <div className="ap-cover" style={{ background: project.gradient }}>
     {project.image ? (
       <img src={project.image} alt={project.title} />
-    ) : withVideo ? (
-      <video
-        className="ap-cover-video"
-        key={project.coverVideo || DEFAULT_COVER_VIDEO}
-        src={project.coverVideo || DEFAULT_COVER_VIDEO}
-        autoPlay
-        muted
-        loop
-        playsInline
-        aria-hidden="true"
-      />
     ) : (
       <svg
         className="ap-cover-rings"
@@ -236,7 +223,7 @@ const AllProjects = ({ onOpenProject }) => {
               exit={{ opacity: 0, scale: 0.98 }}
               transition={{ duration: 0.7, ease: EASE }}
             >
-              <ProjectCover project={project} withVideo />
+              <ProjectCover project={project} />
             </motion.div>
           </AnimatePresence>
           <span className="ap-media-open">Open case study →</span>
