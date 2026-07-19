@@ -183,6 +183,26 @@ const ProjectDetail = ({ slug, onBack, onOpenProject }) => {
           ))}
         </motion.section>
 
+        {/* Demo video — voice agent only */}
+        {isVoiceAgent && (
+          <motion.section className="cs-section" {...rise}>
+            <h2 className="cs-heading">See it in action</h2>
+            <p className="cs-body">
+              A live walkthrough of Siya handling a real call — hear how she
+              greets the caller, answers questions, and captures the lead.
+            </p>
+            <div className="cs-demo">
+              <video
+                src="/voice-agent-demo.mp4"
+                poster="/voice-agent-demo-poster.jpg"
+                controls
+                playsInline
+                preload="none"
+              />
+            </div>
+          </motion.section>
+        )}
+
         {/* Highlights */}
         <motion.section className="cs-section" {...rise}>
           <h2 className="cs-heading">Highlights</h2>

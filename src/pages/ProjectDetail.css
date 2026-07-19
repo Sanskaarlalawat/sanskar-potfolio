@@ -169,6 +169,22 @@
 }
 .cs-body:last-child { margin-bottom: 0; }
 
+/* ── Demo video ── */
+.cs-demo {
+  margin-top: 24px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #000;
+  box-shadow:
+    0 0 0 1px rgba(24, 18, 18, 0.06),
+    0 12px 40px rgba(24, 18, 18, 0.12);
+}
+.cs-demo video {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
 /* ── Highlight cards ── */
 .cs-cards {
   display: grid;
