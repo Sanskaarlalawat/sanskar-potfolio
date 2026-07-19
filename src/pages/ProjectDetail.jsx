@@ -194,7 +194,7 @@ const ProjectDetail = ({ slug, onBack, onOpenProject }) => {
             <div className="cs-demo">
               <video
                 src="/voice-agent-demo.mp4"
-                poster="/voice-agent-demo-poster.jpg"
+                poster="/voice-agent-demo-poster-v2.jpg"
                 controls
                 playsInline
                 preload="none"
