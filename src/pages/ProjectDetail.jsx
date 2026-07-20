@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import { getProjectBySlug, getNextProject } from "../data/projects";
+import SideRails from "../components/SideRails";
 import "./ProjectDetail.css";
 
 const rise = {
@@ -122,6 +123,7 @@ const ProjectDetail = ({ slug, onBack, onOpenProject }) => {
 
   return (
     <div className="cs-page" key={slug} style={{ "--accent": project.accent }}>
+      <SideRails left={project.title} right={`${project.category} — ${project.year}`} />
       <div className="cs-container">
         {/* Back */}
         <button className="cs-back" onClick={onBack}>

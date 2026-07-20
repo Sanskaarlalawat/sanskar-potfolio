@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { motion } from "framer-motion";
+import SideRails from "../components/SideRails";
 import "./AboutPage.css";
 
 const rise = {
@@ -76,6 +77,7 @@ const AboutPage = () => {
 
   return (
     <div className="about-page">
+      <SideRails left="Sanskar Lalawat" right="About — AI / ML Engineer" />
       <div className="about-container">
         {/* Hero */}
         <motion.header

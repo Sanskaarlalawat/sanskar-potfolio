@@ -1,0 +1,65 @@
+/* Editorial side rails — frame the centered 800px reading column and fill the
+   otherwise-empty side margins with a subtle vertical label. Light-page tones. */
+.rails {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* full-height vertical frame lines, ~32px outside the column edges */
+.rail-line {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent 0,
+    #ebe7e3 12%,
+    #ebe7e3 88%,
+    transparent 100%
+  );
+}
+.rail-line--l { left: calc(50% - 432px); }
+.rail-line--r { right: calc(50% - 432px); }
+
+/* small corner ticks for a measured, intentional feel */
+.rail-tick {
+  position: fixed;
+  width: 9px;
+  height: 1px;
+  background: #ddd7d2;
+}
+.rail-tick--tl { top: 118px; left: calc(50% - 436px); }
+.rail-tick--tr { top: 118px; right: calc(50% - 436px); }
+.rail-tick--bl { bottom: 40px; left: calc(50% - 436px); }
+.rail-tick--br { bottom: 40px; right: calc(50% - 436px); }
+
+/* vertical running labels, centered in each margin */
+.rail-text {
+  position: fixed;
+  top: 50%;
+  writing-mode: vertical-rl;
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: #b4ada8;
+  white-space: nowrap;
+  user-select: none;
+}
+.rail-text--l {
+  left: calc(50% - 470px);
+  transform: translateY(-50%) rotate(180deg);
+}
+.rail-text--r {
+  right: calc(50% - 470px);
+  transform: translateY(-50%);
+}
+
+/* Hide once the side margins get too small to hold the rails cleanly. */
+@media (max-width: 1160px) {
+  .rails { display: none; }
+}
