@@ -167,42 +167,129 @@
   will-change: transform;
 }
 
-/* ── Sections — numbered two-column editorial layout ── */
-.cs-section {
+/* ══════════════════════════════════════════
+   SCROLLYTELLING — pinned visual + scrolling story
+══════════════════════════════════════════ */
+.cs-scrolly {
   display: grid;
-  grid-template-columns: 210px minmax(0, 1fr);
-  gap: 64px;
-  padding-top: 104px;
-  border-top: 1px solid #f1edec;
-  margin-top: 40px;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 72px;
+  align-items: start;
+  margin-top: 64px;
 }
-.cs-section:first-of-type { border-top: none; margin-top: 0; }
 
-.cs-section-head {
+/* Left — pinned reactive panel */
+.cs-pin {
   position: sticky;
-  top: 120px;
-  align-self: start;
+  top: 96px;
+  height: calc(100vh - 132px);
+  min-height: 420px;
+}
+.cs-pin-panel {
+  position: relative;
+  height: 100%;
+  border-radius: 22px;
+  overflow: hidden;
+  padding: 34px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  justify-content: flex-end;
+  box-shadow:
+    0 0 0 1px rgba(24, 18, 18, 0.05),
+    0 20px 60px rgba(24, 18, 18, 0.14);
 }
-.cs-section-num {
+.cs-pin-rings {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.5;
+}
+.cs-pin-project {
+  position: absolute;
+  top: 30px;
+  left: 34px;
+  right: 34px;
   font-size: 13px;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+}
+.cs-pin-body {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.cs-pin-num {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.85);
+}
+.cs-pin-total { color: rgba(255, 255, 255, 0.45); }
+.cs-pin-label {
+  font-size: clamp(30px, 3.4vw, 46px);
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+}
+.cs-pin-dots {
+  position: absolute;
+  bottom: 34px;
+  right: 34px;
+  z-index: 1;
+  display: flex;
+  gap: 7px;
+}
+.cs-pin-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.32);
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+.cs-pin-dot.on {
+  background: #ffffff;
+  transform: scale(1.25);
+}
+
+/* Right — scrolling narrative */
+.cs-story { min-width: 0; }
+.cs-story-section {
+  min-height: 82vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 40px 0;
+}
+.cs-story-section:first-child { padding-top: 8px; }
+.cs-story-head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+.cs-story-num {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
   color: var(--accent, #837d7d);
 }
-.cs-section-label {
-  font-size: 22px;
+.cs-story-label {
+  font-size: clamp(26px, 3.2vw, 34px);
   font-weight: 700;
-  line-height: 1.15;
-  letter-spacing: -0.02em;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
   color: #181212;
   margin: 0;
 }
-.cs-section-col { max-width: 720px; }
+.cs-story-col { max-width: 620px; }
 
-/* keep the editorial heading class for any standalone use */
+/* Editorial heading class, kept for standalone use */
 .cs-heading {
   font-size: clamp(28px, 4.4vw, 36px);
   font-weight: 700;
@@ -417,24 +504,31 @@
 
 /* ── Mobile ── */
 /* Collapse the two-column sections when the sidebar no longer fits. */
+/* Collapse scrollytelling to a single column; the pin becomes a normal
+   banner at the top of the story instead of a sticky panel. */
 @media (max-width: 940px) {
-  .cs-section {
+  .cs-scrolly {
     grid-template-columns: 1fr;
-    gap: 18px;
-    padding-top: 64px;
+    gap: 28px;
+    margin-top: 40px;
   }
-  .cs-section-head {
+  .cs-pin {
     position: static;
-    flex-direction: row;
-    align-items: baseline;
-    gap: 12px;
+    height: 200px;
+    min-height: 0;
   }
-  .cs-section-col { max-width: none; }
+  .cs-pin-dots { display: none; }
+  .cs-story-section {
+    min-height: 0;
+    padding: 40px 0;
+    border-top: 1px solid #f1edec;
+  }
+  .cs-story-section:first-child { border-top: none; padding-top: 8px; }
+  .cs-story-col { max-width: none; }
 }
 
 @media (max-width: 700px) {
   .cs-back { margin-top: 96px; }
-  .cs-section { padding-top: 56px; }
   .cs-stats { grid-template-columns: 1fr 1fr; row-gap: 24px; }
   .cs-cards { grid-template-columns: 1fr; }
   .cs-step { grid-template-columns: 40px 1fr; }

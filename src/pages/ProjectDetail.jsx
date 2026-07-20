@@ -1,7 +1,16 @@
-import React, { useEffect, useRef } from "react";
-import { motion } from "framer-motion";
+import React, { useEffect, useRef, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { getProjectBySlug, getNextProject } from "../data/projects";
 import "./ProjectDetail.css";
+
+const RINGS = (
+  <svg className="cs-pin-rings" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice">
+    <circle cx="320" cy="70" r="150" fill="none" stroke="rgba(0,0,0,0.16)" />
+    <circle cx="320" cy="70" r="100" fill="none" stroke="rgba(0,0,0,0.16)" />
+    <circle cx="70" cy="340" r="120" fill="none" stroke="rgba(0,0,0,0.16)" />
+    <line x1="0" y1="200" x2="400" y2="200" stroke="rgba(0,0,0,0.12)" />
+  </svg>
+);
 
 const rise = {
   initial: { opacity: 0, y: 20 },
@@ -102,9 +111,28 @@ const ProjectDetail = ({ slug, onBack, onOpenProject }) => {
   const project = getProjectBySlug(slug);
   const nextProject = getNextProject(slug);
   const progressRef = useRef(null);
+  const sectionRefs = useRef([]);
+  const [active, setActive] = useState(0);
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    setActive(0);
+  }, [slug]);
+
+  // Scrollytelling: mark the section crossing the viewport's middle band as active.
+  useEffect(() => {
+    const els = sectionRefs.current.filter(Boolean);
+    if (!els.length) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) setActive(Number(e.target.dataset.idx));
+        });
+      },
+      { rootMargin: "-45% 0px -45% 0px", threshold: 0 }
+    );
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
   }, [slug]);
 
   // Thin reading-progress bar tied to scroll position.
@@ -265,29 +293,62 @@ const ProjectDetail = ({ slug, onBack, onOpenProject }) => {
           </motion.div>
         )}
 
-        {/* Cover */}
-        <motion.div
-          className="cs-cover"
-          style={{ background: project.gradient }}
-          {...rise}
-        >
-          {project.image ? (
-            <img src={project.image} alt={project.title} />
-          ) : (
-            <span className="cs-cover-title">{project.title}</span>
-          )}
-        </motion.div>
-
-        {/* Numbered content sections */}
-        {sections.map((s, i) => (
-          <motion.section className="cs-section" key={s.label} {...rise}>
-            <div className="cs-section-head">
-              <span className="cs-section-num">{String(i + 1).padStart(2, "0")}</span>
-              <h2 className="cs-section-label">{s.label}</h2>
+        {/* Scrollytelling: pinned visual + scrolling narrative */}
+        <div className="cs-scrolly">
+          {/* Pinned panel — reacts to the active section */}
+          <div className="cs-pin">
+            <div className="cs-pin-panel" style={{ background: project.gradient }}>
+              {RINGS}
+              <span className="cs-pin-project">{project.title}</span>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  className="cs-pin-body"
+                  key={active}
+                  initial={{ opacity: 0, y: 14 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -14 }}
+                  transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <span className="cs-pin-num">
+                    {String(active + 1).padStart(2, "0")}
+                    <span className="cs-pin-total"> / {String(sections.length).padStart(2, "0")}</span>
+                  </span>
+                  <span className="cs-pin-label">{sections[active].label}</span>
+                </motion.div>
+              </AnimatePresence>
+              <div className="cs-pin-dots">
+                {sections.map((s, i) => (
+                  <span key={s.label} className={`cs-pin-dot ${i === active ? "on" : ""}`} />
+                ))}
+              </div>
             </div>
-            <div className="cs-section-col">{s.body}</div>
-          </motion.section>
-        ))}
+          </div>
+
+          {/* Scrolling narrative */}
+          <div className="cs-story">
+            {sections.map((s, i) => (
+              <section
+                className="cs-story-section"
+                key={s.label}
+                data-idx={i}
+                ref={(el) => (sectionRefs.current[i] = el)}
+              >
+                <motion.div
+                  initial={{ opacity: 0, y: 24 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-80px" }}
+                  transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <div className="cs-story-head">
+                    <span className="cs-story-num">{String(i + 1).padStart(2, "0")}</span>
+                    <h2 className="cs-story-label">{s.label}</h2>
+                  </div>
+                  <div className="cs-story-col">{s.body}</div>
+                </motion.div>
+              </section>
+            ))}
+          </div>
+        </div>
 
         {/* Gallery — only when real images exist */}
         {project.gallery.length > 0 && (
