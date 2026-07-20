@@ -59,43 +59,58 @@ const PillsVisual = ({ tags }) => (
   </div>
 );
 
-// AI ↔ caller live conversation: pulsing call rings, a signal travelling back
-// and forth, and alternating "talking" equalizers under each side.
+// Polished live-call scene: status chip, soft halos, refined avatars,
+// alternating "speaking" rings, and a flowing audio waveform between them.
 const CallVisual = () => (
-  <svg className="cs-pv-svg cs-call" viewBox="0 0 260 210">
-    <path id="cs-arc" d="M72 88 Q130 40 188 88" className="cs-call-link" />
-    <circle r="4.5" className="cs-pv-solid">
-      <animateMotion dur="2.4s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;0.5;1" calcMode="linear">
-        <mpath href="#cs-arc" />
-      </animateMotion>
-    </circle>
+  <svg className="cs-pv-svg cs-call" viewBox="0 0 280 200">
+    {/* live status chip */}
+    <rect x="110" y="4" width="60" height="22" rx="11" className="cs-call-chip" />
+    <circle cx="126" cy="15" r="3.4" className="cs-call-live" />
+    <text x="135" y="19" className="cs-call-livetext">LIVE</text>
 
-    {/* AI side */}
-    <circle cx="72" cy="88" r="28" className="cs-call-ring" style={{ animationDelay: "0s" }} />
-    <circle cx="72" cy="88" r="28" className="cs-call-ring" style={{ animationDelay: "1.2s" }} />
-    <circle cx="72" cy="88" r="25" className="cs-call-av" />
-    <line x1="72" y1="71" x2="72" y2="77" className="cs-call-stroke" />
-    <circle cx="72" cy="69" r="2.4" className="cs-pv-solid" />
-    <rect x="61" y="80" width="22" height="17" rx="5" className="cs-call-stroke" />
-    <circle cx="68" cy="89" r="2" className="cs-pv-solid" />
-    <circle cx="76" cy="89" r="2" className="cs-pv-solid" />
-    <text x="72" y="150" textAnchor="middle" className="cs-pv-text cs-pv-text--sm">Siya · AI</text>
+    {/* soft halos */}
+    <circle cx="58" cy="102" r="44" className="cs-call-glow" />
+    <circle cx="222" cy="102" r="44" className="cs-call-glow" />
 
-    {/* Caller side */}
-    <circle cx="188" cy="88" r="28" className="cs-call-ring" style={{ animationDelay: "0.6s" }} />
-    <circle cx="188" cy="88" r="28" className="cs-call-ring" style={{ animationDelay: "1.8s" }} />
-    <circle cx="188" cy="88" r="25" className="cs-call-av" />
-    <circle cx="188" cy="82" r="7" className="cs-call-stroke" />
-    <path d="M176 100 a12 12 0 0 1 24 0" className="cs-call-stroke" fill="none" />
-    <text x="188" y="150" textAnchor="middle" className="cs-pv-text cs-pv-text--sm">Caller</text>
+    {/* baseline connecting the two sides */}
+    <line x1="86" y1="102" x2="194" y2="102" className="cs-call-base" />
 
-    {/* talking equalizers — alternate turns */}
-    <rect className="cs-eq-bar" x="56" y="116" width="4" height="16" rx="2" style={{ animationDelay: "0s" }} />
-    <rect className="cs-eq-bar" x="64" y="116" width="4" height="16" rx="2" style={{ animationDelay: "0.15s" }} />
-    <rect className="cs-eq-bar" x="72" y="116" width="4" height="16" rx="2" style={{ animationDelay: "0.3s" }} />
-    <rect className="cs-eq-bar" x="172" y="116" width="4" height="16" rx="2" style={{ animationDelay: "-1.2s" }} />
-    <rect className="cs-eq-bar" x="180" y="116" width="4" height="16" rx="2" style={{ animationDelay: "-1.05s" }} />
-    <rect className="cs-eq-bar" x="188" y="116" width="4" height="16" rx="2" style={{ animationDelay: "-0.9s" }} />
+    {/* alternating speaking rings */}
+    <circle cx="58" cy="102" r="27" className="cs-call-ring" style={{ animationDelay: "0s" }} />
+    <circle cx="58" cy="102" r="27" className="cs-call-ring" style={{ animationDelay: "0.3s" }} />
+    <circle cx="222" cy="102" r="27" className="cs-call-ring" style={{ animationDelay: "1.5s" }} />
+    <circle cx="222" cy="102" r="27" className="cs-call-ring" style={{ animationDelay: "1.8s" }} />
+
+    {/* AI avatar */}
+    <circle cx="58" cy="102" r="27" className="cs-call-av" />
+    <line x1="58" y1="85" x2="58" y2="91" className="cs-call-stroke" />
+    <circle cx="58" cy="83" r="2.4" className="cs-pv-solid" />
+    <rect x="47" y="94" width="22" height="17" rx="5" className="cs-call-stroke" />
+    <circle cx="54" cy="103" r="2" className="cs-pv-solid" />
+    <circle cx="62" cy="103" r="2" className="cs-pv-solid" />
+    <text x="58" y="162" textAnchor="middle" className="cs-pv-text cs-pv-text--sm">Siya · AI</text>
+
+    {/* Caller avatar */}
+    <circle cx="222" cy="102" r="27" className="cs-call-av" />
+    <circle cx="222" cy="96" r="7" className="cs-call-stroke" />
+    <path d="M210 114 a12 12 0 0 1 24 0" className="cs-call-stroke" fill="none" />
+    <text x="222" y="162" textAnchor="middle" className="cs-pv-text cs-pv-text--sm">Caller</text>
+
+    {/* live audio waveform flowing between them */}
+    <g className="cs-wave">
+      {Array.from({ length: 15 }).map((_, i) => (
+        <rect
+          key={i}
+          x={99 + i * 6}
+          y="90"
+          width="3"
+          height="24"
+          rx="1.5"
+          className="cs-wave-bar"
+          style={{ animationDelay: `${i * 0.08}s` }}
+        />
+      ))}
+    </g>
   </svg>
 );
 

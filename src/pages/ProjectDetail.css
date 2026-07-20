@@ -299,16 +299,34 @@
 }
 
 /* ── Live-call animation (See it in action) ── */
-.cs-call-link {
-  fill: none;
-  stroke: rgba(255, 255, 255, 0.4);
-  stroke-width: 1.4;
-  stroke-dasharray: 3 5;
-  stroke-linecap: round;
+.cs-call-chip {
+  fill: rgba(255, 255, 255, 0.14);
+  stroke: rgba(255, 255, 255, 0.3);
+  stroke-width: 1;
+}
+.cs-call-live {
+  fill: #ffffff;
+  animation: cs-blink 1.4s ease-in-out infinite;
+}
+@keyframes cs-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.25; }
+}
+.cs-call-livetext {
+  fill: rgba(255, 255, 255, 0.92);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+}
+.cs-call-glow { fill: rgba(255, 255, 255, 0.06); }
+.cs-call-base {
+  stroke: rgba(255, 255, 255, 0.16);
+  stroke-width: 1.2;
 }
 .cs-call-av {
   fill: rgba(255, 255, 255, 0.14);
-  stroke: rgba(255, 255, 255, 0.5);
+  stroke: rgba(255, 255, 255, 0.55);
   stroke-width: 1.5;
 }
 .cs-call-stroke {
@@ -319,31 +337,30 @@
 }
 .cs-call-ring {
   fill: none;
-  stroke: rgba(255, 255, 255, 0.5);
+  stroke: rgba(255, 255, 255, 0.55);
   stroke-width: 1.4;
   transform-box: fill-box;
   transform-origin: center;
-  animation: cs-ring 2.4s ease-out infinite;
+  animation: cs-ring 3s ease-out infinite;
 }
 @keyframes cs-ring {
-  0% { transform: scale(0.72); opacity: 0.8; }
-  70%, 100% { transform: scale(1.55); opacity: 0; }
+  0% { transform: scale(1); opacity: 0.7; }
+  40% { transform: scale(1.7); opacity: 0; }
+  100% { transform: scale(1.7); opacity: 0; }
 }
-.cs-eq-bar {
+.cs-wave-bar {
   fill: #ffffff;
   transform-box: fill-box;
-  transform-origin: bottom;
-  animation: cs-talk 2.4s ease-in-out infinite;
+  transform-origin: center;
+  animation: cs-wave 1.3s ease-in-out infinite;
 }
-@keyframes cs-talk {
-  0% { transform: scaleY(0.28); }
-  8% { transform: scaleY(1); }
-  16% { transform: scaleY(0.45); }
-  24% { transform: scaleY(0.92); }
-  32% { transform: scaleY(0.5); }
-  40% { transform: scaleY(0.82); }
-  46% { transform: scaleY(0.3); }
-  50%, 100% { transform: scaleY(0.25); }
+@keyframes cs-wave {
+  0%, 100% { transform: scaleY(0.26); opacity: 0.7; }
+  50% { transform: scaleY(1); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cs-call-ring, .cs-wave-bar, .cs-call-live, .cs-pv-orbit { animation: none; }
 }
 
 .cs-pv-grid {
