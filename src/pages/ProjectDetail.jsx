@@ -59,58 +59,44 @@ const PillsVisual = ({ tags }) => (
   </div>
 );
 
-// Polished live-call scene: status chip, soft halos, refined avatars,
-// alternating "speaking" rings, and a flowing audio waveform between them.
+// Radial voice-visualiser orb: a glowing core with a slowly-rotating ring of
+// audio bars pulsing like a live voice, plus expanding sound ripples.
+const VOICE_BARS = 40;
 const CallVisual = () => (
-  <svg className="cs-pv-svg cs-call" viewBox="0 0 280 200">
+  <svg className="cs-pv-svg cs-voice" viewBox="0 0 260 230">
     {/* live status chip */}
-    <rect x="110" y="4" width="60" height="22" rx="11" className="cs-call-chip" />
-    <circle cx="126" cy="15" r="3.4" className="cs-call-live" />
-    <text x="135" y="19" className="cs-call-livetext">LIVE</text>
+    <rect x="100" y="4" width="60" height="22" rx="11" className="cs-call-chip" />
+    <circle cx="116" cy="15" r="3.4" className="cs-call-live" />
+    <text x="125" y="19" className="cs-call-livetext">LIVE</text>
 
-    {/* soft halos */}
-    <circle cx="58" cy="102" r="44" className="cs-call-glow" />
-    <circle cx="222" cy="102" r="44" className="cs-call-glow" />
+    {/* expanding sound ripples */}
+    <circle cx="130" cy="126" r="46" className="cs-ripple" style={{ animationDelay: "0s" }} />
+    <circle cx="130" cy="126" r="46" className="cs-ripple" style={{ animationDelay: "1.2s" }} />
 
-    {/* baseline connecting the two sides */}
-    <line x1="86" y1="102" x2="194" y2="102" className="cs-call-base" />
+    {/* soft halo */}
+    <circle cx="130" cy="126" r="60" className="cs-call-glow" />
 
-    {/* alternating speaking rings */}
-    <circle cx="58" cy="102" r="27" className="cs-call-ring" style={{ animationDelay: "0s" }} />
-    <circle cx="58" cy="102" r="27" className="cs-call-ring" style={{ animationDelay: "0.3s" }} />
-    <circle cx="222" cy="102" r="27" className="cs-call-ring" style={{ animationDelay: "1.5s" }} />
-    <circle cx="222" cy="102" r="27" className="cs-call-ring" style={{ animationDelay: "1.8s" }} />
-
-    {/* AI avatar */}
-    <circle cx="58" cy="102" r="27" className="cs-call-av" />
-    <line x1="58" y1="85" x2="58" y2="91" className="cs-call-stroke" />
-    <circle cx="58" cy="83" r="2.4" className="cs-pv-solid" />
-    <rect x="47" y="94" width="22" height="17" rx="5" className="cs-call-stroke" />
-    <circle cx="54" cy="103" r="2" className="cs-pv-solid" />
-    <circle cx="62" cy="103" r="2" className="cs-pv-solid" />
-    <text x="58" y="162" textAnchor="middle" className="cs-pv-text cs-pv-text--sm">Siya · AI</text>
-
-    {/* Caller avatar */}
-    <circle cx="222" cy="102" r="27" className="cs-call-av" />
-    <circle cx="222" cy="96" r="7" className="cs-call-stroke" />
-    <path d="M210 114 a12 12 0 0 1 24 0" className="cs-call-stroke" fill="none" />
-    <text x="222" y="162" textAnchor="middle" className="cs-pv-text cs-pv-text--sm">Caller</text>
-
-    {/* live audio waveform flowing between them */}
-    <g className="cs-wave">
-      {Array.from({ length: 15 }).map((_, i) => (
-        <rect
-          key={i}
-          x={99 + i * 6}
-          y="90"
-          width="3"
-          height="24"
-          rx="1.5"
-          className="cs-wave-bar"
-          style={{ animationDelay: `${i * 0.08}s` }}
-        />
+    {/* rotating radial waveform */}
+    <g className="cs-voice-ring">
+      {Array.from({ length: VOICE_BARS }).map((_, i) => (
+        <g key={i} transform={`rotate(${i * (360 / VOICE_BARS)} 130 126)`}>
+          <rect
+            x="128.7"
+            y="70"
+            width="2.6"
+            height="22"
+            rx="1.3"
+            className="cs-voice-bar"
+            style={{ animationDelay: `${(i % 20) * 0.06}s` }}
+          />
+        </g>
       ))}
     </g>
+
+    {/* glowing core */}
+    <circle cx="130" cy="126" r="34" className="cs-voice-core" />
+    <circle cx="130" cy="126" r="34" className="cs-voice-core cs-voice-core--pulse" />
+    <path d="M130 116 v20 M120 120 v12 M140 120 v12 M112 124 v4 M148 124 v4" className="cs-voice-eq" />
   </svg>
 );
 
