@@ -3,14 +3,78 @@ import { motion, AnimatePresence } from "framer-motion";
 import { getProjectBySlug, getNextProject } from "../data/projects";
 import "./ProjectDetail.css";
 
-const RINGS = (
-  <svg className="cs-pin-rings" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice">
-    <circle cx="320" cy="70" r="150" fill="none" stroke="rgba(0,0,0,0.16)" />
-    <circle cx="320" cy="70" r="100" fill="none" stroke="rgba(0,0,0,0.16)" />
-    <circle cx="70" cy="340" r="120" fill="none" stroke="rgba(0,0,0,0.16)" />
-    <line x1="0" y1="200" x2="400" y2="200" stroke="rgba(0,0,0,0.12)" />
+/* ── Per-section visuals for the pinned panel ── */
+const OrbitVisual = () => (
+  <svg className="cs-pv-svg" viewBox="0 0 240 240">
+    <circle cx="120" cy="120" r="46" className="cs-pv-ring" />
+    <circle cx="120" cy="120" r="80" className="cs-pv-ring" />
+    <circle cx="120" cy="120" r="112" className="cs-pv-ring" />
+    <g className="cs-pv-orbit">
+      <circle cx="120" cy="8" r="6" className="cs-pv-solid" />
+    </g>
+    <circle cx="120" cy="120" r="11" className="cs-pv-solid" />
   </svg>
 );
+
+const FLOW = ["Caller", "Plivo", "Deepgram STT", "GPT-4o-mini", "Sarvam TTS"];
+const FlowVisual = () => (
+  <svg className="cs-pv-svg" viewBox="0 0 240 300">
+    <line x1="34" y1="26" x2="34" y2="274" className="cs-pv-line" />
+    {FLOW.map((t, i) => (
+      <g key={t} transform={`translate(0 ${26 + i * 62})`}>
+        <circle cx="34" cy="0" r="7" className="cs-pv-node" />
+        <text x="54" y="4.5" className="cs-pv-text">{t}</text>
+      </g>
+    ))}
+    <circle cx="34" cy="26" r="5" className="cs-pv-solid">
+      <animate attributeName="cy" values="26;274;26" dur="4.5s" repeatCount="indefinite" />
+    </circle>
+  </svg>
+);
+
+const CompareVisual = () => (
+  <svg className="cs-pv-svg" viewBox="0 0 240 240">
+    <rect x="44" y="46" width="56" height="150" rx="7" className="cs-pv-bar-a" />
+    <text x="72" y="216" className="cs-pv-text" textAnchor="middle">Human</text>
+    <text x="72" y="38" className="cs-pv-text cs-pv-text--sm" textAnchor="middle">₹30–50</text>
+    <rect x="140" y="150" width="56" height="46" rx="7" className="cs-pv-bar-b" />
+    <text x="168" y="216" className="cs-pv-text" textAnchor="middle">Siya</text>
+    <text x="168" y="142" className="cs-pv-text cs-pv-text--sm" textAnchor="middle">₹2–3</text>
+  </svg>
+);
+
+const GridVisual = ({ count }) => (
+  <div className="cs-pv-grid">
+    {Array.from({ length: Math.min(count, 6) }).map((_, i) => (
+      <span key={i} className="cs-pv-cell" style={{ animationDelay: `${i * 0.18}s` }}>✓</span>
+    ))}
+  </div>
+);
+
+const PillsVisual = ({ tags }) => (
+  <div className="cs-pv-pills">
+    {tags.slice(0, 8).map((t) => (
+      <span key={t} className="cs-pv-pill">{t}</span>
+    ))}
+  </div>
+);
+
+const PinVisual = ({ label, project }) => {
+  switch (label) {
+    case "See it in action":
+      return <img className="cs-pv-img" src="/voice-agent-demo-poster-v2.jpg" alt="" />;
+    case "How it works":
+      return <FlowVisual />;
+    case "vs. Humans":
+      return <CompareVisual />;
+    case "Highlights":
+      return <GridVisual count={project.features.length} />;
+    case "Stack":
+      return <PillsVisual tags={project.tags} />;
+    default:
+      return <OrbitVisual />;
+  }
+};
 
 const rise = {
   initial: { opacity: 0, y: 20 },
@@ -298,28 +362,45 @@ const ProjectDetail = ({ slug, onBack, onOpenProject }) => {
           {/* Pinned panel — reacts to the active section */}
           <div className="cs-pin">
             <div className="cs-pin-panel" style={{ background: project.gradient }}>
-              {RINGS}
               <span className="cs-pin-project">{project.title}</span>
-              <AnimatePresence mode="wait">
-                <motion.div
-                  className="cs-pin-body"
-                  key={active}
-                  initial={{ opacity: 0, y: 14 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -14 }}
-                  transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                >
-                  <span className="cs-pin-num">
-                    {String(active + 1).padStart(2, "0")}
-                    <span className="cs-pin-total"> / {String(sections.length).padStart(2, "0")}</span>
-                  </span>
-                  <span className="cs-pin-label">{sections[active].label}</span>
-                </motion.div>
-              </AnimatePresence>
-              <div className="cs-pin-dots">
-                {sections.map((s, i) => (
-                  <span key={s.label} className={`cs-pin-dot ${i === active ? "on" : ""}`} />
-                ))}
+
+              <div className="cs-pin-stage">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    className="cs-pin-visual"
+                    key={active}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 1.03 }}
+                    transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    <PinVisual label={sections[active].label} project={project} />
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+
+              <div className="cs-pin-foot">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    className="cs-pin-body"
+                    key={active}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -12 }}
+                    transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    <span className="cs-pin-num">
+                      {String(active + 1).padStart(2, "0")}
+                      <span className="cs-pin-total"> / {String(sections.length).padStart(2, "0")}</span>
+                    </span>
+                    <span className="cs-pin-label">{sections[active].label}</span>
+                  </motion.div>
+                </AnimatePresence>
+                <div className="cs-pin-dots">
+                  {sections.map((s, i) => (
+                    <span key={s.label} className={`cs-pin-dot ${i === active ? "on" : ""}`} />
+                  ))}
+                </div>
               </div>
             </div>
           </div>
