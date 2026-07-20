@@ -59,10 +59,50 @@ const PillsVisual = ({ tags }) => (
   </div>
 );
 
+// AI ↔ caller live conversation: pulsing call rings, a signal travelling back
+// and forth, and alternating "talking" equalizers under each side.
+const CallVisual = () => (
+  <svg className="cs-pv-svg cs-call" viewBox="0 0 260 210">
+    <path id="cs-arc" d="M72 88 Q130 40 188 88" className="cs-call-link" />
+    <circle r="4.5" className="cs-pv-solid">
+      <animateMotion dur="2.4s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;0.5;1" calcMode="linear">
+        <mpath href="#cs-arc" />
+      </animateMotion>
+    </circle>
+
+    {/* AI side */}
+    <circle cx="72" cy="88" r="28" className="cs-call-ring" style={{ animationDelay: "0s" }} />
+    <circle cx="72" cy="88" r="28" className="cs-call-ring" style={{ animationDelay: "1.2s" }} />
+    <circle cx="72" cy="88" r="25" className="cs-call-av" />
+    <line x1="72" y1="71" x2="72" y2="77" className="cs-call-stroke" />
+    <circle cx="72" cy="69" r="2.4" className="cs-pv-solid" />
+    <rect x="61" y="80" width="22" height="17" rx="5" className="cs-call-stroke" />
+    <circle cx="68" cy="89" r="2" className="cs-pv-solid" />
+    <circle cx="76" cy="89" r="2" className="cs-pv-solid" />
+    <text x="72" y="150" textAnchor="middle" className="cs-pv-text cs-pv-text--sm">Siya · AI</text>
+
+    {/* Caller side */}
+    <circle cx="188" cy="88" r="28" className="cs-call-ring" style={{ animationDelay: "0.6s" }} />
+    <circle cx="188" cy="88" r="28" className="cs-call-ring" style={{ animationDelay: "1.8s" }} />
+    <circle cx="188" cy="88" r="25" className="cs-call-av" />
+    <circle cx="188" cy="82" r="7" className="cs-call-stroke" />
+    <path d="M176 100 a12 12 0 0 1 24 0" className="cs-call-stroke" fill="none" />
+    <text x="188" y="150" textAnchor="middle" className="cs-pv-text cs-pv-text--sm">Caller</text>
+
+    {/* talking equalizers — alternate turns */}
+    <rect className="cs-eq-bar" x="56" y="116" width="4" height="16" rx="2" style={{ animationDelay: "0s" }} />
+    <rect className="cs-eq-bar" x="64" y="116" width="4" height="16" rx="2" style={{ animationDelay: "0.15s" }} />
+    <rect className="cs-eq-bar" x="72" y="116" width="4" height="16" rx="2" style={{ animationDelay: "0.3s" }} />
+    <rect className="cs-eq-bar" x="172" y="116" width="4" height="16" rx="2" style={{ animationDelay: "-1.2s" }} />
+    <rect className="cs-eq-bar" x="180" y="116" width="4" height="16" rx="2" style={{ animationDelay: "-1.05s" }} />
+    <rect className="cs-eq-bar" x="188" y="116" width="4" height="16" rx="2" style={{ animationDelay: "-0.9s" }} />
+  </svg>
+);
+
 const PinVisual = ({ label, project }) => {
   switch (label) {
     case "See it in action":
-      return <img className="cs-pv-img" src="/voice-agent-demo-poster-v2.jpg" alt="" />;
+      return <CallVisual />;
     case "How it works":
       return <FlowVisual />;
     case "vs. Humans":
