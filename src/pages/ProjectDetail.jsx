@@ -16,41 +16,73 @@ const OrbitVisual = () => (
   </svg>
 );
 
-// Orbital round-trip pipeline: the 5 stages sit around a loop, a glowing packet
-// races around it lighting each node as it passes, "< 1s" pulses in the centre.
-const FLOW_STEPS = ["Caller", "Plivo", "STT", "LLM", "TTS"];
-const FlowVisual = () => {
-  const cx = 140, cy = 122, R = 74;
-  const nodes = FLOW_STEPS.map((label, i) => {
-    const a = ((i * 72 - 90) * Math.PI) / 180;
-    return {
-      label,
-      x: cx + R * Math.cos(a),
-      y: cy + R * Math.sin(a),
-      lx: cx + (R + 20) * Math.cos(a),
-      ly: cy + (R + 20) * Math.sin(a),
-      anchor: Math.cos(a) > 0.3 ? "start" : Math.cos(a) < -0.3 ? "end" : "middle",
-      dy: Math.sin(a) > 0.3 ? 13 : Math.sin(a) < -0.3 ? -8 : 4,
-    };
-  });
+// Signal-transformation flow: the voice changes form as it moves down the
+// pipeline — waveform (you) → text (transcript) → spark (LLM) → waveform (Siya).
+// A comet flows down the spine and each stage ignites as it passes.
+const tfRep = (type) => {
+  if (type === "wave") {
+    const hs = [9, 16, 23, 15, 10];
+    return (
+      <g className="cs-tf-wave">
+        {hs.map((h, j) => (
+          <rect
+            key={j}
+            x={-12 + j * 6}
+            y={-h / 2}
+            width="3"
+            height={h}
+            rx="1.5"
+            className="cs-tf-wavebar"
+            style={{ animationDelay: `${j * 0.1}s` }}
+          />
+        ))}
+      </g>
+    );
+  }
+  if (type === "text") {
+    return (
+      <g>
+        <rect x="-13" y="-7" width="26" height="2.6" rx="1.3" className="cs-tf-line" />
+        <rect x="-13" y="-1" width="20" height="2.6" rx="1.3" className="cs-tf-line" />
+        <rect x="-13" y="5" width="14" height="2.6" rx="1.3" className="cs-tf-line" />
+      </g>
+    );
+  }
   return (
-    <svg className="cs-pv-svg cs-loop" viewBox="0 0 280 250">
-      <circle cx={cx} cy={cy} r={R} className="cs-loop-track" />
-      <circle cx={cx} cy={cy} r={R} className="cs-loop-flow" />
-      {nodes.map((n, i) => (
-        <g key={n.label}>
-          <circle cx={n.x} cy={n.y} r="10" className="cs-loop-pulse" style={{ animationDelay: `${i}s` }} />
-          <circle cx={n.x} cy={n.y} r="9" className="cs-loop-node" />
-          <circle cx={n.x} cy={n.y} r="3" className="cs-pv-solid" />
-          <text x={n.lx} y={n.ly + n.dy} textAnchor={n.anchor} className="cs-pv-text cs-pv-text--sm">{n.label}</text>
+    <g className="cs-tf-spark">
+      <path d="M0 -14 V14 M-14 0 H14 M-8 -8 L8 8 M-8 8 L8 -8" className="cs-tf-sparkline" />
+      <circle r="2.6" className="cs-pv-solid" />
+    </g>
+  );
+};
+
+const TF_STAGES = [
+  { type: "wave", label: "You speak" },
+  { type: "text", label: "Transcribed" },
+  { type: "ai", label: "GPT-4o-mini" },
+  { type: "wave", label: "Siya replies" },
+];
+const TF_YS = [48, 118, 188, 258];
+const FlowVisual = () => {
+  const cx = 92;
+  return (
+    <svg className="cs-pv-svg cs-tf" viewBox="0 0 250 306">
+      <line x1={cx} y1="48" x2={cx} y2="258" className="cs-tf-track" />
+      <circle cx={cx} r="9" className="cs-tf-comet-glow">
+        <animate attributeName="cy" values="48;258;48" dur="3.4s" repeatCount="indefinite" />
+      </circle>
+      <circle cx={cx} r="4" className="cs-pv-solid">
+        <animate attributeName="cy" values="48;258;48" dur="3.4s" repeatCount="indefinite" />
+      </circle>
+      {TF_STAGES.map((s, i) => (
+        <g key={i} transform={`translate(${cx} ${TF_YS[i]})`}>
+          <g className="cs-tf-stage" style={{ animationDelay: `${((TF_YS[i] - 48) / 210) * 1.7}s` }}>
+            <circle r="21" className="cs-tf-bubble" />
+            {tfRep(s.type)}
+          </g>
+          <text x="36" y="4" textAnchor="start" className="cs-pv-text cs-pv-text--sm">{s.label}</text>
         </g>
       ))}
-      <g className="cs-loop-packet">
-        <circle cx={cx} cy={cy - R} r="9" className="cs-loop-packet-glow" />
-        <circle cx={cx} cy={cy - R} r="4.5" className="cs-pv-solid" />
-      </g>
-      <text x={cx} y={cy - 1} textAnchor="middle" className="cs-loop-big">{"< 1s"}</text>
-      <text x={cx} y={cy + 17} textAnchor="middle" className="cs-loop-sub">ROUND-TRIP</text>
     </svg>
   );
 };
