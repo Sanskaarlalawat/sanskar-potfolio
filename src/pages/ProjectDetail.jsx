@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { getProjectBySlug, getNextProject } from "../data/projects";
 import "./ProjectDetail.css";
@@ -101,9 +101,23 @@ const ComparisonTable = () => (
 const ProjectDetail = ({ slug, onBack, onOpenProject }) => {
   const project = getProjectBySlug(slug);
   const nextProject = getNextProject(slug);
+  const progressRef = useRef(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
+  }, [slug]);
+
+  // Thin reading-progress bar tied to scroll position.
+  useEffect(() => {
+    const onScroll = () => {
+      const el = document.documentElement;
+      const max = el.scrollHeight - el.clientHeight;
+      const p = max > 0 ? el.scrollTop / max : 0;
+      if (progressRef.current) progressRef.current.style.transform = `scaleX(${p})`;
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
   }, [slug]);
 
   if (!project) {
@@ -120,8 +134,97 @@ const ProjectDetail = ({ slug, onBack, onOpenProject }) => {
   const isVoiceAgent = project.slug === "ai-voice-calling-agent";
   const [intro, ...restParas] = project.longDescription;
 
+  // Numbered content sections — conditional ones only appear for the voice agent.
+  const sections = [
+    {
+      label: "Overview",
+      body: restParas.map((para, i) => (
+        <p className="cs-body" key={i}>{para}</p>
+      )),
+    },
+    ...(isVoiceAgent
+      ? [{
+          label: "See it in action",
+          body: (
+            <>
+              <p className="cs-body">
+                A live walkthrough of Siya handling a real call — hear how she
+                greets the caller, answers questions, and captures the lead.
+              </p>
+              <div className="cs-demo">
+                <video
+                  src="/voice-agent-demo.mp4"
+                  poster="/voice-agent-demo-poster-v2.jpg"
+                  controls
+                  playsInline
+                  preload="none"
+                />
+              </div>
+            </>
+          ),
+        }]
+      : []),
+    {
+      label: "Highlights",
+      body: (
+        <div className="cs-cards">
+          {project.features.map((feature, i) => {
+            const [title, bodyText] = splitFeature(feature);
+            return (
+              <div className="cs-card" key={i}>
+                {title && <h3 className="cs-card-title">{title}</h3>}
+                <p className="cs-card-body">{bodyText}</p>
+              </div>
+            );
+          })}
+        </div>
+      ),
+    },
+    ...(isVoiceAgent
+      ? [{
+          label: "How it works",
+          body: (
+            <>
+              <p className="cs-body">
+                From the caller's first word to Siya's reply, the whole loop
+                runs in under a second. Here is what happens on every call:
+              </p>
+              <HowItWorks />
+            </>
+          ),
+        }]
+      : []),
+    ...(isVoiceAgent
+      ? [{
+          label: "vs. Humans",
+          body: (
+            <>
+              <p className="cs-body">
+                The institute was missing every call outside office hours. Siya
+                answers all of them, in both languages, at a tenth of the cost.
+              </p>
+              <ComparisonTable />
+            </>
+          ),
+        }]
+      : []),
+    {
+      label: "Stack",
+      body: (
+        <div className="cs-tags">
+          {project.tags.map((tag) => (
+            <span className="cs-tag" key={tag}>{tag}</span>
+          ))}
+        </div>
+      ),
+    },
+  ];
+
   return (
     <div className="cs-page" key={slug} style={{ "--accent": project.accent }}>
+      <div className="cs-progress">
+        <span className="cs-progress-fill" ref={progressRef} />
+      </div>
       <div className="cs-container">
         {/* Back */}
         <button className="cs-back" onClick={onBack}>
@@ -175,83 +278,16 @@ const ProjectDetail = ({ slug, onBack, onOpenProject }) => {
           )}
         </motion.div>
 
-        {/* Overview */}
-        <motion.section className="cs-section" {...rise}>
-          <h2 className="cs-heading">Overview</h2>
-          {restParas.map((para, i) => (
-            <p className="cs-body" key={i}>{para}</p>
-          ))}
-        </motion.section>
-
-        {/* Demo video — voice agent only */}
-        {isVoiceAgent && (
-          <motion.section className="cs-section" {...rise}>
-            <h2 className="cs-heading">See it in action</h2>
-            <p className="cs-body">
-              A live walkthrough of Siya handling a real call — hear how she
-              greets the caller, answers questions, and captures the lead.
-            </p>
-            <div className="cs-demo">
-              <video
-                src="/voice-agent-demo.mp4"
-                poster="/voice-agent-demo-poster-v2.jpg"
-                controls
-                playsInline
-                preload="none"
-              />
+        {/* Numbered content sections */}
+        {sections.map((s, i) => (
+          <motion.section className="cs-section" key={s.label} {...rise}>
+            <div className="cs-section-head">
+              <span className="cs-section-num">{String(i + 1).padStart(2, "0")}</span>
+              <h2 className="cs-section-label">{s.label}</h2>
             </div>
+            <div className="cs-section-col">{s.body}</div>
           </motion.section>
-        )}
-
-        {/* Highlights */}
-        <motion.section className="cs-section" {...rise}>
-          <h2 className="cs-heading">Highlights</h2>
-          <div className="cs-cards">
-            {project.features.map((feature, i) => {
-              const [title, body] = splitFeature(feature);
-              return (
-                <div className="cs-card" key={i}>
-                  {title && <h3 className="cs-card-title">{title}</h3>}
-                  <p className="cs-card-body">{body}</p>
-                </div>
-              );
-            })}
-          </div>
-        </motion.section>
-
-        {/* How it works — voice agent only */}
-        {isVoiceAgent && (
-          <motion.section className="cs-section" {...rise}>
-            <h2 className="cs-heading">How a call works</h2>
-            <p className="cs-body">
-              From the caller's first word to Siya's reply, the whole loop runs in
-              under a second. Here is what happens on every call:
-            </p>
-            <HowItWorks />
-          </motion.section>
-        )}
-
-        {/* Comparison — voice agent only */}
-        {isVoiceAgent && (
-          <motion.section className="cs-section" {...rise}>
-            <h2 className="cs-heading">Why not just hire more agents?</h2>
-            <p className="cs-body">
-              The institute was missing every call outside office hours. Siya
-              answers all of them, in both languages, at a tenth of the cost.
-            </p>
-            <ComparisonTable />
-          </motion.section>
-        )}
-
-        {/* Stack */}
-        <motion.section className="cs-section" {...rise}>
-          <h2 className="cs-heading">Stack</h2>
-          <div className="cs-tags">
-            {project.tags.map((tag) => (
-              <span className="cs-tag" key={tag}>{tag}</span>
-            ))}
-          </div>
-        </motion.section>
+        ))}
 
         {/* Gallery — only when real images exist */}
         {project.gallery.length > 0 && (

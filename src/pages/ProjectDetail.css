@@ -147,9 +147,62 @@
   padding: 0 32px;
 }
 
-/* ── Sections ── */
-.cs-section { padding-top: 96px; }
+/* ── Reading progress bar ── */
+.cs-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 60;
+  background: transparent;
+  pointer-events: none;
+}
+.cs-progress-fill {
+  display: block;
+  height: 100%;
+  background: var(--accent, #181212);
+  transform: scaleX(0);
+  transform-origin: left;
+  will-change: transform;
+}
 
+/* ── Sections — numbered two-column editorial layout ── */
+.cs-section {
+  display: grid;
+  grid-template-columns: 210px minmax(0, 1fr);
+  gap: 64px;
+  padding-top: 104px;
+  border-top: 1px solid #f1edec;
+  margin-top: 40px;
+}
+.cs-section:first-of-type { border-top: none; margin-top: 0; }
+
+.cs-section-head {
+  position: sticky;
+  top: 120px;
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.cs-section-num {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--accent, #837d7d);
+}
+.cs-section-label {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: #181212;
+  margin: 0;
+}
+.cs-section-col { max-width: 720px; }
+
+/* keep the editorial heading class for any standalone use */
 .cs-heading {
   font-size: clamp(28px, 4.4vw, 36px);
   font-weight: 700;
@@ -162,7 +215,7 @@
 .cs-body {
   font-size: 19px;
   font-weight: 400;
-  line-height: 1.55;
+  line-height: 1.6;
   letter-spacing: -0.012em;
   color: #211b1c;
   margin: 0 0 18px;
@@ -363,9 +416,25 @@
 }
 
 /* ── Mobile ── */
+/* Collapse the two-column sections when the sidebar no longer fits. */
+@media (max-width: 940px) {
+  .cs-section {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    padding-top: 64px;
+  }
+  .cs-section-head {
+    position: static;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 12px;
+  }
+  .cs-section-col { max-width: none; }
+}
+
 @media (max-width: 700px) {
   .cs-back { margin-top: 96px; }
-  .cs-section { padding-top: 72px; }
+  .cs-section { padding-top: 56px; }
   .cs-stats { grid-template-columns: 1fr 1fr; row-gap: 24px; }
   .cs-cards { grid-template-columns: 1fr; }
   .cs-step { grid-template-columns: 40px 1fr; }
