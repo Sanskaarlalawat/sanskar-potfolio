@@ -16,21 +16,44 @@ const OrbitVisual = () => (
   </svg>
 );
 
-const FLOW = ["Caller", "Plivo", "Deepgram STT", "GPT-4o-mini", "Sarvam TTS"];
-const FlowVisual = () => (
-  <svg className="cs-pv-svg" viewBox="0 0 240 300">
-    <line x1="34" y1="26" x2="34" y2="274" className="cs-pv-line" />
-    {FLOW.map((t, i) => (
-      <g key={t} transform={`translate(0 ${26 + i * 62})`}>
-        <circle cx="34" cy="0" r="7" className="cs-pv-node" />
-        <text x="54" y="4.5" className="cs-pv-text">{t}</text>
+// Orbital round-trip pipeline: the 5 stages sit around a loop, a glowing packet
+// races around it lighting each node as it passes, "< 1s" pulses in the centre.
+const FLOW_STEPS = ["Caller", "Plivo", "STT", "LLM", "TTS"];
+const FlowVisual = () => {
+  const cx = 140, cy = 122, R = 74;
+  const nodes = FLOW_STEPS.map((label, i) => {
+    const a = ((i * 72 - 90) * Math.PI) / 180;
+    return {
+      label,
+      x: cx + R * Math.cos(a),
+      y: cy + R * Math.sin(a),
+      lx: cx + (R + 20) * Math.cos(a),
+      ly: cy + (R + 20) * Math.sin(a),
+      anchor: Math.cos(a) > 0.3 ? "start" : Math.cos(a) < -0.3 ? "end" : "middle",
+      dy: Math.sin(a) > 0.3 ? 13 : Math.sin(a) < -0.3 ? -8 : 4,
+    };
+  });
+  return (
+    <svg className="cs-pv-svg cs-loop" viewBox="0 0 280 250">
+      <circle cx={cx} cy={cy} r={R} className="cs-loop-track" />
+      <circle cx={cx} cy={cy} r={R} className="cs-loop-flow" />
+      {nodes.map((n, i) => (
+        <g key={n.label}>
+          <circle cx={n.x} cy={n.y} r="10" className="cs-loop-pulse" style={{ animationDelay: `${i}s` }} />
+          <circle cx={n.x} cy={n.y} r="9" className="cs-loop-node" />
+          <circle cx={n.x} cy={n.y} r="3" className="cs-pv-solid" />
+          <text x={n.lx} y={n.ly + n.dy} textAnchor={n.anchor} className="cs-pv-text cs-pv-text--sm">{n.label}</text>
+        </g>
+      ))}
+      <g className="cs-loop-packet">
+        <circle cx={cx} cy={cy - R} r="9" className="cs-loop-packet-glow" />
+        <circle cx={cx} cy={cy - R} r="4.5" className="cs-pv-solid" />
       </g>
-    ))}
-    <circle cx="34" cy="26" r="5" className="cs-pv-solid">
-      <animate attributeName="cy" values="26;274;26" dur="4.5s" repeatCount="indefinite" />
-    </circle>
-  </svg>
-);
+      <text x={cx} y={cy - 1} textAnchor="middle" className="cs-loop-big">{"< 1s"}</text>
+      <text x={cx} y={cy + 17} textAnchor="middle" className="cs-loop-sub">ROUND-TRIP</text>
+    </svg>
+  );
+};
 
 const CompareVisual = () => (
   <svg className="cs-pv-svg" viewBox="0 0 240 240">
