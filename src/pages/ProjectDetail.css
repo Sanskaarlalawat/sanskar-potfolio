@@ -478,7 +478,13 @@
 .cs-phone-btn--end { fill: #e5484d; stroke: none; }
 .cs-phone-glyph { fill: #ffffff; }
 .cs-phone-glyph-s { fill: none; stroke: #ffffff; stroke-width: 1.4; stroke-linecap: round; }
-.cs-phone-endglyph { fill: #ffffff; }
+.cs-phone-endpath {
+  fill: none;
+  stroke: #ffffff;
+  stroke-width: 2.4;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
 
 /* ── Overview "Siya" hub ── */
 .cs-hub-line {

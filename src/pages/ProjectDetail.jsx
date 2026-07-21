@@ -52,7 +52,12 @@ const OrbitVisual = () => (
       <path d="M132 212 a5 5 0 0 1 0 8" className="cs-phone-glyph-s" />
 
       <circle cx="100" cy="218" r="15" className="cs-phone-btn cs-phone-btn--end" />
-      <rect x="93" y="216.5" width="14" height="3.6" rx="1.8" className="cs-phone-endglyph" transform="rotate(133 100 218)" />
+      <g transform="translate(100 218) rotate(135) scale(0.6) translate(-12 -12)">
+        <path
+          d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"
+          className="cs-phone-endpath"
+        />
+      </g>
     </g>
   </svg>
 );
