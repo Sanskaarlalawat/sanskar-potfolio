@@ -106,13 +106,25 @@ const GridVisual = ({ count }) => (
   </div>
 );
 
-const PillsVisual = ({ tags }) => (
-  <div className="cs-pv-pills">
-    {tags.slice(0, 8).map((t) => (
-      <span key={t} className="cs-pv-pill">{t}</span>
-    ))}
-  </div>
-);
+// Tech stack as a lively marquee: rows of pills drift in alternating directions
+// with faded edges — a modern tech-stack ticker.
+const PillsVisual = ({ tags }) => {
+  const rows = [[], [], []];
+  tags.forEach((t, i) => rows[i % 3].push(t));
+  return (
+    <div className="cs-stack">
+      {rows.map((row, r) => (
+        <div className="cs-stack-row" key={r}>
+          <div className={`cs-stack-track ${r % 2 ? "cs-stack-track--rev" : ""}`}>
+            {[...row, ...row, ...row].map((t, i) => (
+              <span className="cs-pv-pill" key={i}>{t}</span>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
 
 // Radial voice-visualiser orb: a glowing core with a slowly-rotating ring of
 // audio bars pulsing like a live voice, plus expanding sound ripples.

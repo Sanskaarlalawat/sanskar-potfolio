@@ -456,14 +456,6 @@
   to { opacity: 1; transform: scale(1); }
 }
 
-.cs-pv-pills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
-  align-content: center;
-  max-width: 320px;
-}
 .cs-pv-pill {
   font-size: 13px;
   font-weight: 600;
@@ -472,6 +464,34 @@
   border: 1px solid rgba(255, 255, 255, 0.28);
   border-radius: 100px;
   padding: 8px 15px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Stack marquee */
+.cs-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  overflow: hidden;
+  -webkit-mask: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent);
+  mask: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent);
+}
+.cs-stack-row { overflow: hidden; }
+.cs-stack-track {
+  display: flex;
+  gap: 10px;
+  width: max-content;
+  animation: cs-marquee 22s linear infinite;
+}
+.cs-stack-track--rev { animation-direction: reverse; }
+@keyframes cs-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-33.333%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cs-stack-track { animation: none; }
 }
 
 /* Right — scrolling narrative */
