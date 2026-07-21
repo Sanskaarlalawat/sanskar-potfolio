@@ -282,8 +282,51 @@
   font-weight: 600;
 }
 .cs-pv-text--sm { fill: rgba(255, 255, 255, 0.7); font-size: 11px; }
-.cs-pv-bar-a { fill: rgba(255, 255, 255, 0.35); }
-.cs-pv-bar-b { fill: #ffffff; }
+/* ── Cost duel (vs. Humans) ── */
+.cs-vs-base { stroke: rgba(255, 255, 255, 0.2); stroke-width: 1.2; }
+.cs-vs-bar {
+  transform-box: fill-box;
+  transform-origin: bottom;
+  animation: cs-vsgrow 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.cs-vs-bar--human { fill: rgba(255, 255, 255, 0.28); }
+.cs-vs-bar--siya {
+  fill: #ffffff;
+  animation-delay: 0.16s;
+}
+@keyframes cs-vsgrow {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
+.cs-vs-val {
+  fill: rgba(255, 255, 255, 0.85);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.cs-vs-val--win { fill: #ffffff; }
+.cs-vs-badge {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: cs-vspulse 2.2s ease-in-out infinite;
+}
+@keyframes cs-vspulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}
+.cs-vs-badge-bg {
+  fill: rgba(255, 255, 255, 0.18);
+  stroke: rgba(255, 255, 255, 0.4);
+  stroke-width: 1;
+}
+.cs-vs-badge-text {
+  fill: #ffffff;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
 .cs-pv-orbit {
   transform-origin: 120px 120px;
   animation: cs-spin 9s linear infinite;
@@ -430,7 +473,9 @@
 @media (prefers-reduced-motion: reduce) {
   .cs-voice-ring, .cs-voice-bar, .cs-voice-core--pulse, .cs-voice-eq,
   .cs-ripple, .cs-call-live, .cs-pv-orbit,
-  .cs-tf-stage, .cs-tf-wavebar, .cs-tf-spark { animation: none; }
+  .cs-tf-stage, .cs-tf-wavebar, .cs-tf-spark,
+  .cs-vs-bar, .cs-vs-badge, .cs-stack-track { animation: none; }
+  .cs-vs-bar { transform: scaleY(1); }
 }
 
 .cs-pv-grid {

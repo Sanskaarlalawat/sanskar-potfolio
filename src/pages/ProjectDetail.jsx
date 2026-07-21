@@ -87,14 +87,27 @@ const FlowVisual = () => {
   );
 };
 
+// Cost duel: two bars grow in — a tall "human" bar and a tiny "Siya" bar —
+// under a pulsing "10× cheaper" badge.
 const CompareVisual = () => (
-  <svg className="cs-pv-svg" viewBox="0 0 240 240">
-    <rect x="44" y="46" width="56" height="150" rx="7" className="cs-pv-bar-a" />
-    <text x="72" y="216" className="cs-pv-text" textAnchor="middle">Human</text>
-    <text x="72" y="38" className="cs-pv-text cs-pv-text--sm" textAnchor="middle">₹30–50</text>
-    <rect x="140" y="150" width="56" height="46" rx="7" className="cs-pv-bar-b" />
-    <text x="168" y="216" className="cs-pv-text" textAnchor="middle">Siya</text>
-    <text x="168" y="142" className="cs-pv-text cs-pv-text--sm" textAnchor="middle">₹2–3</text>
+  <svg className="cs-pv-svg cs-vs" viewBox="0 0 240 240">
+    {/* badge */}
+    <g className="cs-vs-badge">
+      <rect x="66" y="12" width="108" height="28" rx="14" className="cs-vs-badge-bg" />
+      <text x="120" y="30" textAnchor="middle" className="cs-vs-badge-text">10× CHEAPER</text>
+    </g>
+
+    <line x1="30" y1="206" x2="210" y2="206" className="cs-vs-base" />
+
+    {/* human */}
+    <text x="71" y="68" textAnchor="middle" className="cs-vs-val">₹30–50</text>
+    <rect x="44" y="78" width="54" height="128" rx="7" className="cs-vs-bar cs-vs-bar--human" />
+    <text x="71" y="226" textAnchor="middle" className="cs-pv-text cs-pv-text--sm">Human</text>
+
+    {/* siya */}
+    <text x="169" y="158" textAnchor="middle" className="cs-vs-val cs-vs-val--win">₹2–3</text>
+    <rect x="142" y="168" width="54" height="38" rx="7" className="cs-vs-bar cs-vs-bar--siya" />
+    <text x="169" y="226" textAnchor="middle" className="cs-pv-text cs-pv-text--sm">Siya</text>
   </svg>
 );
 
