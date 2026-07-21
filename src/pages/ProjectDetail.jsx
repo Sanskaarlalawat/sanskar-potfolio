@@ -4,15 +4,39 @@ import { getProjectBySlug, getNextProject } from "../data/projects";
 import "./ProjectDetail.css";
 
 /* ── Per-section visuals for the pinned panel ── */
+// Overview: a "Siya" hub — the agent at the centre with her key capabilities
+// around her and signals radiating out to each.
+const OV_CAPS = [
+  { label: "24/7", x: 130, y: 34, w: 48 },
+  { label: "Bilingual", x: 212, y: 114, w: 76 },
+  { label: "Autonomous", x: 130, y: 196, w: 96 },
+  { label: "Sub-second", x: 48, y: 114, w: 82 },
+];
 const OrbitVisual = () => (
-  <svg className="cs-pv-svg" viewBox="0 0 240 240">
-    <circle cx="120" cy="120" r="46" className="cs-pv-ring" />
-    <circle cx="120" cy="120" r="80" className="cs-pv-ring" />
-    <circle cx="120" cy="120" r="112" className="cs-pv-ring" />
-    <g className="cs-pv-orbit">
-      <circle cx="120" cy="8" r="6" className="cs-pv-solid" />
-    </g>
-    <circle cx="120" cy="120" r="11" className="cs-pv-solid" />
+  <svg className="cs-pv-svg cs-hub" viewBox="0 0 260 232">
+    {/* spokes */}
+    {OV_CAPS.map((c) => (
+      <line key={c.label} x1="130" y1="114" x2={c.x} y2={c.y} className="cs-hub-line" />
+    ))}
+    {/* signals radiating to each capability */}
+    {OV_CAPS.map((c, i) => (
+      <circle key={c.label} r="3" className="cs-hub-pulse">
+        <animateMotion path={`M130,114 L${c.x},${c.y}`} dur="2s" begin={`${i * 0.5}s`} repeatCount="indefinite" />
+      </circle>
+    ))}
+    {/* core */}
+    <circle cx="130" cy="114" r="44" className="cs-call-glow" />
+    <circle cx="130" cy="114" r="34" className="cs-hub-ring" />
+    <circle cx="130" cy="114" r="30" className="cs-hub-core" />
+    <text x="130" y="110" textAnchor="middle" className="cs-hub-name">Siya</text>
+    <text x="130" y="126" textAnchor="middle" className="cs-hub-sub">AI AGENT</text>
+    {/* capability chips on top */}
+    {OV_CAPS.map((c) => (
+      <g key={c.label}>
+        <rect x={c.x - c.w / 2} y={c.y - 12} width={c.w} height="24" rx="12" className="cs-hub-chip" />
+        <text x={c.x} y={c.y + 4} textAnchor="middle" className="cs-hub-chiptext">{c.label}</text>
+      </g>
+    ))}
   </svg>
 );
 
