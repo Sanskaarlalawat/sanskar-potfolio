@@ -283,20 +283,30 @@
 }
 .cs-pv-text--sm { fill: rgba(255, 255, 255, 0.7); font-size: 11px; }
 /* ── Cost duel (vs. Humans) ── */
-.cs-vs-base { stroke: rgba(255, 255, 255, 0.2); stroke-width: 1.2; }
+.cs-vs-track { fill: rgba(255, 255, 255, 0.08); }
+.cs-vs-grid {
+  stroke: rgba(255, 255, 255, 0.13);
+  stroke-width: 1;
+  stroke-dasharray: 2 5;
+}
 .cs-vs-bar {
   transform-box: fill-box;
   transform-origin: bottom;
-  animation: cs-vsgrow 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: cs-vsgrow 1s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
-.cs-vs-bar--human { fill: rgba(255, 255, 255, 0.28); }
-.cs-vs-bar--siya {
-  fill: #ffffff;
-  animation-delay: 0.16s;
-}
+.cs-vs-bar--siya { animation-delay: 0.18s; }
 @keyframes cs-vsgrow {
   from { transform: scaleY(0); }
   to { transform: scaleY(1); }
+}
+.cs-vs-glow {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: cs-vsglow 2.4s ease-in-out infinite;
+}
+@keyframes cs-vsglow {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.6; }
 }
 .cs-vs-val {
   fill: rgba(255, 255, 255, 0.85);
@@ -474,7 +484,7 @@
   .cs-voice-ring, .cs-voice-bar, .cs-voice-core--pulse, .cs-voice-eq,
   .cs-ripple, .cs-call-live, .cs-pv-orbit,
   .cs-tf-stage, .cs-tf-wavebar, .cs-tf-spark,
-  .cs-vs-bar, .cs-vs-badge, .cs-stack-track { animation: none; }
+  .cs-vs-bar, .cs-vs-badge, .cs-vs-glow, .cs-stack-track { animation: none; }
   .cs-vs-bar { transform: scaleY(1); }
 }
 

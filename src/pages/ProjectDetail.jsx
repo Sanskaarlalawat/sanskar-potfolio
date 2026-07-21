@@ -87,27 +87,49 @@ const FlowVisual = () => {
   );
 };
 
-// Cost duel: two bars grow in — a tall "human" bar and a tiny "Siya" bar —
-// under a pulsing "10× cheaper" badge.
+// Cost duel: glassy gradient bars grow inside faded track columns — a tall
+// "human" bar and a tiny glowing "Siya" bar — under a pulsing "10×" badge.
 const CompareVisual = () => (
-  <svg className="cs-pv-svg cs-vs" viewBox="0 0 240 240">
+  <svg className="cs-pv-svg cs-vs" viewBox="0 0 240 252">
+    <defs>
+      <linearGradient id="csvsFill" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stopColor="#ffffff" stopOpacity="0.95" />
+        <stop offset="1" stopColor="#ffffff" stopOpacity="0.6" />
+      </linearGradient>
+      <linearGradient id="csvsFillH" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stopColor="#ffffff" stopOpacity="0.42" />
+        <stop offset="1" stopColor="#ffffff" stopOpacity="0.16" />
+      </linearGradient>
+      <filter id="csvsGlow" x="-70%" y="-70%" width="240%" height="240%">
+        <feGaussianBlur stdDeviation="7" />
+      </filter>
+    </defs>
+
+    {/* gridlines */}
+    <line x1="38" y1="98" x2="202" y2="98" className="cs-vs-grid" />
+    <line x1="38" y1="138" x2="202" y2="138" className="cs-vs-grid" />
+    <line x1="38" y1="178" x2="202" y2="178" className="cs-vs-grid" />
+
     {/* badge */}
     <g className="cs-vs-badge">
-      <rect x="66" y="12" width="108" height="28" rx="14" className="cs-vs-badge-bg" />
-      <text x="120" y="30" textAnchor="middle" className="cs-vs-badge-text">10× CHEAPER</text>
+      <rect x="70" y="10" width="100" height="28" rx="14" className="cs-vs-badge-bg" />
+      <text x="120" y="28" textAnchor="middle" className="cs-vs-badge-text">10× CHEAPER</text>
     </g>
 
-    <line x1="30" y1="206" x2="210" y2="206" className="cs-vs-base" />
+    {/* tracks */}
+    <rect x="44" y="56" width="54" height="150" rx="14" className="cs-vs-track" />
+    <rect x="142" y="56" width="54" height="150" rx="14" className="cs-vs-track" />
 
     {/* human */}
-    <text x="71" y="68" textAnchor="middle" className="cs-vs-val">₹30–50</text>
-    <rect x="44" y="78" width="54" height="128" rx="7" className="cs-vs-bar cs-vs-bar--human" />
-    <text x="71" y="226" textAnchor="middle" className="cs-pv-text cs-pv-text--sm">Human</text>
+    <rect x="44" y="61" width="54" height="145" rx="14" fill="url(#csvsFillH)" className="cs-vs-bar" />
+    <text x="71" y="50" textAnchor="middle" className="cs-vs-val">₹30–50</text>
+    <text x="71" y="228" textAnchor="middle" className="cs-pv-text cs-pv-text--sm">Human</text>
 
-    {/* siya */}
-    <text x="169" y="158" textAnchor="middle" className="cs-vs-val cs-vs-val--win">₹2–3</text>
-    <rect x="142" y="168" width="54" height="38" rx="7" className="cs-vs-bar cs-vs-bar--siya" />
-    <text x="169" y="226" textAnchor="middle" className="cs-pv-text cs-pv-text--sm">Siya</text>
+    {/* siya — winner, with glow */}
+    <rect x="146" y="190" width="46" height="16" rx="8" fill="#ffffff" className="cs-vs-glow" filter="url(#csvsGlow)" />
+    <rect x="142" y="190" width="54" height="16" rx="8" fill="url(#csvsFill)" className="cs-vs-bar cs-vs-bar--siya" />
+    <text x="169" y="180" textAnchor="middle" className="cs-vs-val cs-vs-val--win">₹2–3</text>
+    <text x="169" y="228" textAnchor="middle" className="cs-pv-text cs-pv-text--sm">Siya</text>
   </svg>
 );
 
