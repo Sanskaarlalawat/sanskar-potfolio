@@ -50,15 +50,19 @@ const OrbitVisual = () => (
 
       {/* call controls */}
       <circle cx="71" cy="220" r="13" className="cs-phone-btn" />
-      <rect x="69" y="215" width="4" height="8" rx="2" className="cs-phone-glyph" />
-      <path d="M67 223.5 a4 4 0 0 0 8 0" className="cs-phone-glyph-s" />
+      <g transform="translate(71 220) scale(0.72) translate(-71 -220)">
+        <rect x="69" y="215" width="4" height="8" rx="2" className="cs-phone-glyph" />
+        <path d="M67 223.5 a4 4 0 0 0 8 0" className="cs-phone-glyph-s" />
+      </g>
 
       <circle cx="129" cy="220" r="13" className="cs-phone-btn" />
-      <path d="M124 216 l4 0 l4 -3 v14 l-4 -3 l-4 0 z" className="cs-phone-glyph" />
-      <path d="M135 216 a5 5 0 0 1 0 8" className="cs-phone-glyph-s" />
+      <g transform="translate(129 220) scale(0.72) translate(-129 -220)">
+        <path d="M124 216 l4 0 l4 -3 v14 l-4 -3 l-4 0 z" className="cs-phone-glyph" />
+        <path d="M135 216 a5 5 0 0 1 0 8" className="cs-phone-glyph-s" />
+      </g>
 
       <circle cx="100" cy="220" r="14.5" className="cs-phone-btn cs-phone-btn--end" />
-      <g transform="translate(100 220) rotate(135) scale(0.56) translate(-12 -12)">
+      <g transform="translate(100 220) rotate(135) scale(0.46) translate(-12 -12)">
         <path
           d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"
           className="cs-phone-endpath"
