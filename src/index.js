@@ -9,3 +9,12 @@ root.render(
     <App />
   </React.StrictMode>
 );
+
+// Fade out the pre-mount skeleton once the app has painted.
+requestAnimationFrame(() => {
+  const sk = document.getElementById('app-skeleton');
+  if (sk) {
+    sk.classList.add('sk-hide');
+    setTimeout(() => sk.remove(), 500);
+  }
+});
