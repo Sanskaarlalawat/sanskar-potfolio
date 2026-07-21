@@ -4,41 +4,55 @@ import { getProjectBySlug, getNextProject } from "../data/projects";
 import "./ProjectDetail.css";
 
 /* ── Per-section visuals for the pinned panel ── */
-// Overview: flowing "voice" waves — layered sine curves drifting at different
-// speeds, an elegant, abstract representation of a live voice.
-const ovWave = (amp, base, wl, phase) => {
-  let d = `M 0 ${base}`;
-  for (let x = 0; x <= 520; x += 5) {
-    const y = base + amp * Math.sin((x / wl) * Math.PI * 2 + phase);
-    d += ` L ${x} ${y.toFixed(1)}`;
-  }
-  return d;
-};
-const OV_WAVES = [
-  { amp: 10, base: 78, wl: 130, phase: 0, cls: "cs-ov-wave--faint", dur: 13, rev: false },
-  { amp: 10, base: 152, wl: 130, phase: Math.PI, cls: "cs-ov-wave--faint", dur: 15, rev: true },
-  { amp: 15, base: 115, wl: 96, phase: Math.PI / 2, cls: "cs-ov-wave--mid", dur: 9, rev: false },
-  { amp: 24, base: 115, wl: 156, phase: 0, cls: "cs-ov-wave--bright", dur: 6.5, rev: false },
-];
+// Overview: a clean phone mockup of Siya on a live call — avatar, name, a live
+// timer, an animated waveform and call controls.
 const OrbitVisual = () => (
-  <svg className="cs-pv-svg cs-ov" viewBox="0 0 260 230">
-    <defs>
-      <clipPath id="csovClip"><rect x="0" y="0" width="260" height="230" /></clipPath>
-    </defs>
-    <circle cx="130" cy="115" r="74" className="cs-call-glow" />
-    <g clipPath="url(#csovClip)">
-      {OV_WAVES.map((w, i) => (
-        <path
+  <svg className="cs-pv-svg cs-phone" viewBox="0 0 200 272">
+    <circle cx="100" cy="136" r="94" className="cs-call-glow" />
+    <g className="cs-phone-float">
+      {/* frame + screen */}
+      <rect x="44" y="12" width="112" height="248" rx="26" className="cs-phone-frame" />
+      <rect x="52" y="20" width="96" height="232" rx="18" className="cs-phone-screen" />
+      <rect x="90" y="28" width="20" height="3.5" rx="1.75" className="cs-phone-notch" />
+
+      {/* live status */}
+      <circle cx="84" cy="46" r="2.6" className="cs-call-live" />
+      <text x="92" y="49" className="cs-phone-status">ON CALL · 00:12</text>
+
+      {/* avatar */}
+      <circle cx="100" cy="92" r="26" className="cs-phone-avring cs-hub-ring" />
+      <circle cx="100" cy="92" r="22" className="cs-phone-av" />
+      <text x="100" y="99" textAnchor="middle" className="cs-phone-avtext">S</text>
+
+      {/* name */}
+      <text x="100" y="136" textAnchor="middle" className="cs-phone-name">Siya</text>
+      <text x="100" y="151" textAnchor="middle" className="cs-phone-sub">AI VOICE AGENT</text>
+
+      {/* waveform */}
+      {[9, 15, 22, 15, 9].map((h, i) => (
+        <rect
           key={i}
-          d={ovWave(w.amp, w.base, w.wl, w.phase)}
-          className={`cs-ov-wave ${w.cls}`}
-          style={{
-            "--shift": `-${w.wl}px`,
-            animationDuration: `${w.dur}s`,
-            animationDirection: w.rev ? "reverse" : "normal",
-          }}
+          x={84 + i * 8}
+          y={176 - h / 2}
+          width="3.4"
+          height={h}
+          rx="1.7"
+          className="cs-voice-bar"
+          style={{ animationDelay: `${i * 0.12}s` }}
         />
       ))}
+
+      {/* call controls */}
+      <circle cx="74" cy="216" r="14" className="cs-phone-btn" />
+      <rect x="72" y="210" width="4" height="8" rx="2" className="cs-phone-glyph" />
+      <path d="M70 219 a4 4 0 0 0 8 0" className="cs-phone-glyph-s" />
+
+      <circle cx="126" cy="216" r="14" className="cs-phone-btn" />
+      <path d="M121 212 l4 0 l4 -3 v14 l-4 -3 l-4 0 z" className="cs-phone-glyph" />
+      <path d="M132 212 a5 5 0 0 1 0 8" className="cs-phone-glyph-s" />
+
+      <circle cx="100" cy="218" r="15" className="cs-phone-btn cs-phone-btn--end" />
+      <rect x="93" y="216.5" width="14" height="3.6" rx="1.8" className="cs-phone-endglyph" transform="rotate(133 100 218)" />
     </g>
   </svg>
 );

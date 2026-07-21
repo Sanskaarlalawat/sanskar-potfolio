@@ -420,20 +420,65 @@
   50% { transform: scaleY(1.12); }
 }
 
-/* ── Overview flowing voice waves ── */
-.cs-ov-wave {
-  fill: none;
-  stroke-linecap: round;
-  animation-name: cs-waveflow;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
+/* ── Overview phone mockup ── */
+.cs-phone-float {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: cs-float 4.5s ease-in-out infinite;
 }
-@keyframes cs-waveflow {
-  to { transform: translateX(var(--shift)); }
+@keyframes cs-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
 }
-.cs-ov-wave--bright { stroke: rgba(255, 255, 255, 0.92); stroke-width: 2.2; }
-.cs-ov-wave--mid { stroke: rgba(255, 255, 255, 0.5); stroke-width: 1.8; }
-.cs-ov-wave--faint { stroke: rgba(255, 255, 255, 0.28); stroke-width: 1.4; }
+.cs-phone-frame {
+  fill: rgba(0, 0, 0, 0.34);
+  stroke: rgba(255, 255, 255, 0.22);
+  stroke-width: 1.2;
+}
+.cs-phone-screen { fill: rgba(0, 0, 0, 0.2); }
+.cs-phone-notch { fill: rgba(255, 255, 255, 0.28); }
+.cs-phone-status {
+  fill: rgba(255, 255, 255, 0.82);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 8.5px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+.cs-phone-avring { fill: none; stroke: rgba(255, 255, 255, 0.35); stroke-width: 1.4; }
+.cs-phone-av {
+  fill: rgba(255, 255, 255, 0.16);
+  stroke: rgba(255, 255, 255, 0.55);
+  stroke-width: 1.4;
+}
+.cs-phone-avtext {
+  fill: #ffffff;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+}
+.cs-phone-name {
+  fill: #ffffff;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.cs-phone-sub {
+  fill: rgba(255, 255, 255, 0.6);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 7.5px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+}
+.cs-phone-btn {
+  fill: rgba(255, 255, 255, 0.15);
+  stroke: rgba(255, 255, 255, 0.24);
+  stroke-width: 1;
+}
+.cs-phone-btn--end { fill: #e5484d; stroke: none; }
+.cs-phone-glyph { fill: #ffffff; }
+.cs-phone-glyph-s { fill: none; stroke: #ffffff; stroke-width: 1.4; stroke-linecap: round; }
+.cs-phone-endglyph { fill: #ffffff; }
 
 /* ── Overview "Siya" hub ── */
 .cs-hub-line {
@@ -551,7 +596,7 @@
   .cs-ripple, .cs-call-live, .cs-pv-orbit,
   .cs-tf-stage, .cs-tf-wavebar, .cs-tf-spark,
   .cs-vs-bar, .cs-vs-badge, .cs-vs-glow, .cs-stack-track,
-  .cs-hub-ring, .cs-ov-wave { animation: none; }
+  .cs-hub-ring, .cs-phone-float { animation: none; }
   .cs-vs-bar { transform: scaleY(1); }
 }
 
