@@ -497,10 +497,6 @@ const ProjectDetail = ({ slug, onBack, onOpenProject }) => {
                     exit={{ opacity: 0, y: -12 }}
                     transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                   >
-                    <span className="cs-pin-num">
-                      {String(active + 1).padStart(2, "0")}
-                      <span className="cs-pin-total"> / {String(sections.length).padStart(2, "0")}</span>
-                    </span>
                     <span className="cs-pin-label">{sections[active].label}</span>
                   </motion.div>
                 </AnimatePresence>
