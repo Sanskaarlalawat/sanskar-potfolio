@@ -420,6 +420,21 @@
   50% { transform: scaleY(1.12); }
 }
 
+/* ── Overview flowing voice waves ── */
+.cs-ov-wave {
+  fill: none;
+  stroke-linecap: round;
+  animation-name: cs-waveflow;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+@keyframes cs-waveflow {
+  to { transform: translateX(var(--shift)); }
+}
+.cs-ov-wave--bright { stroke: rgba(255, 255, 255, 0.92); stroke-width: 2.2; }
+.cs-ov-wave--mid { stroke: rgba(255, 255, 255, 0.5); stroke-width: 1.8; }
+.cs-ov-wave--faint { stroke: rgba(255, 255, 255, 0.28); stroke-width: 1.4; }
+
 /* ── Overview "Siya" hub ── */
 .cs-hub-line {
   stroke: rgba(255, 255, 255, 0.25);
@@ -536,7 +551,7 @@
   .cs-ripple, .cs-call-live, .cs-pv-orbit,
   .cs-tf-stage, .cs-tf-wavebar, .cs-tf-spark,
   .cs-vs-bar, .cs-vs-badge, .cs-vs-glow, .cs-stack-track,
-  .cs-hub-ring { animation: none; }
+  .cs-hub-ring, .cs-ov-wave { animation: none; }
   .cs-vs-bar { transform: scaleY(1); }
 }
 
