@@ -440,9 +440,9 @@
 .cs-phone-status {
   fill: rgba(255, 255, 255, 0.82);
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 8.5px;
+  font-size: 7.5px;
   font-weight: 600;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.02em;
 }
 .cs-phone-avring { fill: none; stroke: rgba(255, 255, 255, 0.35); stroke-width: 1.4; }
 .cs-phone-av {

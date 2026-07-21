@@ -22,8 +22,8 @@ const OrbitVisual = () => (
       <rect x="90" y="28" width="20" height="3.5" rx="1.75" className="cs-phone-notch" />
 
       {/* live status */}
-      <circle cx="84" cy="46" r="2.6" className="cs-call-live" />
-      <text x="92" y="49" className="cs-phone-status">ON CALL · 00:12</text>
+      <circle cx="70" cy="45.5" r="2.3" className="cs-call-live" />
+      <text x="78" y="48.5" className="cs-phone-status">ON CALL · 00:12</text>
 
       {/* avatar */}
       <circle cx="100" cy="92" r="26" className="cs-phone-avring cs-hub-ring" />
@@ -38,8 +38,8 @@ const OrbitVisual = () => (
       {[9, 15, 22, 15, 9].map((h, i) => (
         <rect
           key={i}
-          x={84 + i * 8}
-          y={176 - h / 2}
+          x={82 + i * 8}
+          y={178 - h / 2}
           width="3.4"
           height={h}
           rx="1.7"
@@ -49,16 +49,16 @@ const OrbitVisual = () => (
       ))}
 
       {/* call controls */}
-      <circle cx="74" cy="216" r="14" className="cs-phone-btn" />
-      <rect x="72" y="210" width="4" height="8" rx="2" className="cs-phone-glyph" />
-      <path d="M70 219 a4 4 0 0 0 8 0" className="cs-phone-glyph-s" />
+      <circle cx="71" cy="220" r="13" className="cs-phone-btn" />
+      <rect x="69" y="215" width="4" height="8" rx="2" className="cs-phone-glyph" />
+      <path d="M67 223.5 a4 4 0 0 0 8 0" className="cs-phone-glyph-s" />
 
-      <circle cx="126" cy="216" r="14" className="cs-phone-btn" />
-      <path d="M121 212 l4 0 l4 -3 v14 l-4 -3 l-4 0 z" className="cs-phone-glyph" />
-      <path d="M132 212 a5 5 0 0 1 0 8" className="cs-phone-glyph-s" />
+      <circle cx="129" cy="220" r="13" className="cs-phone-btn" />
+      <path d="M124 216 l4 0 l4 -3 v14 l-4 -3 l-4 0 z" className="cs-phone-glyph" />
+      <path d="M135 216 a5 5 0 0 1 0 8" className="cs-phone-glyph-s" />
 
-      <circle cx="100" cy="218" r="15" className="cs-phone-btn cs-phone-btn--end" />
-      <g transform="translate(100 218) rotate(135) scale(0.6) translate(-12 -12)">
+      <circle cx="100" cy="220" r="14.5" className="cs-phone-btn cs-phone-btn--end" />
+      <g transform="translate(100 220) rotate(135) scale(0.56) translate(-12 -12)">
         <path
           d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"
           className="cs-phone-endpath"
