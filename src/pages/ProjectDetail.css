@@ -431,12 +431,12 @@
   50% { transform: translateY(-5px); }
 }
 .cs-phone-frame {
-  fill: rgba(0, 0, 0, 0.34);
-  stroke: rgba(255, 255, 255, 0.22);
+  fill: #1b1512;
+  stroke: rgba(255, 255, 255, 0.16);
   stroke-width: 1.2;
 }
-.cs-phone-screen { fill: rgba(0, 0, 0, 0.2); }
-.cs-phone-notch { fill: rgba(255, 255, 255, 0.28); }
+.cs-phone-screen { stroke: rgba(255, 255, 255, 0.06); stroke-width: 1; }
+.cs-phone-notch { fill: rgba(255, 255, 255, 0.3); }
 .cs-phone-status {
   fill: rgba(255, 255, 255, 0.82);
   font-family: 'Space Grotesk', sans-serif;

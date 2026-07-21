@@ -8,11 +8,17 @@ import "./ProjectDetail.css";
 // timer, an animated waveform and call controls.
 const OrbitVisual = () => (
   <svg className="cs-pv-svg cs-phone" viewBox="0 0 200 272">
+    <defs>
+      <linearGradient id="csPhoneScreen" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stopColor="#2c2420" />
+        <stop offset="1" stopColor="#15110e" />
+      </linearGradient>
+    </defs>
     <circle cx="100" cy="136" r="94" className="cs-call-glow" />
     <g className="cs-phone-float">
       {/* frame + screen */}
       <rect x="44" y="12" width="112" height="248" rx="26" className="cs-phone-frame" />
-      <rect x="52" y="20" width="96" height="232" rx="18" className="cs-phone-screen" />
+      <rect x="52" y="20" width="96" height="232" rx="18" fill="url(#csPhoneScreen)" className="cs-phone-screen" />
       <rect x="90" y="28" width="20" height="3.5" rx="1.75" className="cs-phone-notch" />
 
       {/* live status */}
