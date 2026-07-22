@@ -50,21 +50,18 @@
 }
 .ab-rot {
   display: block;
-  line-height: 1;
+  overflow: hidden;
+  height: 1.25em;
   color: var(--ab-accent);
 }
-.ab-rot-word {
-  display: inline-block;
-  line-height: 1;
-  opacity: 1;
-  animation: ab-word-in 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-}
-@keyframes ab-word-in {
-  from { transform: translateY(0.24em); opacity: 0.25; }
-  to { transform: translateY(0); opacity: 1; }
+.ab-rot-track { will-change: transform; }
+.ab-rot-item {
+  display: block;
+  height: 1.25em;
+  line-height: 1.25;
 }
 @media (prefers-reduced-motion: reduce) {
-  .ab-rot-word { animation: none; }
+  .ab-rot-track { transition: none !important; }
 }
 
 .ab-lead {

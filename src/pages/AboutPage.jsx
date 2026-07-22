@@ -26,15 +26,32 @@ const fade = {
 
 const AboutPage = () => {
   const [wi, setWi] = useState(0);
+  const [snap, setSnap] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
   useEffect(() => {
-    const id = setInterval(() => setWi((w) => (w + 1) % ROTATE.length), 2200);
+    const id = setInterval(() => setWi((w) => w + 1), 2400);
     return () => clearInterval(id);
   }, []);
+
+  // Seamless loop: after sliding onto the duplicated first word, snap back
+  // to index 0 with the transition off (invisible jump).
+  useEffect(() => {
+    if (wi === ROTATE.length) {
+      const t = setTimeout(() => {
+        setSnap(true);
+        setWi(0);
+      }, 640);
+      return () => clearTimeout(t);
+    }
+    if (snap) {
+      const raf = requestAnimationFrame(() => setSnap(false));
+      return () => cancelAnimationFrame(raf);
+    }
+  }, [wi, snap]);
 
   return (
     <div className="ab-page">
@@ -57,8 +74,20 @@ const AboutPage = () => {
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.05 }}
           >
             I build AI that
-            <span className="ab-rot">
-              <span key={wi} className="ab-rot-word">{ROTATE[wi]}</span>
+            <span className="ab-rot" aria-label={ROTATE[wi % ROTATE.length]}>
+              <span
+                className="ab-rot-track"
+                style={{
+                  transform: `translateY(-${wi * 1.25}em)`,
+                  transition: snap
+                    ? "none"
+                    : "transform 0.6s cubic-bezier(0.22, 1, 0.36, 1)",
+                }}
+              >
+                {[...ROTATE, ROTATE[0]].map((w, i) => (
+                  <span className="ab-rot-item" key={i}>{w}</span>
+                ))}
+              </span>
             </span>
           </motion.h1>
 
