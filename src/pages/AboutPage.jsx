@@ -146,6 +146,38 @@ const AboutPage = () => {
           </div>
         </motion.section>
 
+        {/* Résumé */}
+        <motion.section className="ab-section" {...fade}>
+          <h2 className="ab-h2">Résumé</h2>
+          <a
+            className="ab-resume"
+            href="/sanskar-lalawat-resume.pdf"
+            download="Sanskar-Lalawat-Resume.pdf"
+          >
+            <span className="ab-resume-doc" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none">
+                <path
+                  d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5Z"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinejoin="round"
+                />
+                <path d="M14 3v5h5" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+              </svg>
+            </span>
+            <span className="ab-resume-info">
+              <span className="ab-resume-title">Sanskar Lalawat — Résumé</span>
+              <span className="ab-resume-meta">PDF · full work history & skills</span>
+            </span>
+            <span className="ab-resume-dl">
+              Download
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" aria-hidden="true">
+                <path d="M12 4v12m0 0 5-5m-5 5-5-5M5 20h14" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </span>
+          </a>
+        </motion.section>
+
         {/* Contact */}
         <motion.section className="ab-contact" {...fade}>
           <h2 className="ab-cta">Let's build something.</h2>
