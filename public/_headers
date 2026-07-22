@@ -1,0 +1,11 @@
+# Always revalidate the HTML so visitors get the latest JS bundle.
+/
+  Cache-Control: no-cache
+/about
+  Cache-Control: no-cache
+/projects
+  Cache-Control: no-cache
+/project/*
+  Cache-Control: no-cache
+/index.html
+  Cache-Control: no-cache
