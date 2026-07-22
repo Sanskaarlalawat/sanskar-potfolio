@@ -5,10 +5,38 @@ import "./AboutPage.css";
 const ROTATE = ["talks", "listens", "reasons", "ships"];
 
 const experience = [
-  { role: "Technical Head", company: "Siksha Bhavishayan", period: "2025 — Now" },
-  { role: "AI / ML Engineer", company: "Karai Innovation", period: "2024 — 25" },
-  { role: "AI Automation Intern", company: "Vyza Solutions", period: "2023" },
-  { role: "Data & Analytics Intern", company: "Aimpathy Consulting", period: "2023" },
+  {
+    role: "Technical Head",
+    company: "Siksha Bhavishayan",
+    period: "2025 — Now",
+    description:
+      "Leading complete technical operations for an education & counseling platform — managing the engineering team, driving innovation, handling deployments, and building AI systems for counseling and student analytics.",
+    tech: ["Python", "Django", "LLMs", "AWS", "Docker", "System Architecture"],
+  },
+  {
+    role: "AI / ML Engineer",
+    company: "Karai Innovation",
+    period: "2024 — 25",
+    description:
+      "Built intelligent education-focused systems: AI chatbots, vector-based knowledge systems, OCR pipelines and answer-evaluation engines — deployed end to end at scale.",
+    tech: ["Python", "OCR", "Computer Vision", "LLMs", "Vector Databases", "OpenAI"],
+  },
+  {
+    role: "AI Automation Intern",
+    company: "Vyza Solutions",
+    period: "2023",
+    description:
+      "Worked on data analysis, NLP and machine-learning solutions — contributing to real-world AI projects, model building, insight generation and automation workflows.",
+    tech: ["Python", "NLP", "Machine Learning", "Pandas"],
+  },
+  {
+    role: "Data & Analytics Intern",
+    company: "Aimpathy Consulting",
+    period: "2023",
+    description:
+      "Handled HR data and analytics to improve recruitment efficiency and decision-making through data extraction, cleaning and reporting.",
+    tech: ["Python", "Data Cleaning", "Analytics"],
+  },
 ];
 
 const skills = [
@@ -27,6 +55,7 @@ const fade = {
 const AboutPage = () => {
   const [wi, setWi] = useState(0);
   const [snap, setSnap] = useState(false);
+  const [openExp, setOpenExp] = useState(0);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -123,16 +152,39 @@ const AboutPage = () => {
         <motion.section className="ab-section" {...fade}>
           <h2 className="ab-h2">Experience</h2>
           <div className="ab-exp">
-            {experience.map((job) => (
-              <div className="ab-exp-row" key={job.company}>
-                <span className="ab-exp-arrow">→</span>
-                <div className="ab-exp-main">
-                  <span className="ab-exp-role">{job.role}</span>
-                  <span className="ab-exp-co">{job.company}</span>
+            {experience.map((job, i) => {
+              const isOpen = openExp === i;
+              return (
+                <div className={`ab-exp-row ${isOpen ? "is-open" : ""}`} key={job.company}>
+                  <button
+                    className="ab-exp-head"
+                    onClick={() => setOpenExp(isOpen ? -1 : i)}
+                    aria-expanded={isOpen}
+                  >
+                    <div className="ab-exp-main">
+                      <span className="ab-exp-role">{job.role}</span>
+                      <span className="ab-exp-co">{job.company}</span>
+                    </div>
+                    <span className="ab-exp-year">{job.period}</span>
+                    <span className="ab-exp-chev" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" width="20" height="20" fill="none">
+                        <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </span>
+                  </button>
+                  <div className="ab-exp-detail">
+                    <div className="ab-exp-detail-inner">
+                      <p className="ab-exp-desc">{job.description}</p>
+                      <div className="ab-exp-tags">
+                        {job.tech.map((t) => (
+                          <span key={t}>{t}</span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <span className="ab-exp-year">{job.period}</span>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </motion.section>
 

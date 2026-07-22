@@ -113,32 +113,27 @@
   margin: 0 0 12px;
 }
 
-/* ── Experience ── */
-.ab-exp-row {
+/* ── Experience (accordion) ── */
+.ab-exp-row { border-bottom: 1px solid #ece8e4; }
+.ab-exp-head {
+  width: 100%;
   display: flex;
-  align-items: baseline;
-  gap: 18px;
+  align-items: center;
+  gap: 20px;
   padding: 26px 0;
-  border-bottom: 1px solid #ece8e4;
-  transition: padding-left 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.ab-exp-row:hover { padding-left: 14px; }
-.ab-exp-arrow {
-  color: var(--ab-accent);
-  font-size: 20px;
-  opacity: 0;
-  transform: translateX(-8px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
-}
-.ab-exp-row:hover .ab-exp-arrow {
-  opacity: 1;
-  transform: translateX(0);
+  border: none;
+  background: none;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  color: inherit;
 }
 .ab-exp-main {
   display: flex;
   flex-direction: column;
   gap: 5px;
   flex: 1;
+  min-width: 0;
 }
 .ab-exp-role {
   font-size: clamp(22px, 3vw, 32px);
@@ -147,7 +142,8 @@
   color: #1a1512;
   transition: color 0.25s ease;
 }
-.ab-exp-row:hover .ab-exp-role { color: var(--ab-accent); }
+.ab-exp-head:hover .ab-exp-role,
+.ab-exp-row.is-open .ab-exp-role { color: var(--ab-accent); }
 .ab-exp-co {
   font-size: 15px;
   letter-spacing: -0.01em;
@@ -157,6 +153,60 @@
   font-size: 15px;
   color: #aca69f;
   white-space: nowrap;
+}
+.ab-exp-chev {
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #8a827c;
+  background: #f5f2ee;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), background 0.2s ease, color 0.2s ease;
+}
+.ab-exp-row.is-open .ab-exp-chev {
+  transform: rotate(180deg);
+  background: var(--ab-accent);
+  color: #fff;
+}
+
+/* expand */
+.ab-exp-detail {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.ab-exp-row.is-open .ab-exp-detail { grid-template-rows: 1fr; }
+.ab-exp-detail-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+.ab-exp-desc {
+  font-size: 17px;
+  line-height: 1.55;
+  letter-spacing: -0.01em;
+  color: #5f5852;
+  margin: 0 0 16px;
+  max-width: 680px;
+  padding-top: 2px;
+}
+.ab-exp-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-bottom: 28px;
+}
+.ab-exp-tags span {
+  font-size: 13px;
+  font-weight: 500;
+  color: #8a827c;
+  background: #f5f2ee;
+  border-radius: 100px;
+  padding: 6px 13px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ab-exp-detail, .ab-exp-chev { transition: none; }
 }
 
 /* ── Skills ── */
