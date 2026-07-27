@@ -236,92 +236,43 @@
   transform: translateY(-2px);
 }
 
-/* ── Ephemeral download popup (mimics a browser's download tray) ── */
-.ab-dl-tray {
-  position: fixed;
-  top: 14px;
-  left: 50%;
-  z-index: 998;
+/* ── Download progress (real CLI-style transfer, inline in the terminal) ── */
+.ab-term-progress {
   display: flex;
   align-items: center;
-  gap: 9px;
-  padding: 9px 16px 9px 11px;
+  gap: 11px;
+  margin: 11px 0 0;
+}
+.ab-term-progress-track {
+  flex: 1;
+  height: 5px;
   border-radius: 100px;
-  background: #ffffff;
-  box-shadow: 0 12px 32px rgba(26, 21, 18, 0.2), 0 0 0 1px rgba(26, 21, 18, 0.06);
-  opacity: 0;
-  transform: translate(-50%, -18px) scale(0.92);
-  pointer-events: none;
-  transition: opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  background: rgba(255, 255, 255, 0.12);
+  overflow: hidden;
 }
-.ab-dl-tray.is-show {
-  opacity: 1;
-  transform: translate(-50%, 0) scale(1);
+.ab-term-progress-fill {
+  height: 100%;
+  border-radius: 100px;
+  background: linear-gradient(90deg, #5fcf8d, #7ee787);
+  transition: width 0.1s linear;
 }
-.ab-dl-tray svg { display: block; flex-shrink: 0; }
-.ab-dl-tray-label {
-  font-size: 12.5px;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  color: #5f5852;
-  white-space: nowrap;
+.ab-term-progress-pct {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.45);
+  min-width: 32px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
 }
-.ab-dl-tray-check {
-  display: grid;
-  place-items: center;
-  width: 17px;
-  height: 17px;
-  border-radius: 50%;
-  background: #2e7d4f;
-  color: #fff;
-  font-size: 10px;
-  flex-shrink: 0;
-  opacity: 0;
-  transform: scale(0.4);
-  transition: opacity 0.22s ease, transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+.ab-term-ok {
+  animation: ab-line-in 0.32s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.ab-dl-tray.is-done .ab-dl-tray-check {
-  opacity: 1;
-  transform: scale(1);
-}
-@keyframes ab-tray-pop {
-  0% { transform: scale(1); }
-  35% { transform: scale(1.18) translateY(-3px); }
-  65% { transform: scale(0.94); }
-  100% { transform: scale(1); }
-}
-.ab-dl-tray.is-done svg { animation: ab-tray-pop 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
-
-/* flying document — portaled to <body>, positioned in viewport coords */
-.ab-fly-doc {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 28px;
-  height: 32px;
-  margin: -16px 0 0 -14px;
-  pointer-events: none;
-  z-index: 999;
-  filter: drop-shadow(0 6px 14px rgba(26, 21, 18, 0.25));
-  animation: ab-fly-doc 0.7s cubic-bezier(0.32, 0.6, 0.36, 1) forwards;
-}
-@keyframes ab-fly-doc {
-  0% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 1; }
-  55% {
-    transform: translate(calc(var(--dx) * 0.55), calc(var(--dy) * 0.55 - 34px))
-      scale(0.75) rotate(-10deg);
-    opacity: 1;
-  }
-  100% { transform: translate(var(--dx), var(--dy)) scale(0.16) rotate(8deg); opacity: 0; }
+@keyframes ab-line-in {
+  from { opacity: 0; transform: translateY(3px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .ab-fly-doc, .ab-dl-tray.is-done svg { animation: none; }
-  .ab-dl-tray { transition: none; }
-}
-@media (max-width: 480px) {
-  .ab-dl-tray-label { display: none; }
-  .ab-dl-tray { padding: 9px 12px; }
+  .ab-term-progress-fill { transition: none; }
+  .ab-term-ok { animation: none; }
 }
 
 /* ── Résumé terminal ── */

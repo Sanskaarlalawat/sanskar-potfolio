@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
-import { createPortal } from "react-dom";
 import { motion } from "framer-motion";
 import "./AboutPage.css";
 
@@ -59,20 +58,20 @@ const AboutPage = () => {
   const [openExp, setOpenExp] = useState(0);
   const [dlDone, setDlDone] = useState(false);
   const [pressing, setPressing] = useState(false);
-  const [flying, setFlying] = useState(false);
-  const [trayShow, setTrayShow] = useState(false);
-  const [trayDone, setTrayDone] = useState(false);
-  const [flyPos, setFlyPos] = useState({ x: 0, y: 0, dx: 0, dy: 0 });
+  const [downloading, setDownloading] = useState(false);
+  const [percent, setPercent] = useState(0);
   const termRef = useRef(null);
   const linkRef = useRef(null);
-  const trayRef = useRef(null);
+  const timerRef = useRef(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
+  useEffect(() => () => clearTimeout(timerRef.current), []);
+
   const downloadResume = useCallback(() => {
-    if (dlDone || pressing || flying) return;
+    if (dlDone || pressing || downloading) return;
 
     const reduceMotion =
       window.matchMedia &&
@@ -85,36 +84,31 @@ const AboutPage = () => {
     }
 
     setPressing(true); // flash the Enter key first
-    setTimeout(() => {
+    timerRef.current = setTimeout(() => {
       setPressing(false);
-      setTrayShow(true); // the "download popup" appears near the top, like a browser
-
-      // The tray is always mounted (only its opacity/transform toggle), so its
-      // box dimensions are valid immediately — no need to wait a frame for the
-      // show transition, which also avoids rAF ever stalling in a backgrounded tab.
-      const tr = termRef.current.getBoundingClientRect();
-      const trayEl = trayRef.current;
-      const sx = tr.left + tr.width * 0.5;
-      const sy = tr.top + tr.height * 0.62;
-      const ex = window.innerWidth / 2;
-      const ey = 14 + trayEl.offsetHeight / 2; // matches the tray's resting `top: 14px`
-      setFlyPos({ x: sx, y: sy, dx: ex - sx, dy: ey - sy });
-
+      setDownloading(true);
+      setPercent(0);
       linkRef.current?.click();
-      setFlying(true);
 
-      setTimeout(() => {
-        setFlying(false);
-        setDlDone(true);
-        setTrayDone(true); // file "arrives" — checkmark + bounce
-
-        setTimeout(() => {
-          setTrayShow(false); // the popup fades away, as if it were never there
-          setTimeout(() => setTrayDone(false), 350);
-        }, 950);
-      }, 700);
+      // Ease toward 100 — quick at first, settling in near the end, like a
+      // real transfer. setTimeout (not rAF) so it always finishes, even if
+      // this tab is backgrounded — it just runs slower, never stalls.
+      let p = 0;
+      const tick = () => {
+        p = Math.min(100, p + Math.max(2, (100 - p) * 0.22));
+        setPercent(Math.round(p));
+        if (p < 100) {
+          timerRef.current = setTimeout(tick, 70);
+        } else {
+          timerRef.current = setTimeout(() => {
+            setDownloading(false);
+            setDlDone(true);
+          }, 260);
+        }
+      };
+      timerRef.current = setTimeout(tick, 70);
     }, 220);
-  }, [dlDone, pressing, flying]);
+  }, [dlDone, pressing, downloading]);
 
   // Press Enter to download — active while the terminal is on screen.
   useEffect(() => {
@@ -303,7 +297,7 @@ const AboutPage = () => {
                 <span className="ab-term-prompt">$</span>
                 <span className="ab-term-cmd">./get-resume.sh</span>
               </p>
-              {!flying && !dlDone && (
+              {!downloading && !dlDone && (
                 <p className="ab-term-hint">
                   press{" "}
                   <kbd className={`ab-term-kbd ${pressing ? "ab-term-kbd--active" : ""}`}>
@@ -313,10 +307,23 @@ const AboutPage = () => {
                   <span className="ab-term-cursor" />
                 </p>
               )}
-              {(flying || dlDone) && (
-                <p className="ab-term-out">→ fetching Sanskar-Lalawat-Resume.pdf …</p>
+              {(downloading || dlDone) && (
+                <p className="ab-term-out">→ fetching Sanskar-Lalawat-Resume.pdf</p>
               )}
-              {dlDone && <p className="ab-term-ok">✓ saved to Downloads</p>}
+              {downloading && (
+                <div className="ab-term-progress">
+                  <div className="ab-term-progress-track">
+                    <div
+                      className="ab-term-progress-fill"
+                      style={{ width: `${percent}%` }}
+                    />
+                  </div>
+                  <span className="ab-term-progress-pct">{percent}%</span>
+                </div>
+              )}
+              {dlDone && (
+                <p className="ab-term-ok">✓ saved to ~/Downloads/Sanskar-Lalawat-Resume.pdf</p>
+              )}
             </div>
             <a
               ref={linkRef}
@@ -330,62 +337,6 @@ const AboutPage = () => {
             </a>
           </div>
         </motion.section>
-
-        {createPortal(
-          <>
-            {/* Ephemeral "download popup" — pops in near the top like a
-                browser's download tray, receives the file, then vanishes. */}
-            <div
-              className={`ab-dl-tray ${trayShow ? "is-show" : ""} ${trayDone ? "is-done" : ""}`}
-              ref={trayRef}
-              aria-hidden="true"
-            >
-              <svg viewBox="0 0 64 50" width="20" height="16" fill="none">
-                <path
-                  d="M3 8c0-2.8 2.2-5 5-5h13l5 6h30c2.8 0 5 2.2 5 5v29c0 2.8-2.2 5-5 5H8c-2.8 0-5-2.2-5-5V8z"
-                  fill="#bcd9ff"
-                />
-                <path d="M3 15h58v23c0 2.8-2.2 5-5 5H8c-2.8 0-5-2.2-5-5V15z" fill="#5b9df9" />
-              </svg>
-              <span className="ab-dl-tray-label">Sanskar-Lalawat-Resume.pdf</span>
-              <span className="ab-dl-tray-check">✓</span>
-            </div>
-
-            {flying && (
-              <div
-                className="ab-fly-doc"
-                style={{
-                  left: flyPos.x,
-                  top: flyPos.y,
-                  "--dx": `${flyPos.dx}px`,
-                  "--dy": `${flyPos.dy}px`,
-                }}
-              >
-                <svg viewBox="0 0 28 32" width="28" height="32" fill="none">
-                  <path
-                    d="M3 1h14l6 6v23a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z"
-                    fill="#fff"
-                    stroke="#d8d3cd"
-                  />
-                  <path d="M17 1v6h6" fill="none" stroke="#d8d3cd" />
-                  <rect x="4" y="17" width="17" height="6" rx="1.2" fill="#e2503a" />
-                  <text
-                    x="12.5"
-                    y="21.7"
-                    fontSize="4.6"
-                    fill="#fff"
-                    textAnchor="middle"
-                    fontFamily="ui-monospace, monospace"
-                    fontWeight="700"
-                  >
-                    PDF
-                  </text>
-                </svg>
-              </div>
-            )}
-          </>,
-          document.body
-        )}
 
         {/* Contact */}
         <motion.section className="ab-contact" {...fade}>
