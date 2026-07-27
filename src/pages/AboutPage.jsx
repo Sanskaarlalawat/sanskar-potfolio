@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
 import "./AboutPage.css";
 
@@ -56,10 +56,37 @@ const AboutPage = () => {
   const [wi, setWi] = useState(0);
   const [snap, setSnap] = useState(false);
   const [openExp, setOpenExp] = useState(0);
+  const [dlDone, setDlDone] = useState(false);
+  const termRef = useRef(null);
+  const linkRef = useRef(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  const downloadResume = useCallback(() => {
+    setDlDone(true);
+    linkRef.current?.click();
+  }, []);
+
+  // Press Enter to download — active while the terminal is on screen.
+  useEffect(() => {
+    if (dlDone) return;
+    const onKey = (e) => {
+      if (e.key !== "Enter") return;
+      const tag = document.activeElement?.tagName;
+      if (["A", "BUTTON", "INPUT", "TEXTAREA"].includes(tag)) return;
+      const el = termRef.current;
+      if (!el) return;
+      const r = el.getBoundingClientRect();
+      const inView = r.top < window.innerHeight * 0.85 && r.bottom > window.innerHeight * 0.15;
+      if (!inView) return;
+      e.preventDefault();
+      downloadResume();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [dlDone, downloadResume]);
 
   useEffect(() => {
     const id = setInterval(() => setWi((w) => w + 1), 2400);
@@ -201,33 +228,57 @@ const AboutPage = () => {
         {/* Résumé */}
         <motion.section className="ab-section" {...fade}>
           <h2 className="ab-h2">Résumé</h2>
-          <a
-            className="ab-resume"
-            href="/sanskar-lalawat-resume.pdf"
-            download="Sanskar-Lalawat-Resume.pdf"
+          <div
+            className="ab-term"
+            ref={termRef}
+            role="button"
+            tabIndex={0}
+            aria-label="Download résumé"
+            onClick={downloadResume}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                downloadResume();
+              }
+            }}
           >
-            <span className="ab-resume-doc" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="22" height="22" fill="none">
-                <path
-                  d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5Z"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinejoin="round"
-                />
-                <path d="M14 3v5h5" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
-              </svg>
-            </span>
-            <span className="ab-resume-info">
-              <span className="ab-resume-title">Sanskar Lalawat — Résumé</span>
-              <span className="ab-resume-meta">PDF · full work history & skills</span>
-            </span>
-            <span className="ab-resume-dl">
-              Download
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" aria-hidden="true">
-                <path d="M12 4v12m0 0 5-5m-5 5-5-5M5 20h14" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </span>
-          </a>
+            <div className="ab-term-bar">
+              <span className="ab-term-dot ab-term-dot--r" />
+              <span className="ab-term-dot ab-term-dot--y" />
+              <span className="ab-term-dot ab-term-dot--g" />
+              <span className="ab-term-title">resume — zsh</span>
+            </div>
+            <div className="ab-term-body">
+              <p className="ab-term-line">
+                <span className="ab-term-user">sanskar@portfolio</span>
+                <span className="ab-term-sep">:</span>
+                <span className="ab-term-dir">~</span>
+                <span className="ab-term-prompt">$</span>
+                <span className="ab-term-cmd">./get-resume.sh</span>
+              </p>
+              {!dlDone ? (
+                <p className="ab-term-hint">
+                  press <kbd className="ab-term-kbd">⏎ enter</kbd> to download résumé
+                  <span className="ab-term-cursor" />
+                </p>
+              ) : (
+                <>
+                  <p className="ab-term-out">→ fetching Sanskar-Lalawat-Resume.pdf …</p>
+                  <p className="ab-term-ok">✓ download started — check your Downloads folder</p>
+                </>
+              )}
+            </div>
+            <a
+              ref={linkRef}
+              href="/sanskar-lalawat-resume.pdf"
+              download="Sanskar-Lalawat-Resume.pdf"
+              aria-hidden="true"
+              tabIndex={-1}
+              style={{ position: "absolute", width: 0, height: 0, opacity: 0, pointerEvents: "none" }}
+            >
+              resume
+            </a>
+          </div>
         </motion.section>
 
         {/* Contact */}
