@@ -88,11 +88,11 @@ const AboutPage = () => {
       setPressing(false);
       setDownloading(true);
       setPercent(0);
-      linkRef.current?.click();
 
       // Ease toward 100 — quick at first, settling in near the end, like a
       // real transfer. setTimeout (not rAF) so it always finishes, even if
-      // this tab is backgrounded — it just runs slower, never stalls.
+      // this tab is backgrounded — it just runs slower, never stalls. The
+      // actual file download only fires once the bar reads 100%.
       let p = 0;
       const tick = () => {
         p = Math.min(100, p + Math.max(2, (100 - p) * 0.22));
@@ -100,6 +100,7 @@ const AboutPage = () => {
         if (p < 100) {
           timerRef.current = setTimeout(tick, 70);
         } else {
+          linkRef.current?.click();
           timerRef.current = setTimeout(() => {
             setDownloading(false);
             setDlDone(true);
