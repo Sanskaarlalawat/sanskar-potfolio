@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { motion } from "framer-motion";
 import "./AboutPage.css";
 
@@ -57,17 +58,54 @@ const AboutPage = () => {
   const [snap, setSnap] = useState(false);
   const [openExp, setOpenExp] = useState(0);
   const [dlDone, setDlDone] = useState(false);
+  const [pressing, setPressing] = useState(false);
+  const [flying, setFlying] = useState(false);
+  const [folderBounce, setFolderBounce] = useState(false);
+  const [flyPos, setFlyPos] = useState({ x: 0, y: 0, dx: 0, dy: 0 });
   const termRef = useRef(null);
   const linkRef = useRef(null);
+  const folderRef = useRef(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
   const downloadResume = useCallback(() => {
-    setDlDone(true);
-    linkRef.current?.click();
-  }, []);
+    if (dlDone || pressing || flying) return;
+
+    const reduceMotion =
+      window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (reduceMotion || !termRef.current || !folderRef.current) {
+      linkRef.current?.click();
+      setDlDone(true);
+      return;
+    }
+
+    setPressing(true); // flash the Enter key first
+    setTimeout(() => {
+      setPressing(false);
+
+      const tr = termRef.current.getBoundingClientRect();
+      const fr = folderRef.current.getBoundingClientRect();
+      const sx = tr.left + tr.width * 0.5;
+      const sy = tr.top + tr.height * 0.62;
+      const ex = fr.left + fr.width * 0.5;
+      const ey = fr.top + fr.height * 0.42;
+      setFlyPos({ x: sx, y: sy, dx: ex - sx, dy: ey - sy });
+
+      linkRef.current?.click();
+      setFlying(true);
+
+      setTimeout(() => {
+        setFlying(false);
+        setDlDone(true);
+        setFolderBounce(true);
+        setTimeout(() => setFolderBounce(false), 550);
+      }, 750);
+    }, 220);
+  }, [dlDone, pressing, flying]);
 
   // Press Enter to download — active while the terminal is on screen.
   useEffect(() => {
@@ -228,58 +266,114 @@ const AboutPage = () => {
         {/* Résumé */}
         <motion.section className="ab-section" {...fade}>
           <h2 className="ab-h2">Résumé</h2>
-          <div
-            className="ab-term"
-            ref={termRef}
-            role="button"
-            tabIndex={0}
-            aria-label="Download résumé"
-            onClick={downloadResume}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                e.preventDefault();
-                downloadResume();
-              }
-            }}
-          >
-            <div className="ab-term-bar">
-              <span className="ab-term-dot ab-term-dot--r" />
-              <span className="ab-term-dot ab-term-dot--y" />
-              <span className="ab-term-dot ab-term-dot--g" />
-              <span className="ab-term-title">resume — zsh</span>
-            </div>
-            <div className="ab-term-body">
-              <p className="ab-term-line">
-                <span className="ab-term-user">sanskar@portfolio</span>
-                <span className="ab-term-sep">:</span>
-                <span className="ab-term-dir">~</span>
-                <span className="ab-term-prompt">$</span>
-                <span className="ab-term-cmd">./get-resume.sh</span>
-              </p>
-              {!dlDone ? (
-                <p className="ab-term-hint">
-                  press <kbd className="ab-term-kbd">⏎ enter</kbd> to download résumé
-                  <span className="ab-term-cursor" />
-                </p>
-              ) : (
-                <>
-                  <p className="ab-term-out">→ fetching Sanskar-Lalawat-Resume.pdf …</p>
-                  <p className="ab-term-ok">✓ download started — check your Downloads folder</p>
-                </>
-              )}
-            </div>
-            <a
-              ref={linkRef}
-              href="/sanskar-lalawat-resume.pdf"
-              download="Sanskar-Lalawat-Resume.pdf"
-              aria-hidden="true"
-              tabIndex={-1}
-              style={{ position: "absolute", width: 0, height: 0, opacity: 0, pointerEvents: "none" }}
+          <div className="ab-resume-row">
+            <div
+              className="ab-term"
+              ref={termRef}
+              role="button"
+              tabIndex={0}
+              aria-label="Download résumé"
+              onClick={downloadResume}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  downloadResume();
+                }
+              }}
             >
-              resume
-            </a>
+              <div className="ab-term-bar">
+                <span className="ab-term-dot ab-term-dot--r" />
+                <span className="ab-term-dot ab-term-dot--y" />
+                <span className="ab-term-dot ab-term-dot--g" />
+                <span className="ab-term-title">resume — zsh</span>
+              </div>
+              <div className="ab-term-body">
+                <p className="ab-term-line">
+                  <span className="ab-term-user">sanskar@portfolio</span>
+                  <span className="ab-term-sep">:</span>
+                  <span className="ab-term-dir">~</span>
+                  <span className="ab-term-prompt">$</span>
+                  <span className="ab-term-cmd">./get-resume.sh</span>
+                </p>
+                {!flying && !dlDone && (
+                  <p className="ab-term-hint">
+                    press{" "}
+                    <kbd className={`ab-term-kbd ${pressing ? "ab-term-kbd--active" : ""}`}>
+                      ⏎ enter
+                    </kbd>{" "}
+                    to download résumé
+                    <span className="ab-term-cursor" />
+                  </p>
+                )}
+                {(flying || dlDone) && (
+                  <p className="ab-term-out">→ fetching Sanskar-Lalawat-Resume.pdf …</p>
+                )}
+                {dlDone && <p className="ab-term-ok">✓ saved to Downloads</p>}
+              </div>
+              <a
+                ref={linkRef}
+                href="/sanskar-lalawat-resume.pdf"
+                download="Sanskar-Lalawat-Resume.pdf"
+                aria-hidden="true"
+                tabIndex={-1}
+                style={{ position: "absolute", width: 0, height: 0, opacity: 0, pointerEvents: "none" }}
+              >
+                resume
+              </a>
+            </div>
+
+            <div
+              className={`ab-folder ${folderBounce ? "ab-folder-bounce" : ""}`}
+              ref={folderRef}
+              aria-hidden="true"
+            >
+              <svg viewBox="0 0 64 50" width="52" height="41" fill="none">
+                <path
+                  d="M3 8c0-2.8 2.2-5 5-5h13l5 6h30c2.8 0 5 2.2 5 5v29c0 2.8-2.2 5-5 5H8c-2.8 0-5-2.2-5-5V8z"
+                  fill="#bcd9ff"
+                />
+                <path d="M3 15h58v23c0 2.8-2.2 5-5 5H8c-2.8 0-5-2.2-5-5V15z" fill="#5b9df9" />
+              </svg>
+              <span className="ab-folder-label">Downloads</span>
+              {dlDone && <span className="ab-folder-badge">✓</span>}
+            </div>
           </div>
         </motion.section>
+
+        {flying &&
+          createPortal(
+            <div
+              className="ab-fly-doc"
+              style={{
+                left: flyPos.x,
+                top: flyPos.y,
+                "--dx": `${flyPos.dx}px`,
+                "--dy": `${flyPos.dy}px`,
+              }}
+            >
+              <svg viewBox="0 0 28 32" width="28" height="32" fill="none">
+                <path
+                  d="M3 1h14l6 6v23a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z"
+                  fill="#fff"
+                  stroke="#d8d3cd"
+                />
+                <path d="M17 1v6h6" fill="none" stroke="#d8d3cd" />
+                <rect x="4" y="17" width="17" height="6" rx="1.2" fill="#e2503a" />
+                <text
+                  x="12.5"
+                  y="21.7"
+                  fontSize="4.6"
+                  fill="#fff"
+                  textAnchor="middle"
+                  fontFamily="ui-monospace, monospace"
+                  fontWeight="700"
+                >
+                  PDF
+                </text>
+              </svg>
+            </div>,
+            document.body
+          )}
 
         {/* Contact */}
         <motion.section className="ab-contact" {...fade}>

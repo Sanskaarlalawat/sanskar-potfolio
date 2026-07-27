@@ -236,6 +236,85 @@
   transform: translateY(-2px);
 }
 
+/* ── Résumé row (terminal + downloads target) ── */
+.ab-resume-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 44px;
+  margin-top: 20px;
+}
+.ab-resume-row .ab-term { margin-top: 0; }
+
+.ab-folder {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  padding-top: 6px;
+}
+.ab-folder svg { display: block; filter: drop-shadow(0 8px 16px rgba(26, 21, 18, 0.14)); }
+.ab-folder-label {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: #aca69f;
+}
+.ab-folder-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #2e7d4f;
+  color: #fff;
+  font-size: 11px;
+  display: grid;
+  place-items: center;
+  animation: ab-badge-in 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes ab-badge-in {
+  from { opacity: 0; transform: scale(0.4); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes ab-folder-pop {
+  0% { transform: scale(1) translateY(0); }
+  35% { transform: scale(1.16) translateY(-8px); }
+  65% { transform: scale(0.94) translateY(2px); }
+  100% { transform: scale(1) translateY(0); }
+}
+.ab-folder.ab-folder-bounce svg {
+  animation: ab-folder-pop 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* flying document — portaled to <body>, positioned in viewport coords */
+.ab-fly-doc {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 28px;
+  height: 32px;
+  margin: -16px 0 0 -14px;
+  pointer-events: none;
+  z-index: 999;
+  filter: drop-shadow(0 6px 14px rgba(26, 21, 18, 0.25));
+  animation: ab-fly-doc 0.75s cubic-bezier(0.32, 0.6, 0.36, 1) forwards;
+}
+@keyframes ab-fly-doc {
+  0% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 1; }
+  55% {
+    transform: translate(calc(var(--dx) * 0.55), calc(var(--dy) * 0.55 - 44px))
+      scale(0.75) rotate(-10deg);
+    opacity: 1;
+  }
+  100% { transform: translate(var(--dx), var(--dy)) scale(0.16) rotate(8deg); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ab-fly-doc, .ab-folder.ab-folder-bounce svg { animation: none; }
+}
+
 /* ── Résumé terminal ── */
 .ab-term {
   position: relative;
@@ -298,6 +377,12 @@
   border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 6px;
   padding: 2px 9px;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+}
+.ab-term-kbd--active {
+  background: var(--ab-accent);
+  border-color: var(--ab-accent);
+  transform: scale(0.94);
 }
 .ab-term-cursor {
   display: inline-block;
@@ -375,6 +460,8 @@
   .ab-section { margin-top: 80px; }
   .ab-exp-year { display: none; }
   .ab-term-body { font-size: 12.5px; padding: 16px 16px 18px; }
+  .ab-resume-row { flex-direction: column; align-items: flex-start; gap: 20px; }
+  .ab-folder { align-self: center; }
   .ab-footer { flex-direction: column; gap: 6px; }
 }
 
