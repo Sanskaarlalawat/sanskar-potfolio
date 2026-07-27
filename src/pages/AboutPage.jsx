@@ -4,6 +4,10 @@ import "./AboutPage.css";
 
 const ROTATE = ["talks", "listens", "reasons", "ships"];
 
+// Real size of public/sanskar-lalawat-resume.pdf (350826 bytes), so the
+// byte counters in the terminal transfer aren't made up.
+const RESUME_KB = 343;
+
 const experience = [
   {
     role: "Technical Head",
@@ -60,15 +64,27 @@ const AboutPage = () => {
   const [pressing, setPressing] = useState(false);
   const [downloading, setDownloading] = useState(false);
   const [percent, setPercent] = useState(0);
+  const [speed, setSpeed] = useState("--.-KB/s");
+  const [barW, setBarW] = useState(28);
   const termRef = useRef(null);
   const linkRef = useRef(null);
   const timerRef = useRef(null);
+  const startRef = useRef(0);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
   useEffect(() => () => clearTimeout(timerRef.current), []);
+
+  // The ASCII bar is drawn in characters, so its length has to shrink on
+  // narrow screens or the line wraps and breaks the terminal illusion.
+  useEffect(() => {
+    const fit = () => setBarW(window.innerWidth <= 560 ? 14 : 28);
+    fit();
+    window.addEventListener("resize", fit);
+    return () => window.removeEventListener("resize", fit);
+  }, []);
 
   const downloadResume = useCallback(() => {
     if (dlDone || pressing || downloading) return;
@@ -88,6 +104,8 @@ const AboutPage = () => {
       setPressing(false);
       setDownloading(true);
       setPercent(0);
+      setSpeed("--.-KB/s");
+      startRef.current = Date.now();
 
       // Ease toward 100 — quick at first, settling in near the end, like a
       // real transfer. setTimeout (not rAF) so it always finishes, even if
@@ -97,6 +115,16 @@ const AboutPage = () => {
       const tick = () => {
         p = Math.min(100, p + Math.max(2, (100 - p) * 0.22));
         setPercent(Math.round(p));
+
+        // Real throughput for the bytes "moved" so far, formatted like wget.
+        const secs = Math.max(0.001, (Date.now() - startRef.current) / 1000);
+        const kbps = (RESUME_KB * (p / 100)) / secs;
+        setSpeed(
+          kbps >= 1024
+            ? `${(kbps / 1024).toFixed(1)}MB/s`
+            : `${Math.round(kbps)}KB/s`
+        );
+
         if (p < 100) {
           timerRef.current = setTimeout(tick, 70);
         } else {
@@ -150,6 +178,17 @@ const AboutPage = () => {
       return () => cancelAnimationFrame(raf);
     }
   }, [wi, snap]);
+
+  // wget-style bar: "=" for the transferred span, ">" as the moving head.
+  const filledCount = Math.round((percent / 100) * barW);
+  const barFilled =
+    filledCount <= 0
+      ? ""
+      : percent >= 100
+      ? "=".repeat(barW)
+      : "=".repeat(filledCount - 1) + ">";
+  const barRest = " ".repeat(Math.max(0, barW - barFilled.length));
+  const transferredKb = Math.round((percent / 100) * RESUME_KB);
 
   return (
     <div className="ab-page">
@@ -309,18 +348,28 @@ const AboutPage = () => {
                 </p>
               )}
               {(downloading || dlDone) && (
-                <p className="ab-term-out">→ fetching Sanskar-Lalawat-Resume.pdf</p>
-              )}
-              {downloading && (
-                <div className="ab-term-progress">
-                  <div className="ab-term-progress-track">
-                    <div
-                      className="ab-term-progress-fill"
-                      style={{ width: `${percent}%` }}
-                    />
-                  </div>
-                  <span className="ab-term-progress-pct">{percent}%</span>
-                </div>
+                <>
+                  <p className="ab-term-out">
+                    → fetching Sanskar-Lalawat-Resume.pdf
+                  </p>
+                  {/* Character-drawn transfer bar, the way wget/curl render
+                      one in a real shell — no GUI widget involved. */}
+                  <p className="ab-term-xfer">
+                    <span className="ab-term-xfer-pct">
+                      {`${percent}`.padStart(3, " ")}%
+                    </span>
+                    <span className="ab-term-xfer-br">[</span>
+                    <span className="ab-term-xfer-fill">{barFilled}</span>
+                    <span>{barRest}</span>
+                    <span className="ab-term-xfer-br">]</span>
+                    <span className="ab-term-xfer-stat">
+                      {` ${transferredKb}K/${RESUME_KB}K`}
+                    </span>
+                    <span className="ab-term-xfer-stat ab-term-xfer-rate">
+                      {`  ${speed}`}
+                    </span>
+                  </p>
+                </>
               )}
               {dlDone && (
                 <p className="ab-term-ok">✓ saved to ~/Downloads/Sanskar-Lalawat-Resume.pdf</p>
