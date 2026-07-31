@@ -920,7 +920,17 @@
 /* Collapse the two-column sections when the sidebar no longer fits. */
 /* Collapse scrollytelling to a single column; the pin becomes a normal
    banner at the top of the story instead of a sticky panel. */
+/* ── Tablet (landscape) ──
+   Still two columns here, but the desktop gap and padding left the story
+   column too narrow to read comfortably. */
+@media (max-width: 1100px) and (min-width: 941px) {
+  .cs-container { padding: 0 32px 40px; }
+  .cs-scrolly { gap: 44px; margin-top: 52px; }
+  .cs-pin-panel { padding: 26px; }
+}
+
 @media (max-width: 940px) {
+  .cs-container { padding: 0 32px 40px; }
   .cs-scrolly {
     grid-template-columns: 1fr;
     gap: 28px;
@@ -939,6 +949,13 @@
   }
   .cs-story-section:first-child { border-top: none; padding-top: 8px; }
   .cs-story-col { max-width: none; }
+}
+
+/* Tablet portrait: stacked like mobile, but there's room for a taller
+   visual than the 200px strip phones get. */
+@media (max-width: 940px) and (min-width: 701px) {
+  .cs-pin { height: 300px; }
+  .cs-story-section { padding: 48px 0; }
 }
 
 @media (max-width: 700px) {

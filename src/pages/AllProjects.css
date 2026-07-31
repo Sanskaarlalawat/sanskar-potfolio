@@ -439,3 +439,43 @@
   .ap-stage { grid-template-columns: 1fr 340px; }
   .ap-index { display: none; }
 }
+
+/* ── Tablet ──
+   Tablets fall back to the swipe carousel (touch, no hover), but the phone
+   sizing leaves most of the screen empty. Scale the card up and show two
+   at a time so the extra width is actually used. */
+@media (min-width: 700px) {
+  .ap-m-hero { padding: 112px 40px 20px; }
+  .ap-m-heading { font-size: clamp(52px, 6.4vw, 68px); }
+  .ap-m-sub { font-size: 17px; max-width: 520px; }
+  .ap-m-track { gap: 22px; padding: 10px 40px 14px; align-items: center; }
+  .ap-m-slide { flex: 0 0 46%; max-width: 460px; }
+  /* On a tall tablet the height-filling cover stretched into a very narrow
+     column, so pin it to a real aspect and centre the card instead. */
+  .ap-m-cover {
+    flex: 0 0 auto;
+    aspect-ratio: 4 / 3;
+    min-height: 0;
+    border-radius: 20px;
+    margin-bottom: 16px;
+  }
+  .ap-m-title { font-size: 26px; }
+  .ap-m-desc { font-size: 15.5px; }
+  .ap-m-counter { padding: 18px 40px 0; }
+  .ap-footer--m { margin: auto 40px 0; }
+}
+
+/* Landscape tablets are wide enough for three cards. */
+@media (min-width: 1000px) {
+  .ap-m-slide { flex: 0 0 32%; }
+}
+
+/* Landscape tablets are also short — the portrait sizing above overflowed
+   the viewport, so tighten the header and flatten the cover. */
+@media (min-width: 700px) and (max-height: 820px) {
+  .ap-m-hero { padding-top: 74px; padding-bottom: 10px; }
+  .ap-m-heading { font-size: clamp(36px, 4.6vw, 46px); }
+  .ap-m-sub { font-size: 15.5px; }
+  .ap-m-cover { aspect-ratio: 16 / 10; }
+  .ap-m-counter { padding-top: 10px; }
+}

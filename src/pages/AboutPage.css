@@ -395,6 +395,22 @@
   letter-spacing: -0.01em;
 }
 
+/* ── Tablet ──
+   Between the 1280px desktop wrap and the 700px phone layout the page kept
+   full desktop padding, which squeezed the three meta columns badly. */
+@media (max-width: 1024px) and (min-width: 701px) {
+  .ab-wrap { padding: 0 36px 80px; }
+  .ab-hero { padding-top: 140px; }
+  .ab-meta {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 26px 32px;
+    margin-top: 72px;
+  }
+  .ab-section { margin-top: 88px; }
+  .ab-exp-head { gap: 16px; }
+  .ab-contact { margin-top: 104px; }
+}
+
 /* ── Mobile ── */
 @media (max-width: 700px) {
   .ab-wrap { padding: 0 22px 64px; }

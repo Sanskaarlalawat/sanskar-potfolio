@@ -618,6 +618,17 @@
   .fp-preview { width: 250px; }
 }
 
+/* ── Tablet ──
+   The sidebar and preview pane together ate most of the window width here,
+   leaving the folder grid only a couple of columns. */
+@media (max-width: 900px) and (min-width: 761px) {
+  .fp-stage { padding: 0 1.1rem; }
+  .fp-sidebar { width: 158px; }
+  .fp-preview { width: 208px; padding: 12px 12px 16px; }
+  .fp-body { height: 420px; }
+  .fp-stage.expanded .fp-body { height: 500px; }
+}
+
 @media (max-width: 760px) {
   .fp-stage { padding: 0 0.9rem; }
 
