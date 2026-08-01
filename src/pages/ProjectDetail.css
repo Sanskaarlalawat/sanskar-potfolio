@@ -218,8 +218,6 @@
 .cs-pin-visual {
   position: absolute;
   inset: 20px 0;
-  display: grid;
-  place-items: center;
 }
 .cs-pin-foot {
   flex-shrink: 0;
@@ -265,7 +263,15 @@
 }
 
 /* ── Pinned-panel visuals ── */
+/* Centred by absolute positioning rather than a grid/flex parent: as a
+   centred grid item the SVG's height:100% stopped resolving, so it fell
+   back to its viewBox aspect and rendered 340px tall inside a much
+   shorter box — overflowing the panel on stacked (tablet/phone) layouts. */
 .cs-pv-svg {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
   width: 100%;
   height: 100%;
   max-height: 340px;
@@ -938,10 +944,14 @@
   }
   .cs-pin {
     position: static;
-    height: 200px;
+    height: 300px;
     min-height: 0;
   }
   .cs-pin-dots { display: none; }
+  /* Stacked, the panel sits directly above the section heading, so its own
+     big label just repeated the same word twice. Drop the whole foot and
+     give that space back to the visual. */
+  .cs-pin-foot { display: none; }
   .cs-story-section {
     min-height: 0;
     padding: 40px 0;
@@ -954,7 +964,7 @@
 /* Tablet portrait: stacked like mobile, but there's room for a taller
    visual than the 200px strip phones get. */
 @media (max-width: 940px) and (min-width: 701px) {
-  .cs-pin { height: 300px; }
+  .cs-pin { height: 400px; }
   .cs-story-section { padding: 48px 0; }
 }
 
