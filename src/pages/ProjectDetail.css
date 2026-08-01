@@ -219,6 +219,15 @@
   position: absolute;
   inset: 20px 0;
 }
+/* The two non-SVG visuals are centred the same way as the SVGs, since the
+   parent can't use grid/flex centring without breaking the SVG's height. */
+.cs-pin-visual > .cs-pv-grid,
+.cs-pin-visual > .cs-stack {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
 .cs-pin-foot {
   flex-shrink: 0;
   display: flex;
