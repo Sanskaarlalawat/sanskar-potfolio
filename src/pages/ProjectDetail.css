@@ -427,6 +427,25 @@
 }
 
 /* ── Overview phone mockup ── */
+/* ── Neutral overview visual (non-voice projects) ── */
+.cs-layers-glow { fill: rgba(255, 255, 255, 0.07); }
+.cs-layers-card {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: cs-float 4.5s ease-in-out infinite;
+}
+.cs-layers-rect {
+  fill: rgba(255, 255, 255, 0.1);
+  stroke: rgba(255, 255, 255, 0.42);
+  stroke-width: 1.4;
+}
+.cs-layers-bar { fill: rgba(255, 255, 255, 0.85); }
+.cs-layers-bar--dim { fill: rgba(255, 255, 255, 0.42); }
+.cs-layers-dot { fill: rgba(255, 255, 255, 0.7); }
+@media (prefers-reduced-motion: reduce) {
+  .cs-layers-card { animation: none; }
+}
+
 .cs-phone-float {
   transform-box: fill-box;
   transform-origin: center;

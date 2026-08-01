@@ -112,6 +112,44 @@ const tfRep = (type) => {
   );
 };
 
+// Overview fallback for every other project: a neutral stack of product
+// panels. The phone mockup above is specific to Siya, so it must not stand in
+// as the generic overview visual.
+const LayersVisual = () => (
+  <svg className="cs-pv-svg cs-layers" viewBox="0 0 240 252">
+    <circle cx="120" cy="126" r="82" className="cs-layers-glow" />
+    {[0, 1, 2].map((i) => (
+      <g key={i} className="cs-layers-card" style={{ animationDelay: `${i * 0.5}s` }}>
+        <rect
+          x="48"
+          y={40 + i * 58}
+          width="144"
+          height="48"
+          rx="12"
+          className="cs-layers-rect"
+        />
+        <rect
+          x="62"
+          y={56 + i * 58}
+          width={64 - i * 8}
+          height="6"
+          rx="3"
+          className="cs-layers-bar"
+        />
+        <rect
+          x="62"
+          y={69 + i * 58}
+          width={100 - i * 14}
+          height="4"
+          rx="2"
+          className="cs-layers-bar cs-layers-bar--dim"
+        />
+        <circle cx="176" cy={64 + i * 58} r="4" className="cs-layers-dot" />
+      </g>
+    ))}
+  </svg>
+);
+
 const TF_STAGES = [
   { type: "wave", label: "You speak" },
   { type: "text", label: "Transcribed" },
@@ -271,7 +309,13 @@ const PinVisual = ({ label, project }) => {
     case "Stack":
       return <PillsVisual tags={project.tags} />;
     default:
-      return <OrbitVisual />;
+      // The phone mockup is Siya-specific — everything else gets the
+      // neutral panel stack.
+      return project.slug === "ai-voice-calling-agent" ? (
+        <OrbitVisual />
+      ) : (
+        <LayersVisual />
+      );
   }
 };
 
