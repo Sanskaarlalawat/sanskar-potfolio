@@ -150,6 +150,156 @@ const LayersVisual = () => (
   </svg>
 );
 
+/* ── Per-module visuals (IAS Sathi) ── */
+
+// RAG mentor: NCERT sources retrieved into a grounded, structured answer.
+const RagVisual = () => (
+  <svg className="cs-pv-svg cs-rag" viewBox="0 0 240 252">
+    {[0, 1, 2].map((i) => (
+      <g key={i} className="cs-rag-doc" style={{ animationDelay: `${i * 0.25}s` }}>
+        <rect x={30 + i * 60} y="12" width="42" height="52" rx="7" className="cs-rag-docbox" />
+        <rect x={38 + i * 60} y="24" width="26" height="4" rx="2" className="cs-rag-docline" />
+        <rect x={38 + i * 60} y="34" width="18" height="3.5" rx="1.75" className="cs-rag-docline cs-rag-docline--dim" />
+        <rect x={38 + i * 60} y="43" width="22" height="3.5" rx="1.75" className="cs-rag-docline cs-rag-docline--dim" />
+      </g>
+    ))}
+    <text x="120" y="80" textAnchor="middle" className="cs-rag-cap">NCERT · updated 2025</text>
+
+    {[0, 1, 2].map((i) => (
+      <line
+        key={i}
+        x1={51 + i * 60}
+        y1="88"
+        x2="120"
+        y2="112"
+        className="cs-rag-wire"
+        style={{ animationDelay: `${i * 0.3}s` }}
+      />
+    ))}
+
+    <circle cx="120" cy="128" r="18" className="cs-rag-hub" />
+    <text x="120" y="132" textAnchor="middle" className="cs-rag-hubtext">RAG</text>
+
+    {/* grounded answer, with a chart drawn inside it */}
+    <rect x="30" y="162" width="180" height="78" rx="11" className="cs-rag-ans" />
+    <rect x="42" y="174" width="68" height="5" rx="2.5" className="cs-rag-ansline" />
+    {[16, 27, 21, 33].map((h, i) => (
+      <rect
+        key={i}
+        x={42 + i * 17}
+        y={228 - h}
+        width="11"
+        height={h}
+        rx="2.5"
+        className="cs-rag-bar"
+        style={{ animationDelay: `${i * 0.15}s` }}
+      />
+    ))}
+    <rect x="128" y="196" width="70" height="4" rx="2" className="cs-rag-ansline cs-rag-ansline--dim" />
+    <rect x="128" y="208" width="56" height="4" rx="2" className="cs-rag-ansline cs-rag-ansline--dim" />
+    <rect x="128" y="220" width="64" height="4" rx="2" className="cs-rag-ansline cs-rag-ansline--dim" />
+  </svg>
+);
+
+// Adaptive MCQs: options resolve to the right answer; history means no repeats.
+const McqVisual = () => (
+  <svg className="cs-pv-svg cs-mcq" viewBox="0 0 240 252">
+    <rect x="24" y="14" width="192" height="48" rx="10" className="cs-mcq-q" />
+    <rect x="38" y="28" width="92" height="6" rx="3" className="cs-mcq-qline" />
+    <rect x="38" y="42" width="140" height="4.5" rx="2.25" className="cs-mcq-qline cs-mcq-qline--dim" />
+
+    {[0, 1, 2, 3].map((i) => (
+      <g
+        key={i}
+        className={`cs-mcq-opt ${i === 2 ? "is-right" : ""}`}
+        style={{ animationDelay: `${i * 0.16}s` }}
+      >
+        <rect x="24" y={76 + i * 36} width="192" height="28" rx="8" className="cs-mcq-optbox" />
+        <circle cx="43" cy={90 + i * 36} r="7" className="cs-mcq-radio" />
+        <rect x="60" y={87 + i * 36} width={118 - i * 16} height="5" rx="2.5" className="cs-mcq-optline" />
+        {i === 2 && (
+          <path d={`M39.5 ${90 + i * 36} l3 3 l5.5 -6`} className="cs-mcq-check" />
+        )}
+      </g>
+    ))}
+
+    <text x="120" y="238" textAnchor="middle" className="cs-mcq-cap">
+      history tracked · never repeated
+    </text>
+  </svg>
+);
+
+// Answer evaluation: handwriting scanned by OCR, then scored by structure.
+const OcrVisual = () => (
+  <svg className="cs-pv-svg cs-ocr" viewBox="0 0 240 252">
+    <rect x="46" y="10" width="148" height="146" rx="10" className="cs-ocr-paper" />
+    {[0, 1, 2, 3, 4, 5].map((i) => (
+      <path
+        key={i}
+        d={`M60 ${32 + i * 21} q 11 -6 22 0 t 22 0 t 22 0 t ${i % 2 ? 16 : 28} 0`}
+        className="cs-ocr-ink"
+        style={{ animationDelay: `${i * 0.12}s` }}
+      />
+    ))}
+    <rect x="46" y="10" width="148" height="3" className="cs-ocr-scan" />
+
+    {[["Intro", 0], ["Body", 1], ["Concl.", 2]].map(([t, i]) => (
+      <g key={t} className="cs-ocr-score" style={{ animationDelay: `${1 + i * 0.2}s` }}>
+        <rect x={20 + i * 70} y="178" width="62" height="50" rx="9" className="cs-ocr-pill" />
+        <text x={51 + i * 70} y="200" textAnchor="middle" className="cs-ocr-pilltext">{t}</text>
+        <rect x={32 + i * 70} y="209" width="38" height="4" rx="2" className="cs-ocr-pillbar" />
+        <rect x={32 + i * 70} y="217" width={26 - i * 5} height="4" rx="2" className="cs-ocr-pillbar cs-ocr-pillbar--dim" />
+      </g>
+    ))}
+    <text x="120" y="244" textAnchor="middle" className="cs-ocr-cap">~90% OCR accuracy</text>
+  </svg>
+);
+
+// Live lectures: a generated slide with explanation, chart and imagery.
+const LectureVisual = () => (
+  <svg className="cs-pv-svg cs-lec" viewBox="0 0 240 252">
+    <rect x="22" y="30" width="196" height="140" rx="11" className="cs-lec-slide" />
+    <rect x="36" y="46" width="76" height="7" rx="3.5" className="cs-lec-title" />
+    <rect x="36" y="61" width="52" height="4" rx="2" className="cs-lec-title cs-lec-title--dim" />
+
+    {[28, 46, 36, 60, 50].map((h, i) => (
+      <rect
+        key={i}
+        x={36 + i * 19}
+        y={152 - h}
+        width="13"
+        height={h}
+        rx="3"
+        className="cs-lec-bar"
+        style={{ animationDelay: `${i * 0.14}s` }}
+      />
+    ))}
+
+    <rect x="146" y="72" width="58" height="46" rx="7" className="cs-lec-img" />
+    <circle cx="160" cy="86" r="5" className="cs-lec-imgsun" />
+    <path d="M148 116 l15 -17 l11 12 l9 -8 l19 13 z" className="cs-lec-imghill" />
+
+    {[0, 1, 2].map((i) => (
+      <circle
+        key={i}
+        cx={106 + i * 14}
+        cy="188"
+        r="4"
+        className="cs-lec-dot"
+        style={{ animationDelay: `${i * 0.35}s` }}
+      />
+    ))}
+    <text x="120" y="222" textAnchor="middle" className="cs-lec-cap">any topic → a taught lecture</text>
+  </svg>
+);
+
+const MODULE_VISUALS = {
+  rag: RagVisual,
+  mcq: McqVisual,
+  ocr: OcrVisual,
+  lecture: LectureVisual,
+};
+
 const TF_STAGES = [
   { type: "wave", label: "You speak" },
   { type: "text", label: "Transcribed" },
@@ -297,6 +447,13 @@ const CallVisual = () => (
 );
 
 const PinVisual = ({ label, project }) => {
+  // A project's own modules bring their own visuals.
+  const mod = project.modules?.find((m) => m.label === label);
+  if (mod && MODULE_VISUALS[mod.visual]) {
+    const ModuleVisual = MODULE_VISUALS[mod.visual];
+    return <ModuleVisual />;
+  }
+
   switch (label) {
     case "See it in action":
       return <CallVisual />;
@@ -499,22 +656,30 @@ const ProjectDetail = ({ slug, onBack, onOpenProject }) => {
           ),
         }]
       : []),
-    {
-      label: "Highlights",
-      body: (
-        <div className="cs-cards">
-          {project.features.map((feature, i) => {
-            const [title, bodyText] = splitFeature(feature);
-            return (
-              <div className="cs-card" key={i}>
-                {title && <h3 className="cs-card-title">{title}</h3>}
-                <p className="cs-card-body">{bodyText}</p>
-              </div>
-            );
-          })}
-        </div>
-      ),
-    },
+    // One section per module, each with its own demonstrating visual.
+    ...(project.modules || []).map((m) => ({
+      label: m.label,
+      body: <p className="cs-body">{m.body}</p>,
+    })),
+    // Highlights would just restate the modules, so skip it when they exist.
+    ...(project.modules
+      ? []
+      : [{
+          label: "Highlights",
+          body: (
+            <div className="cs-cards">
+              {project.features.map((feature, i) => {
+                const [title, bodyText] = splitFeature(feature);
+                return (
+                  <div className="cs-card" key={i}>
+                    {title && <h3 className="cs-card-title">{title}</h3>}
+                    <p className="cs-card-body">{bodyText}</p>
+                  </div>
+                );
+              })}
+            </div>
+          ),
+        }]),
     ...(isVoiceAgent
       ? [{
           label: "How it works",

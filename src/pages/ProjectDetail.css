@@ -427,6 +427,192 @@
 }
 
 /* ── Overview phone mockup ── */
+/* ── Per-module visuals (IAS Sathi) ── */
+.cs-rag-docbox,
+.cs-mcq-q,
+.cs-mcq-optbox,
+.cs-ocr-pill,
+.cs-lec-slide,
+.cs-lec-img,
+.cs-rag-ans {
+  fill: rgba(255, 255, 255, 0.1);
+  stroke: rgba(255, 255, 255, 0.4);
+  stroke-width: 1.4;
+}
+.cs-rag-docline,
+.cs-mcq-qline,
+.cs-mcq-optline,
+.cs-lec-title,
+.cs-rag-ansline {
+  fill: rgba(255, 255, 255, 0.85);
+}
+.cs-rag-docline--dim,
+.cs-mcq-qline--dim,
+.cs-lec-title--dim,
+.cs-rag-ansline--dim {
+  fill: rgba(255, 255, 255, 0.4);
+}
+.cs-rag-cap,
+.cs-mcq-cap,
+.cs-ocr-cap,
+.cs-lec-cap {
+  fill: rgba(255, 255, 255, 0.72);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* RAG mentor */
+.cs-rag-doc {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: cs-float 4.2s ease-in-out infinite;
+}
+.cs-rag-wire {
+  stroke: rgba(255, 255, 255, 0.55);
+  stroke-width: 1.4;
+  stroke-dasharray: 4 5;
+  animation: cs-rag-flow 1.5s linear infinite;
+}
+@keyframes cs-rag-flow {
+  to { stroke-dashoffset: -18; }
+}
+.cs-rag-hub {
+  fill: rgba(255, 255, 255, 0.18);
+  stroke: #ffffff;
+  stroke-width: 1.8;
+  animation: cs-rag-pulse 2.6s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+@keyframes cs-rag-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+.cs-rag-hubtext {
+  fill: #ffffff;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+.cs-rag-bar {
+  fill: rgba(255, 255, 255, 0.9);
+  transform-box: fill-box;
+  transform-origin: bottom;
+  animation: cs-bar-rise 2.4s ease-in-out infinite;
+}
+@keyframes cs-bar-rise {
+  0%, 100% { transform: scaleY(0.45); }
+  50% { transform: scaleY(1); }
+}
+
+/* Adaptive MCQs */
+.cs-mcq-radio {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.5);
+  stroke-width: 1.4;
+}
+.cs-mcq-opt.is-right .cs-mcq-optbox {
+  fill: rgba(255, 255, 255, 0.22);
+  stroke: #ffffff;
+  animation: cs-mcq-hit 3s ease-in-out infinite;
+}
+.cs-mcq-opt.is-right .cs-mcq-radio {
+  fill: #ffffff;
+  stroke: #ffffff;
+}
+@keyframes cs-mcq-hit {
+  0%, 45%, 100% { fill: rgba(255, 255, 255, 0.1); }
+  60%, 85% { fill: rgba(255, 255, 255, 0.24); }
+}
+.cs-mcq-check {
+  fill: none;
+  stroke: var(--accent, #85b9a5);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Answer evaluation */
+.cs-ocr-paper {
+  fill: rgba(255, 255, 255, 0.94);
+  stroke: rgba(255, 255, 255, 0.5);
+  stroke-width: 1.2;
+}
+.cs-ocr-ink {
+  fill: none;
+  stroke: rgba(30, 26, 24, 0.42);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 120;
+  animation: cs-ocr-write 3.6s ease-in-out infinite;
+}
+@keyframes cs-ocr-write {
+  0% { stroke-dashoffset: 120; }
+  35%, 80% { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: 120; }
+}
+.cs-ocr-scan {
+  fill: rgba(255, 255, 255, 0.85);
+  animation: cs-ocr-sweep 3.6s ease-in-out infinite;
+}
+@keyframes cs-ocr-sweep {
+  0%, 100% { transform: translateY(0); opacity: 0; }
+  15% { opacity: 1; }
+  70% { transform: translateY(143px); opacity: 1; }
+  85% { transform: translateY(143px); opacity: 0; }
+}
+.cs-ocr-pilltext {
+  fill: #ffffff;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+}
+.cs-ocr-pillbar { fill: rgba(255, 255, 255, 0.85); }
+.cs-ocr-pillbar--dim { fill: rgba(255, 255, 255, 0.4); }
+.cs-ocr-score {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: cs-pop-in 3.6s ease-in-out infinite;
+}
+@keyframes cs-pop-in {
+  0%, 20% { opacity: 0; transform: scale(0.85); }
+  35%, 90% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(0.85); }
+}
+
+/* Live lectures */
+.cs-lec-bar {
+  fill: rgba(255, 255, 255, 0.9);
+  transform-box: fill-box;
+  transform-origin: bottom;
+  animation: cs-bar-rise 2.8s ease-in-out infinite;
+}
+.cs-lec-imgsun { fill: rgba(255, 255, 255, 0.9); }
+.cs-lec-imghill { fill: rgba(255, 255, 255, 0.55); }
+.cs-lec-dot {
+  fill: rgba(255, 255, 255, 0.35);
+  animation: cs-lec-dot 3s ease-in-out infinite;
+}
+@keyframes cs-lec-dot {
+  0%, 100% { fill: rgba(255, 255, 255, 0.35); }
+  40%, 60% { fill: rgba(255, 255, 255, 0.95); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cs-rag-doc, .cs-rag-wire, .cs-rag-hub, .cs-rag-bar,
+  .cs-mcq-opt.is-right .cs-mcq-optbox,
+  .cs-ocr-ink, .cs-ocr-scan, .cs-ocr-score,
+  .cs-lec-bar, .cs-lec-dot {
+    animation: none;
+  }
+  .cs-ocr-ink { stroke-dasharray: none; }
+  .cs-ocr-scan { opacity: 0; }
+}
+
 /* ── Neutral overview visual (non-voice projects) ── */
 .cs-layers-glow { fill: rgba(255, 255, 255, 0.07); }
 .cs-layers-card {

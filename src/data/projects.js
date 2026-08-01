@@ -11,9 +11,30 @@ const projectsData = [
       "A four-module AI platform for UPSC aspirants — a RAG chatbot grounded in NCERT, self-adapting MCQ practice, OCR-based handwritten answer evaluation, and AI-generated live lectures.",
     longDescription: [
       "IAS Sathi is a full-stack AI learning ecosystem built for one of the most competitive exams in the world. Rather than a single chatbot bolted onto a course site, it ships four distinct AI modules — a retrieval-grounded mentor, an adaptive MCQ engine, an examiner-style answer evaluator, and an on-demand lecture generator — all reading from the same NCERT knowledge base.",
-      "The mentor is a RAG chatbot built on the full NCERT corpus, updated through 2025 and embedded into a vector store. Grounding every response in retrieved source material rather than the model's own recall lifted answer quality roughly 70% over the earlier non-retrieval build. Answers come back structured the way an examiner expects — with diagrams and graphs where a concept is easier drawn than described, and a set of related follow-up questions so an aspirant can immediately practise the topic in UPSC format.",
-      "Practice runs on the same retrieval layer. The MCQ engine profiles each student's performance, generates fresh questions from the NCERT vectors, and keeps a full attempt history so a question is never served twice. The test series adds a custom OCR pipeline that reads scanned handwritten answer sheets at around 90% accuracy even on poor handwriting, then evaluates the answer the way a UPSC teacher would — scoring introduction, body and conclusion structure separately and returning written feedback alongside the marks.",
-      "The fourth module turns any topic into a taught session. An aspirant supplies a topic plus a short description of what they want to cover, and the system generates a full lecture — explanation, supporting graphs, images and slides — so a concept can be understood the way it would be in a classroom rather than read off a page.",
+      "Everything is grounded in one place: the full NCERT corpus, updated through 2025 and embedded into a vector store. Every module reads from that same retrieval layer, so a concept explained by the mentor, tested in an MCQ, and marked in a handwritten answer all trace back to the same source material rather than to whatever the model happens to remember.",
+    ],
+    // Each module becomes its own case-study section with a matching visual.
+    modules: [
+      {
+        label: "AI Mentor",
+        visual: "rag",
+        body: "The mentor answers from retrieved NCERT passages rather than the model's own recall — grounding that lifted answer quality roughly 70% over the earlier non-retrieval build. Responses come back structured the way an examiner expects, with graphs and diagrams where a concept is easier drawn than described, and a set of related follow-up questions so an aspirant can practise the topic immediately in UPSC format.",
+      },
+      {
+        label: "Adaptive MCQs",
+        visual: "mcq",
+        body: "The MCQ engine profiles each student's performance and generates fresh questions from the same NCERT vectors. Every attempt is written to a history, so a question is never served to the same aspirant twice — practice keeps moving into untested ground instead of recycling what they already know.",
+      },
+      {
+        label: "Answer Evaluation",
+        visual: "ocr",
+        body: "Aspirants photograph a handwritten answer sheet and a custom OCR pipeline transcribes it at around 90% accuracy, holding up even on poor handwriting. The transcript is then marked the way a UPSC teacher would mark it — introduction, body and conclusion scored separately, with written feedback next to the marks rather than a bare number.",
+      },
+      {
+        label: "Live Lectures",
+        visual: "lecture",
+        body: "Give the system a topic and a short note on what you want covered, and it teaches the session — a full explanation with supporting graphs, images and generated slides, so a concept lands the way it would in a classroom instead of being read off a page.",
+      },
     ],
     features: [
       "RAG chatbot grounded in the full NCERT corpus, updated through 2025 — ~70% better answer quality than the previous non-retrieval build",
