@@ -595,9 +595,9 @@ const voiceSteps = [
   },
 ];
 
-const HowItWorks = () => (
+const StepFlow = ({ steps }) => (
   <div className="cs-steps">
-    {voiceSteps.map((step, i) => (
+    {steps.map((step, i) => (
       <div className="cs-step" key={i}>
         <span className="cs-step-num">{String(i + 1).padStart(2, "0")}</span>
         <div className="cs-step-body">
@@ -738,6 +738,8 @@ const ProjectDetail = ({ slug, onBack, onOpenProject }) => {
       body: (
         <>
           <p className="cs-body">{m.body}</p>
+          {m.stepsIntro && <p className="cs-body">{m.stepsIntro}</p>}
+          {m.steps && <StepFlow steps={m.steps} />}
           {m.demo && (
             <div className="cs-demo">
               <video
@@ -780,7 +782,7 @@ const ProjectDetail = ({ slug, onBack, onOpenProject }) => {
                 From the caller's first word to Siya's reply, the whole loop
                 runs in under a second. Here is what happens on every call:
               </p>
-              <HowItWorks />
+              <StepFlow steps={voiceSteps} />
             </>
           ),
         }]

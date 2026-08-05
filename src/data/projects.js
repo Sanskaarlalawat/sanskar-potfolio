@@ -89,7 +89,41 @@ const projectsData = [
       {
         label: "Evaluation",
         visual: "evaluate",
-        body: "The second half marks the extracted answer. Rather than collapsing everything into one number, it scores six dimensions separately — introduction, content quality, analysis and argumentation, paraphrasing and expression, following instructions, and conclusion — so an aspirant can see whether they lost marks on substance or on structure. Essays run against their own rubric covering structure, depth of analysis, originality, interdisciplinary approach, language and presentation. Model answers are grounded against a Pinecone index of current material instead of being written from the model's own recall, and the feedback comes back three ways: written suggestions, the mistakes circled directly on the student's own scanned page, and a typeset model answer PDF with diagrams.",
+        body: "The second half marks the extracted answer. Rather than collapsing everything into one number, it scores six dimensions separately — introduction, content quality, analysis and argumentation, paraphrasing and expression, following instructions, and conclusion — so an aspirant can see whether they lost marks on substance or on structure. Essays run against their own rubric covering structure, depth of analysis, originality, interdisciplinary approach, language and presentation. The feedback comes back three ways: written suggestions, the mistakes circled directly on the student's own scanned page, and a typeset model answer with diagrams.",
+        stepsIntro:
+          "The order matters, because it's the order a teacher marks in — you don't grade an answer until you know what the right one looks like:",
+        steps: [
+          {
+            title: "Look up what the answer should contain",
+            body: "Before the answer is read at all, the question goes to a vector lookup that returns the relevant source passages. Everything after this point is judged against that material rather than against whatever the model happens to remember — the same reason an examiner marks with the syllabus open.",
+            tools: [
+              { name: "pinecone_full_response", desc: "retrieves the source passages for the question" },
+            ],
+          },
+          {
+            title: "Read the answer against it",
+            body: "Only now is the candidate's answer read, and read the way an examiner reads: what was actually covered, what the question asked for and didn't get, and where a claim is asserted rather than supported. This critique — not the raw answer — is what every later step works from, so the score and the feedback can never disagree with each other.",
+            tools: [
+              { name: "new_single_answer_checking", desc: "produces the examiner's read of the answer" },
+            ],
+          },
+          {
+            title: "Mark, advise and model — all at once",
+            body: "Three jobs then run concurrently on a thread pool instead of one after another: scoring the rubric, writing the improvement notes, and drafting a full model answer with its diagram, typeset to PDF in the candidate's own language and uploaded to S3. Because they run in parallel, the slowest of the three sets the response time rather than the sum of them.",
+            tools: [
+              { name: "generate_evaluation_score", desc: "scores the six rubric dimensions" },
+              { name: "generate_suggestion_response", desc: "writes the improvement notes" },
+              { name: "generate_the_correct_answer", desc: "drafts the model answer and diagram, then the PDF" },
+            ],
+          },
+          {
+            title: "Convert to the paper's marks",
+            body: "A UPSC question can be out of 10, 12.5, 15 or 20, and the same rubric has to mean something different in each case. The critique and the scores are merged and passed through the converter matching the question's weight, so the candidate gets marks in the units their own paper actually uses.",
+            tools: [
+              { name: "generate_ten_marks · twelve · fifteen · twenty", desc: "normalises the rubric to the question's mark value" },
+            ],
+          },
+        ],
       },
     ],
     features: [
