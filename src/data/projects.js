@@ -70,14 +70,27 @@ const projectsData = [
     id: 2,
     slug: "answer-evaluation",
     title: "Answer Evaluation",
-    subtitle: "OCR + LLM service that marks handwritten UPSC answers like an examiner",
+    subtitle: "Two-stage service: extract the student's answer, then evaluate it like an examiner",
     description:
-      "A FastAPI microservice that reads a photographed handwritten answer sheet, scores it across a six-part rubric, circles the mistakes on the original scan, and returns a typeset model answer.",
+      "A FastAPI microservice built in two halves — one that lifts a student's handwritten answer off the page, and one that marks it against a six-part examiner rubric.",
     longDescription: [
-      "Answer Evaluation is the marking engine behind IAS Sathi's test series, pulled out into its own FastAPI service. An aspirant photographs a handwritten answer sheet; the service transcribes it, marks it the way a UPSC examiner would, and hands back a score breakdown, written feedback, the original scan with its mistakes circled, and a model answer as a typeset PDF.",
-      "Handwriting is the hard part. Before a single token reaches the model, each page runs through an OpenCV pipeline: a 2x Lanczos upscale, dark-border cropping, a bilateral filter that smooths paper noise without softening strokes, morphological background normalisation to flatten uneven photo lighting, then adaptive Gaussian thresholding and sharpening. Only the cleaned page is handed to a vision model for transcription, which is what holds accuracy near 90% on genuinely poor handwriting.",
-      "Marking runs against a six-part rubric — introduction, content quality, analysis and argumentation, paraphrasing and expression, following instructions, and conclusion — each scored separately rather than collapsed into one number. Essays get their own rubric covering structure, depth of analysis, originality, interdisciplinary approach, language and presentation. Model answers are grounded against a Pinecone index of current material instead of being written from the model's own recall.",
-      "A bulk test submission is far too slow to mark on the request path, so evaluation is dispatched to a Kafka consumer backed by a Redis/RQ worker pool. The generated artefacts — annotated scans, Mermaid diagrams rendered through Playwright, and ReportLab PDFs typeset in Latin, Devanagari or Gurmukhi script — are written to S3 and returned as links.",
+      "Answer Evaluation is the marking engine behind IAS Sathi's test series, pulled out into its own FastAPI service. It splits cleanly in two: extraction turns a photographed answer booklet into structured question/answer text, and evaluation marks that text the way a UPSC examiner would. Keeping them separate means either half can be called on its own — a scanned booklet can be digitised without being graded, and typed answers can be graded without ever touching OCR.",
+      "The whole thing runs on FastAPI behind a Kafka consumer and a Redis/RQ worker pool, because a bulk test submission is far too slow to mark on the request path. Generated artefacts — annotated scans, Mermaid diagrams rendered through Playwright, and ReportLab PDFs typeset in Latin, Devanagari or Gurmukhi script — are written to S3 and returned as links.",
+    ],
+    // The service's two halves, each with its own section and visual.
+    // To add a demo clip, drop the file in /public and add:
+    //   demo: { src: "/answer-eval-extract.mp4", poster: "/answer-eval-extract.jpg" }
+    modules: [
+      {
+        label: "Extraction",
+        visual: "extract",
+        body: "The first half turns paper into structured text. PyMuPDF rasterises the booklet page by page, and every page is preprocessed and transcribed concurrently rather than one after another. The preprocessing is what carries the accuracy: a 2x Lanczos upscale, dark-border cropping, a bilateral filter that smooths paper grain without softening pen strokes, morphological background normalisation to flatten uneven phone-camera lighting, then adaptive Gaussian thresholding and sharpening. Only the cleaned page reaches the vision model, which is what holds transcription near 90% on genuinely poor handwriting. The model marks question boundaries as it reads, so the raw transcript is then split into question/answer pairs — each answer being everything between one question and the next — and deduplicated before it leaves this stage.",
+      },
+      {
+        label: "Evaluation",
+        visual: "evaluate",
+        body: "The second half marks the extracted answer. Rather than collapsing everything into one number, it scores six dimensions separately — introduction, content quality, analysis and argumentation, paraphrasing and expression, following instructions, and conclusion — so an aspirant can see whether they lost marks on substance or on structure. Essays run against their own rubric covering structure, depth of analysis, originality, interdisciplinary approach, language and presentation. Model answers are grounded against a Pinecone index of current material instead of being written from the model's own recall, and the feedback comes back three ways: written suggestions, the mistakes circled directly on the student's own scanned page, and a typeset model answer PDF with diagrams.",
+      },
     ],
     features: [
       "Handwriting OCR — OpenCV preprocessing ahead of vision-model transcription, holding ~90% accuracy on poor handwriting",

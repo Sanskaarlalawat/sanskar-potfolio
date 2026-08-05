@@ -622,6 +622,103 @@
   .cs-ocr-scan { opacity: 0; }
 }
 
+/* ── Two-stage visuals (Answer Evaluation) ── */
+/* Stage 1 — extraction */
+.cs-ex-page {
+  fill: rgba(255, 255, 255, 0.16);
+  stroke: rgba(255, 255, 255, 0.34);
+  stroke-width: 1.2;
+}
+.cs-ex-page--front {
+  fill: rgba(255, 255, 255, 0.94);
+  stroke: rgba(255, 255, 255, 0.5);
+}
+.cs-ex-ink {
+  fill: none;
+  stroke: rgba(30, 26, 24, 0.4);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 110;
+  animation: cs-ocr-write 3.6s ease-in-out infinite;
+}
+.cs-ex-scan {
+  fill: rgba(255, 255, 255, 0.9);
+  animation: cs-ex-sweep 3.6s ease-in-out infinite;
+}
+@keyframes cs-ex-sweep {
+  0%, 100% { transform: translateY(0); opacity: 0; }
+  15% { opacity: 1; }
+  70% { transform: translateY(95px); opacity: 1; }
+  85% { transform: translateY(95px); opacity: 0; }
+}
+.cs-ex-cap {
+  fill: rgba(255, 255, 255, 0.72);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.cs-ex-arrow {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.6);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.cs-ex-card {
+  fill: rgba(255, 255, 255, 0.1);
+  stroke: rgba(255, 255, 255, 0.4);
+  stroke-width: 1.4;
+}
+.cs-ex-chip { fill: rgba(255, 255, 255, 0.85); }
+.cs-ex-chiptext {
+  fill: #1e1a18;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 9.5px;
+  font-weight: 700;
+}
+.cs-ex-line { fill: rgba(255, 255, 255, 0.85); }
+.cs-ex-line--dim { fill: rgba(255, 255, 255, 0.42); }
+
+/* Stage 2 — evaluation */
+.cs-ev-label { fill: rgba(255, 255, 255, 0.5); }
+.cs-ev-track { fill: rgba(255, 255, 255, 0.14); }
+.cs-ev-fill {
+  fill: rgba(255, 255, 255, 0.9);
+  transform-box: fill-box;
+  transform-origin: left center;
+  animation: cs-ev-grow 3s ease-in-out infinite;
+}
+@keyframes cs-ev-grow {
+  0%, 100% { transform: scaleX(0.12); }
+  45%, 80% { transform: scaleX(1); }
+}
+.cs-ev-total {
+  fill: rgba(255, 255, 255, 0.16);
+  stroke: rgba(255, 255, 255, 0.45);
+  stroke-width: 1.4;
+}
+.cs-ev-totallabel {
+  fill: rgba(255, 255, 255, 0.72);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+.cs-ev-totalvalue {
+  fill: #ffffff;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cs-ex-ink, .cs-ex-scan, .cs-ev-fill { animation: none; }
+  .cs-ex-ink { stroke-dasharray: none; }
+  .cs-ex-scan { opacity: 0; }
+}
+
 /* ── Neutral overview visual (non-voice projects) ── */
 .cs-layers-glow { fill: rgba(255, 255, 255, 0.07); }
 .cs-layers-card {

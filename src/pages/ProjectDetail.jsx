@@ -293,11 +293,86 @@ const LectureVisual = () => (
   </svg>
 );
 
+/* ── Two-stage visuals (Answer Evaluation) ── */
+
+// Stage 1: pages rasterised, OCR'd in parallel, split into question/answer pairs.
+const ExtractVisual = () => (
+  <svg className="cs-pv-svg cs-ex" viewBox="0 0 240 252">
+    {/* stacked pages, back to front */}
+    {[2, 1, 0].map((i) => (
+      <rect
+        key={i}
+        x={62 - i * 9}
+        y={4 + i * 6}
+        width="116"
+        height="98"
+        rx="8"
+        className={`cs-ex-page ${i === 0 ? "cs-ex-page--front" : ""}`}
+      />
+    ))}
+    {[0, 1, 2, 3].map((i) => (
+      <path
+        key={i}
+        d={`M76 ${28 + i * 19} q 10 -6 20 0 t 20 0 t ${i % 2 ? 14 : 24} 0`}
+        className="cs-ex-ink"
+        style={{ animationDelay: `${i * 0.12}s` }}
+      />
+    ))}
+    <rect x="62" y="4" width="116" height="3" className="cs-ex-scan" />
+    <text x="120" y="128" textAnchor="middle" className="cs-ex-cap">
+      pages OCR'd in parallel
+    </text>
+
+    <path d="M120 136 v12" className="cs-ex-arrow" />
+    <path d="M116 145 l4 5 l4 -5" className="cs-ex-arrow" />
+
+    {/* structured question / answer output */}
+    <rect x="24" y="156" width="192" height="84" rx="10" className="cs-ex-card" />
+    <rect x="36" y="166" width="17" height="14" rx="4" className="cs-ex-chip" />
+    <text x="44.5" y="176.5" textAnchor="middle" className="cs-ex-chiptext">Q</text>
+    <rect x="60" y="170" width="108" height="5" rx="2.5" className="cs-ex-line" />
+
+    <rect x="36" y="192" width="17" height="14" rx="4" className="cs-ex-chip" />
+    <text x="44.5" y="202.5" textAnchor="middle" className="cs-ex-chiptext">A</text>
+    <rect x="60" y="193" width="140" height="4" rx="2" className="cs-ex-line cs-ex-line--dim" />
+    <rect x="60" y="203" width="118" height="4" rx="2" className="cs-ex-line cs-ex-line--dim" />
+    <rect x="60" y="213" width="132" height="4" rx="2" className="cs-ex-line cs-ex-line--dim" />
+    <rect x="60" y="223" width="96" height="4" rx="2" className="cs-ex-line cs-ex-line--dim" />
+  </svg>
+);
+
+// Stage 2: the extracted answer scored across the rubric, dimension by dimension.
+const EV_ROWS = [104, 86, 116, 70, 96, 78];
+const EvaluateVisual = () => (
+  <svg className="cs-pv-svg cs-ev" viewBox="0 0 240 252">
+    {EV_ROWS.map((w, i) => (
+      <g key={i}>
+        <rect x="22" y={22 + i * 29} width={48 - (i % 3) * 6} height="5" rx="2.5" className="cs-ev-label" />
+        <rect x="86" y={17 + i * 29} width="126" height="11" rx="5.5" className="cs-ev-track" />
+        <rect
+          x="86"
+          y={17 + i * 29}
+          width={w}
+          height="11"
+          rx="5.5"
+          className="cs-ev-fill"
+          style={{ animationDelay: `${i * 0.13}s` }}
+        />
+      </g>
+    ))}
+    <rect x="22" y="200" width="190" height="38" rx="10" className="cs-ev-total" />
+    <text x="38" y="223" className="cs-ev-totallabel">TOTAL</text>
+    <text x="196" y="225" textAnchor="end" className="cs-ev-totalvalue">7.5</text>
+  </svg>
+);
+
 const MODULE_VISUALS = {
   rag: RagVisual,
   mcq: McqVisual,
   ocr: OcrVisual,
   lecture: LectureVisual,
+  extract: ExtractVisual,
+  evaluate: EvaluateVisual,
 };
 
 const TF_STAGES = [
