@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useRef, useEffect } from "react";
 import {
   GraduationCap, PhoneCall, MessageCircle, Boxes, BarChart3, ScanFace, Bot,
-  Database, X,
+  SpellCheck, Database, X,
 } from "lucide-react";
 import projectsData from "../data/projects";
 import "./FinderProjects.css";
@@ -19,6 +19,7 @@ const PALETTE = [
 // Each project gets an icon that reflects what it actually is.
 const GLYPH_BY_SLUG = {
   "ias-sathi": GraduationCap,
+  "answer-evaluation": SpellCheck,
   "ai-voice-calling-agent": PhoneCall,
   "ncert-ai-chatbot": MessageCircle,
   "object-detection-system": Boxes,
