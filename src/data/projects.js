@@ -14,6 +14,10 @@ const projectsData = [
       "Everything is grounded in one place: the full NCERT corpus, updated through 2025 and embedded into a vector store. Every module reads from that same retrieval layer, so a concept explained by the mentor, tested in an MCQ, and marked in a handwritten answer all trace back to the same source material rather than to whatever the model happens to remember.",
     ],
     // Each module becomes its own case-study section with a matching visual.
+    // To add a demo clip to a module, drop the file in /public and add:
+    //   demo: { src: "/ias-sathi-mentor.mp4", poster: "/ias-sathi-mentor.jpg" }
+    // The video renders under that module's copy. `poster` is optional but
+    // worth having — without it the player shows a black frame until played.
     modules: [
       {
         label: "AI Mentor",

@@ -656,10 +656,26 @@ const ProjectDetail = ({ slug, onBack, onOpenProject }) => {
           ),
         }]
       : []),
-    // One section per module, each with its own demonstrating visual.
+    // One section per module, each with its own demonstrating visual and an
+    // optional demo video sitting under the copy that explains it.
     ...(project.modules || []).map((m) => ({
       label: m.label,
-      body: <p className="cs-body">{m.body}</p>,
+      body: (
+        <>
+          <p className="cs-body">{m.body}</p>
+          {m.demo && (
+            <div className="cs-demo">
+              <video
+                src={m.demo.src}
+                poster={m.demo.poster}
+                controls
+                playsInline
+                preload="none"
+              />
+            </div>
+          )}
+        </>
+      ),
     })),
     // Highlights would just restate the modules, so skip it when they exist.
     ...(project.modules
