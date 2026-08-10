@@ -5,7 +5,7 @@ const TOTAL_FRAMES = 120;
 
 function getFramePath(index) {
   const frameNum = String(index + 1).padStart(3, "0");
-  return `/sequence/ezgif-frame-${frameNum}.png`;
+  return `/sequence/ezgif-frame-${frameNum}.jpg`;
 }
 
 const Hero = ({ heroRef }) => {
